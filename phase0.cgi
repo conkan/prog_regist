@@ -9,7 +9,6 @@ use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser); 
 use HTML::Template;
 use File::Basename;
-use SFCON::Register;
 use pgreglib;
 our %CONDEF_CONST;
 
@@ -21,8 +20,7 @@ my $reg_num  = $cgi->param("reg_num");
 
 # セッション生成
 my $session;
-my $register = SFCON::Register->new;
-$session=CGI::Session->new(undef,undef,{Directory=>$register->session_dir()});
+$session=CGI::Session->new(undef,undef,{Directory=>'/tmp'});
 $session->expire('+720m');              # 有効期限の設定．１２時間
 # セッション経由で引き渡す項目と値
 $session->param('reg_num',  $reg_num);  # 登録番号

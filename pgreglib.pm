@@ -10,19 +10,21 @@ use Net::SMTP;
 package main;
 use Sys::Hostname;
 our %CONDEF_CONST = (
-    'CONNAME'   => '米魂',
-    'CONPERIOD' => '2014-2015',
-    'FULLNAME'  => '第54回日本SF大会 米魂',
-    'ENTADDR'   => 'program@comecon.jp',
-    'ENVFROM'   => 'program-return@comecon.jp',
-    'PGSTAFF'   => 'program-operater@comecon.jp',
-    'MIMENAME'  => '=?ISO-2022-JP?B?GyRCQmgbKEI1NBskQjJzRnxLXBsoQlNGGyRCQmcycRsoQiAbJEJKRjoyPEI5VDBRMHcycRsoQg==?=',
-        # '第54回日本SF大会 米魂実行委員会' をMIME化
-    'MIMEPGSG'  => '=?ISO-2022-JP?B?GyRCSkY6MjRrMmg8dUlVGyhC?=',
-        # '米魂企画受付' をMIME化
-    'SPREGNUM1' => '2015DIRECTPGREGIST082930',  # 直接申込jump
-    'SPREGNUM2' => '2015DIRECTMAILCHEC082930',  # 直接申込jump&FinalMail確認
-    'SPREGNUM3' => '2015MAILBODYCHECK082930',   # FirstMail確認
+    'CONNAME'   => 'いせしまこん',
+    'CONPERIOD' => '2015-2014',
+    'FULLNAME'  => '第55回日本SF大会 いせしまこん',
+    'ENTADDR'   => 'program@sf55.jp',
+    'ENVFROM'   => 'program-return@sf55.jp',
+    'PGSTAFF'   => 'program-operater@sf55.jp',
+    'MIMENAME'  => '=?ISO-2022-JP?B?GyRCQmgbKEI1NRskQjJzRnxLXBsoQlNGGyRCQmcycRsoQiAbJEIkJCQ7JDckXiQzJHM8QjlUMFEwdzJxGyhC?=',
+        # '第55回日本SF大会 いせしまこん実行委員会' をMIME化
+    'MIMEPGSG'  => '=?ISO-2022-JP?B?GyRCJCQkOyQ3JF4kMyRzNGsyaDx1SVUbKEI=?=',
+        # 'いせしまこん企画受付' をMIME化
+    'SPREGNUM1' => '2016DIRECTPGREGIST070910',  # 直接申込jump
+    'SPREGNUM2' => '2016DIRECTMAILCHEC070910',  # 直接申込jump&FinalMail確認
+    'SPREGNUM3' => '2016MAILBODYCHECK070910',   # FirstMail確認
+    'CONKANURL' => 'https://rem5.s-rem.jp:30443/', # conkanトップURL
+    'CONKANPASS' => '', # conkan WebIF利用者パスワード IDは埋め込み
     'DEVENV'    => hostname =~ /s-rem.jp/ ? 1 : undef,
 );
 }
@@ -59,13 +61,13 @@ my %pg_layout_cnv = (       # レイアウトtable
 );
 my %pg_time_cnv = (         # 希望日時table
     'T-N'       => '特になし',
-    'T-1any'    => '29日(土)のどこでも',
-    'T-1am'     => '29日(土)午前',
-    'T-1pm'     => '29日(土)午後',
-    'T-1ngt'    => '29日(土)夜(パーティ後)',
-    'T-2any'    => '30日(日)のどこでも',
-    'T-2am'     => '30日(日)午前',
-    'T-2pm'     => '30日(日)午後',
+    'T-1any'    => '09日(土)のどこでも',
+    'T-1am'     => '09日(土)午前',
+    'T-1pm'     => '09日(土)午後',
+    'T-1ngt'    => '09日(土)夜(パーティ後)',
+    'T-2any'    => '10日(日)のどこでも',
+    'T-2am'     => '10日(日)午前',
+    'T-2pm'     => '10日(日)午後',
     'T-wday'    => '両日',
     'T-X1'      => 'その他',
 );
@@ -302,7 +304,7 @@ my %h_pname4mail = (
     # 申込者情報
     'p1_name'       => ['申込者名', undef],
     'email'         => ['メールアドレス', undef],
-    'reg_num'       => ['米魂番号', undef],
+    'reg_num'       => ['参加番号', undef],
     'tel'           => ['電話番号', undef],
     'fax'           => ['FAX番号', undef],
     'cellphone'     => ['携帯番号', undef],
@@ -615,7 +617,7 @@ sub pg_createRegParam {
     my($c_d, $c_m, $c_y) = (localtime(time))[3,4,5];
     $c_y += 1900;
     $c_m += 1;
-    $sprm->param('prog_no', $pg_num);
+    $sprm->param('prog_no', $pg_num) if defined( $pg_num );
     $sprm->param('regdate', $c_y. '/' . $c_m . '/' . $c_d);
     
     # %h_pname4mailの定義に従って値設定 

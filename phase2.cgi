@@ -6,16 +6,14 @@ use CGI;
 use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser); 
 use HTML::Template;
-use SFCON::Register;
 use pgreglib;
 our %CONDEF_CONST;
 
-my $register = SFCON::Register->new;
 my $cgi = CGI->new;
 
 # セッションID = urlパラメータ||cookieからCGISESSID||取得できなかったらundef．
 my $sid=$cgi->param('ID')||$cgi->cookie('ID')||undef;
-my $session=CGI::Session->new(undef,$sid,{Directory=>$register->session_dir()});
+my $session=CGI::Session->new(undef,$sid,{Directory=>'/tmp'});
 my $input_page;
 my $http_header;
 

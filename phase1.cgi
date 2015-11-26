@@ -7,17 +7,15 @@ use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser); 
 use HTML::Template;
 use HTML::FillInForm;
-use SFCON::Register;
 use pgreglib;
 our %CONDEF_CONST;
 
-my $register = SFCON::Register->new;
 my $cgi=CGI->new;
 
 # セッションID = urlパラメータ||cookieからCGISESSID||取得できなかったらundef．
 my $sid=$cgi->param('ID')||$cgi->cookie('ID')||undef;
 #セッションIDに基づきセッション取得 セッションIDが無効なら新たに発行
-my $session=CGI::Session->new(undef,$sid,{Directory=>$register->session_dir()});
+my $session=CGI::Session->new(undef,$sid,{Directory=>'/tmp'});
 
 # 画面表示前処理
 my $input_page  = undef; # HTML表示テンプレート
@@ -25,7 +23,8 @@ my $fobject     = undef; # HTML FormFillパラメータ
 my $html_out    = undef; # 出力するHTML
 my $http_header = $cgi->header( -charset => 'UTF-8', );
 
-if ( defined $sid && $sid eq $session->id ) { # 取得したセッションidが有効
+if ( $CONDEF_CONST{'DEVENV'} || # 開発環境か
+    ( defined $sid && $sid eq $session->id ) ) { # 取得したセッションidが有効
     # 申し込み画面 or 確認画面表示準備
     $input_page = HTML::Template->new(filename => 'phase1-tmpl.html');
 	if($session->param('phase') ne '1-2' || $cgi->param('self') ne 'true') {
