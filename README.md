@@ -25,4 +25,23 @@ index.html
     *html *txt *cgi
 は、変更なく次からも使えます。
 
-
+下記のモジュールに依存します。
+  [Perl5.14 CORE]
+    CGI
+    CGI::Carp
+    Encode
+    File::Basename
+    Net::SMTP
+    Sys::Hostname
+  [さくら標準]
+    CGI::Session
+    HTML::Template
+    HTTP::Request::Common
+    LWP::UserAgent
+    MIME::Base64
+    Try::Tiny
+  [独自インストール]
+    Data::Dumper
+    HTML::FillInForm
+    JSON
+    LWP::Protocol::https

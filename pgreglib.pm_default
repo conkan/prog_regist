@@ -23,8 +23,8 @@ our %CONDEF_CONST = (
     'SPREGNUM1' => '2016DIRECTPGREGIST070910',  # 直接申込jump
     'SPREGNUM2' => '2016DIRECTMAILCHEC070910',  # 直接申込jump&FinalMail確認
     'SPREGNUM3' => '2016MAILBODYCHECK070910',   # FirstMail確認
-    'CONKANURL' => 'https://rem5.s-rem.jp:30443/', # conkanトップURL
-    'CONKANPASS' => '', # conkan WebIF利用者パスワード IDは埋め込み
+    'CONKANURL' => '', # conkanトップURL
+    'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード
     'DEVENV'    => hostname =~ /s-rem.jp/ ? 1 : undef,
 );
 }
