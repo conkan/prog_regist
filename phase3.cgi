@@ -25,15 +25,16 @@ my $session=CGI::Session->new(undef,$sid,{Directory=>'/tmp'});
 
 my $input_page;
 
+### for develop
+_progRegViaConkanWebIF ( { "申し込み日付" => "2015/02/13", "申込者名" => "宮崎恵彦", "メールアドレス" => "", "米魂番号" => "", "電話番号" => "", "FAX番号" => "", "携帯番号" => "", "企画名" => "テスト用ダミー", "企画名ふりがな" => "テストヨウダミー", "企画種別" => "その他", "企画種別その他内容" => "セレモニー", "希望場所" => "小ホール(300人)", "希望場所その他内容" => "", "希望レイアウト" => "シアター", "希望レイアウトその他内容" => "", "希望時刻" => "29日(土)午後", "希望時刻その他内容" => "", "希望コマ数" => "１コマ(90分+準備30分)", "希望コマ数その他内容" => "", "予想人数" => "200人超", "内容事前公開" => "事前公開可", "企画内容" => "星雲賞授与式です。", "リアルタイム公開" => "twitter等テキストと静止画公開可", "事後公開" => "blog等テキストと静止画公開可", "企画経験" => "継続して3～5回目", "重なると困る企画" => "", "備考" => "", "その他持ち込み機材" => "機材については未定。", "出演者氏名1" => "熊倉晃生", "出演者氏名ふりがな1" => "くまくらあきお", "出演交渉1" => "出演了承済", "ゲスト申請1" => "しない", "出演者氏名2" => "山本浩之", "出演者氏名ふりがな2" => "やまもとひろし", "出演交渉2" => "出演了承済", "ゲスト申請2" => "しない", "出演者氏名3" => "桑本 みつよし", "出演者氏名ふりがな3" => "くわもとみつよし", "出演交渉3" => "出演了承済", "ゲスト申請3" => "する"});
+
 try {
     if(defined $sid && $sid eq $session->id){
         # 企画登録情報ハッシュ生成 (企画番号はundef)
         my $pHreg_param = pgreglib::pg_createRegParam($session, undef);
 
         # 企画登録実行(conkan企画登録WebAPI呼び出し)
-        #  この中で、$pHreg_param->{'prog_no'} を設定
-        _progRegViaConkanWebIF( $pHreg_param );
-        my $r_num = $pHreg_param->{'prog_no'};
+        my $r_num = _progRegViaConkanWebIF( $pHreg_param );
 
         # 登録者に送るmail生成/送付
         my $name = $session->param('p1_name');
@@ -100,7 +101,7 @@ print "\n\n";
 print $input_page->output;
 
 # 企画登録実行(conkan企画登録WebAPI呼び出し)
-#  この中で、$pHreg_param->{'prog_no'} を設定
+#  戻り値: 企画番号
 #  エラー発生時 die
 sub _progRegViaConkanWebIF {
     my (
@@ -127,21 +128,39 @@ sub _progRegViaConkanWebIF {
     $req = POST( $CONDEF_CONST{'CONKANURL'} . 'login',
                  [  'realm'     => 'passwd',
                     'account'   => 'admin',
-                    'passwd'    => $CONDEF_CONST{'CONKANPASS'}, ] );
+                    'passwd'    => $CONDEF_CONST{'CONKANPASS'},
+                 ] );
     $res = $agent->request( $req );
-    die '' unless $res->is_success();
+    die '' if $res->is_error();
     
-    # 企画登録 -> RESPONCEから企画番号($prog_no)を取り出す
-    #   企画番号は id#progress_regpgid の値
-    # !!!!
-    my $prog_no;
-    $pHreg_param->{'prog_no'} = sprintf( "%04d", $prog_no);
+    # 企画登録
+    $req = POST( $CONDEF_CONST{'CONKANURL'} . 'program/add',
+                 Content_Type => 'form-data',
+                 Content      =>
+                    [
+                        'jsoninputfile' =>
+                            [
+                                undef,
+                                'regprog.json',
+                                'Content-Type' => 'application/octet-stream',
+                                'Content'      => $paramjson,
+                            ]
+                    ] );
+    $res = $agent->request( $req );
+    die '' if $res->is_error();
+    
+    # RESPONCEから企画番号($prog_no)を取り出す
+    #   企画番号は リダイレクト先のパラメータ(<a href="/program/XXX">)
+    my $prog_no = $1 if ( $res->content =~ m'<a href="/program/(\d+)">'m );
+    die if ( $prog_no == undef );
+    my $retval = sprintf( "%04d", $prog_no);
 
     # logout
     $agent->get( $CONDEF_CONST{'CONKANURL'} . 'logout');
     # logoutはエラーになっても無視
 
     $agent = undef;
+    return $retval;
 }
 
 exit;
