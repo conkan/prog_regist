@@ -28,6 +28,11 @@
 
 <h3>企画情報</h3>
 <dl class="register"><table>
+<TMPL_IF NAME="phase3">
+    <tr>
+        <th align="right" class="tclm">企画番号</td>
+        <td align="left"><TMPL_VAR NAME="prog_no"></td></tr>
+</TMPL_IF>
     <tr>
         <th align="right" class="tclm">企画名称</td>
         <td align="left"><TMPL_VAR NAME="pg_name"></td></tr>
