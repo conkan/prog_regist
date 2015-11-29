@@ -5,29 +5,30 @@ use warnings;
 use Encode qw/ encode decode /;
 use Net::SMTP;
 
+#### 起動前に設定しておく項目 ---->
 #### 大会独自項目 定数定義
 {
 package main;
 use Sys::Hostname;
 our %CONDEF_CONST = (
-    'CONNAME'   => 'いせしまこん',
-    'CONPERIOD' => '2015-2014',
-    'FULLNAME'  => '第55回日本SF大会 いせしまこん',
-    'ENTADDR'   => 'program@sf55.jp',
-    'ENVFROM'   => 'program-return@sf55.jp',
-    'PGSTAFF'   => 'program-operater@sf55.jp',
-    'MIMENAME'  => '=?ISO-2022-JP?B?GyRCQmgbKEI1NRskQjJzRnxLXBsoQlNGGyRCQmcycRsoQiAbJEIkJCQ7JDckXiQzJHM8QjlUMFEwdzJxGyhC?=',
-        # '第55回日本SF大会 いせしまこん実行委員会' をMIME化
-    'MIMEPGSG'  => '=?ISO-2022-JP?B?GyRCJCQkOyQ3JF4kMyRzNGsyaDx1SVUbKEI=?=',
-        # 'いせしまこん企画受付' をMIME化
-    'SPREGNUM1' => '2016DIRECTPGREGIST070910',  # 直接申込jump
-    'SPREGNUM2' => '2016DIRECTMAILCHEC070910',  # 直接申込jump&FinalMail確認
-    'SPREGNUM3' => '2016MAILBODYCHECK070910',   # FirstMail確認
-    'CONKANURL' => '', # conkanトップURL
+    'CONNAME'    => '', # 大会愛称      ex. CCCC
+    'CONPERIOD'  => '', # 有効期間      ex. 2015-2016
+    'FULLNAME'   => '', # 大会正式名称  ex. 第NN回日本SF大会 CCCC
+    'ENTADDR'    => '', # メールヘッダ差出人アドレス
+    'ENVFROM'    => '', # ENVELOPE FROM アドレス
+    'PGSTAFF'    => '', # 企画管理者アドレス (ML)
+    'MIMENAME'   => '', # '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
+    'MIMEPGSG'   => '', # 'XXXX企画受付' をMIME化した値
+    'CONKANURL'  => '', # conkanトップURL
     'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード
+    # 以下デバッグ用
+    'SPREGNUM1' => '',  # 直接申込jump用参加番号
+    'SPREGNUM2' => '',  # 直接申込jump&FinalMail確認用参加番号
+    'SPREGNUM3' => '',   # FirstMail確認用参加番号
     'DEVENV'    => hostname =~ /s-rem.jp/ ? 1 : undef,
 );
 }
+#### <---- ここまで
 
 #### 企画登録情報 テーブル定義
 # CGI値変換テーブル
