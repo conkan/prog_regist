@@ -2,7 +2,7 @@ From: <TMPL_VAR NAME=MIMENAME> <<TMPL_VAR NAME=FROMADDR>>
 To:   <TMPL_VAR NAME=TOADDR>
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="ISO-2022-JP"
-Subject: 企画申込完了通知
+Subject: =?ISO-2022-JP?B?GyRCNGsyaD89OX40ME47RExDThsoQg==?=
 
 <TMPL_VAR NAME=NAME> 様
 
