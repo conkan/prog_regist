@@ -24,7 +24,7 @@ our %CONDEF_CONST = (
     # 以下デバッグ用
     'SPREGNUM1' => '',  # 直接申込jump用参加番号
     'SPREGNUM2' => '',  # 直接申込jump&FinalMail確認用参加番号
-    'SPREGNUM3' => '',   # FirstMail確認用参加番号
+    'SPREGNUM3' => '',  # FirstMail確認用参加番号
     'DEVENV'    => hostname =~ /s-rem.jp/ ? 1 : undef,
 );
 }
