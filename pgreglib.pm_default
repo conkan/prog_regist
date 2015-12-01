@@ -21,6 +21,7 @@ our %CONDEF_CONST = (
     'MIMEPGSG'   => '', # 'XXXX企画受付' をMIME化した値
     'CONKANURL'  => '', # conkanトップURL
     'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード
+    'SMTPSERVER' => '', # メールサーバ
     # 以下デバッグ用
     'SPREGNUM1' => '',  # 直接申込jump用参加番号
     'SPREGNUM2' => '',  # 直接申込jump&FinalMail確認用参加番号
@@ -164,7 +165,7 @@ my %ppn_grq_cnv = (     # ゲスト申請table
 # 単純置き換え パラメータ名配列
 my @org_pname = (
     'p1_name', 'email', 'reg_num', 'tel', 'fax', 'cellphone',
-    'pg_name', 'pg_name_f', 'pg_naiyou', 'fc_other_naiyou',
+    'prog_no', 'pg_name', 'pg_name_f', 'pg_naiyou', 'fc_other_naiyou',
     'fc_mochikomi', 'pg_badprog',
     'fc_comment',
 );
@@ -512,7 +513,7 @@ sub pg_HtmlTmpl_set {
     foreach $pname ( @org_pname ) {
         my $value = $sprm->param($pname);
         $value =~ s/[\r\n]+/<br\/>/mg
-            unless $isMail;
+            if defined($value) && !defined($isMail);
         $page->param( $pname => $value );
     }
     # テーブル変換(その他解釈込み)
@@ -585,7 +586,7 @@ sub cnv_radio_val {
     ) = @_;
 
     my $value = $pAprm->[0]->{$sprm->param($pname)};
-    if ( ( $pAprm->[1] ne undef ) and ( $value eq 'その他' ) ) {
+    if ( defined( $pAprm->[1] ) and ( $value eq 'その他' ) ) {
         $value .= '(' . $sprm->param($pAprm->[1]) . ')';
     }
     return ($value);
@@ -628,11 +629,11 @@ sub pg_createRegParam {
     while ( my ($pname, $pAval) = each(%h_pname4mail)) {
         my $val = $sprm->param($pname);
         if ( !defined($pAval->[1]) ) {
-            $reg_param{$pAval->[0]} = $val
+            $reg_param{$pAval->[0]} = $val;
         } elsif ( $pAval->[1] eq 0 ) {
             $reg_param{$pAval->[0]} = ($val) ? '使用する' : '使用しない';
         } else {
-            $reg_param{$pAval->[0]} = $pAval->[1]->{$val} || '';
+            $reg_param{$pAval->[0]} = defined($val) ? $pAval->[1]->{$val} : '';
         }
     }
 
@@ -663,10 +664,7 @@ sub doMailSend {
         $body,      # メール本文
     ) = @_;
 
-    # 開発環境では何もしない
-    return if $main::CONDEF_CONST{'DEVENV'};
-
-    my $smtp = Net::SMTP->new('127.0.0.1');
+    my $smtp = Net::SMTP->new($main::CONDEF_CONST{'SMTPSERVER'});
     $smtp->mail($envfrom);
     foreach my $envto ( @$pAenvto ) {
         $smtp->to($envto);

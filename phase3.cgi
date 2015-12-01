@@ -45,7 +45,8 @@ try {
         my $mbody = $mail_out->output;
         pgreglib::doMailSend( $CONDEF_CONST{'ENVFROM'},
                     [ $mailaddr, $CONDEF_CONST{'ENTADDR'}, ],
-                    $mbody );
+                    $mbody )
+            unless ( $session->param('reg_num') eq $CONDEF_CONST{'SPREGNUM2'} );
 
         # 企画登録スタッフに送るメールの作成/送付
         $name = undef;
@@ -62,7 +63,8 @@ try {
         my $mbody2 = $mail_out->output;
         pgreglib::doMailSend( $CONDEF_CONST{'ENVFROM'},
                     [ $mailaddr, ],
-                    $mbody2 );
+                    $mbody2 )
+            unless ( $session->param('reg_num') eq $CONDEF_CONST{'SPREGNUM2'} );
     
         # HTMLを生成する。
         $input_page=HTML::Template->new(filename => 'phase3-tmpl.html');
@@ -92,7 +94,8 @@ try {
     $session->close;
     $session->delete;
     # エラー画面表示
-    $input_page=HTML::Template->new(filename => 'regerr.html');
+    $input_page = HTML::Template->new(filename => 'regerr.html');
+    $input_page->param( 'catcherr' => $_ );
 };
 
 # 共通のTMPL変数置き換え
@@ -101,6 +104,8 @@ pgreglib::pg_stdHtmlTmpl_set( $input_page, $sid );
 print $cgi->header(-charset=>'UTF-8', -expires=>'now');
 print "\n\n";
 print $input_page->output;
+
+exit;
 
 # 企画登録実行(conkan企画登録WebAPI呼び出し)
 #  戻り値: 企画番号
@@ -133,7 +138,7 @@ sub _progRegViaConkanWebIF {
                     'passwd'    => $CONDEF_CONST{'CONKANPASS'},
                  ] );
     $res = $agent->request( $req );
-    die '' if $res->is_error();
+    die 'login error: ' . $res->message if $res->is_error();
     
     # 企画登録
     $req = POST( $CONDEF_CONST{'CONKANURL'} . 'program/add',
@@ -149,7 +154,7 @@ sub _progRegViaConkanWebIF {
                             ]
                     ] );
     $res = $agent->request( $req );
-    die '' if $res->is_error();
+    die 'program/add error: ' . $res->message if $res->is_error();
     
     # RESPONCEから内部企画IDと企画IDを取り出す
     #   (<a href="/program/[pgid]&amp;prog_id=[prog_no]">)
@@ -161,7 +166,7 @@ sub _progRegViaConkanWebIF {
         $pHreg_param->{'企画ID'} = $prog_no;
     }
     else {
-        die;
+        die 'Cannot get pgid or prog_no';
     }
 
     # logout

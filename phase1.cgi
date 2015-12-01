@@ -39,8 +39,8 @@ if ( $CONDEF_CONST{'DEVENV'} || # 開発環境か
 		} else {
             # チェック成功 -> 入力値をセッションに保存し、phase2にredirect
 			$session->save_param($cgi);
-            my $urlparam =
-                ($cgi->cookie('ID') eq  $session->id) ? '' : '?ID=' . $sid;
+            my $wkid = defined($cgi->cookie('ID')) ? $cgi->cookie('ID') : '';
+            my $urlparam = ( $wkid eq  $session->id ) ? '' : '?ID=' . $sid;
             $input_page = undef;
 			$html_out = $cgi->redirect('./phase2.cgi' . $urlparam);
 		}
