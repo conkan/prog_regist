@@ -46,7 +46,7 @@ try {
         pgreglib::doMailSend( $CONDEF_CONST{'ENVFROM'},
                     [ $mailaddr, $CONDEF_CONST{'ENTADDR'}, ],
                     $mbody )
-            unless ( $session->param('reg_num') eq $CONDEF_CONST{'SPREGNUM2'} );
+            unless ( $session->param('dbgflgs')->{'NOMAIL2U'} );
 
         # 企画登録スタッフに送るメールの作成/送付
         $name = undef;
@@ -59,20 +59,26 @@ try {
         $Data::Dumper::Terse = 1; # 変数名を表示しないおまじない
         $mail_out->param(REGPRM_DUMP  => Dumper($pHreg_param));
         $mail_out->param(JSON_FNAME   => 'reg_' . $pgid . '.json');
-        $mail_out->param(REGPRM_JSON  => encode_base64(decode('utf8', encode_json($pHreg_param))));
+        my $jsonbody = decode('utf8', encode_json($pHreg_param));
+        $mail_out->param(REGPRM_JSON  => encode_base64($jsonbody) );
         my $mbody2 = $mail_out->output;
         pgreglib::doMailSend( $CONDEF_CONST{'ENVFROM'},
                     [ $mailaddr, ],
                     $mbody2 )
-            unless ( $session->param('reg_num') eq $CONDEF_CONST{'SPREGNUM2'} );
+            unless ( $session->param('dbgflgs')->{'NOMAIL2K'} );
     
         # HTMLを生成する。
         $input_page=HTML::Template->new(filename => 'phase3-tmpl.html');
         $input_page->param( 'phase3' => 1 );
         # phase3の戻りページでは企画番号を表示する
         pgreglib::pg_HtmlTmpl_set($input_page, $session, undef);
-        if ( $session->param('reg_num') eq $CONDEF_CONST{'SPREGNUM2'}) {
+
+        if ( $session->param('dbgflgs')->{'SHOWMAIL2'} ) {
             pgreglib::pg_HtmlMailChk_set($input_page, $mbody, $mbody2);
+        }
+        if ( $session->param('dbgflgs')->{'SHOWJSON'} ) {
+            my $jsontext = to_json($pHreg_param, {pretty => 1});
+            pgreglib::pg_HtmlJson_set( $input_page, $jsontext );
         }
 
         # 全処理が完了したのでセッションを削除
@@ -115,8 +121,18 @@ sub _progRegViaConkanWebIF {
         $pHreg_param,   # 企画登録情報ハッシュ
     ) = @_;
 
-    my $paramjson =  decode('utf8', encode_json($pHreg_param));
+    my $pgid;
+    my $prog_no;
 
+    if ( $session->param('dbgflgs')->{'SKIPREGIST'} ) {
+        # 登録スキップ時は、必要なもの(ダミー)のみ設定して戻る
+        $pgid = 99;
+        $prog_no = 9999;
+        $pHreg_param->{'企画ID'} = $prog_no;
+        return ( $pgid, $prog_no );
+    };
+
+    my $paramjson =  decode('utf8', encode_json($pHreg_param));
     my $req;
     my $res;
     my $session;
@@ -158,8 +174,6 @@ sub _progRegViaConkanWebIF {
     
     # RESPONCEから内部企画IDと企画IDを取り出す
     #   (<a href="/program/[pgid]&amp;prog_id=[prog_no]">)
-    my $pgid;
-    my $prog_no;
     if ( $res->content =~ m'<a href="/program/(\d+)&amp;prog_id=(\d+)">'m ) {
         $pgid = $1;
         $prog_no = $2;

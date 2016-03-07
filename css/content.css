@@ -39,7 +39,7 @@
 .content label input,
 .content select,
 .content label textarea    {display:inline;margin-top:8px;margin-bottom:15px;}
-textarea#cfMessage         {width:500px;height:150px;}
+textarea #cfMessage         {width:500px;height:150px;}
 
 .content input.text,
 .content textarea          {
@@ -47,7 +47,6 @@ textarea#cfMessage         {width:500px;height:150px;}
                             background-repeat:repeat-x;
                             border:1px solid #a7a6aa;
                             padding:3px;
-                            width:350px;
                            }
 .content input.button      {background-color:#6b7881;color:#fff;padding:5px;cursor:pointer;cursor:hand;border:1px solid #ccc;}
 

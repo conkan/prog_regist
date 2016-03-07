@@ -17,12 +17,16 @@
         <td align="left"><TMPL_VAR NAME="tel"></td>
     </tr>
     <tr>
-        <th align="right">FAX番号</td>
-        <td align="left"><TMPL_VAR NAME="fax"></td>
-    </tr>
-    <tr>
         <th align="right">携帯電話番号</td>
         <td align="left"><TMPL_VAR NAME="cellphone"></td>
+    </tr>
+    <tr>
+        <th align="right">電話時刻</td>
+        <td align="left"><TMPL_VAR NAME="phonetime"></td>
+    </tr>
+    <tr>
+        <th align="right">FAX番号</td>
+        <td align="left"><TMPL_VAR NAME="fax"></td>
     </tr>
 </table></dl>
 
@@ -65,6 +69,14 @@
         <td align="left"><TMPL_VAR NAME="pg_ninzu"></td>
     </tr>
     <tr>
+        <th align="right">未成年者参加可否</td>
+        <td align="left"><TMPL_VAR NAME="pg_pgu18"></td>
+    </tr>
+    <tr>
+        <th align="right">一般公開可否</td>
+        <td align="left"><TMPL_VAR NAME="pg_pggen"></td>
+    </tr>
+    <tr>
         <th align="right">内容公開可否</td>
         <td align="left"><TMPL_VAR NAME="pg_naiyou_k"></td>
     </tr>
@@ -85,11 +97,11 @@
         <td align="left"><TMPL_VAR NAME="wbd"></td>
     </tr>
     <tr>
-        <th align="right">壇上用マイク(固定)</td>
+        <th align="right">壇上用マイク(固定)(本数)</td>
         <td align="left"><TMPL_VAR NAME="mic"></td>
     </tr>
     <tr>
-        <th align="right">客席用マイク(可動)</td>
+        <th align="right">客席用マイク(可動)(本数)</td>
         <td align="left"><TMPL_VAR NAME="mic2"></td>
     </tr>
     <tr>
@@ -137,12 +149,18 @@
 <h3>出演者情報</h3>
 <dl class="register"><table>
     <tr>
-        <th colspan="2" align="right">企画申込者は出演</td>
-        <td colspan="2" align="left"><TMPL_VAR NAME="youdo"></td>
+        <th align="right">企画申込者は出演</td>
+        <td align="left"><TMPL_VAR NAME="youdo"></td>
+        <td valign="middle"><TMPL_VAR NAME="py_name">
+            (<TMPL_VAR NAME="py_name_f">)</td>
+        <td><TMPL_VAR NAME="py_title"></td>
     </tr>
+</table>
+<table>
     <tr>
         <th align="right" >No.</td>
         <th align="left" >出演者氏名 (ふりがな)</td>
+        <th align="left" >肩書</td>
         <th align="left" >出演交渉</td>
         <th align="left" >ゲスト申請</td>
     </tr>
@@ -151,6 +169,7 @@
             <th align="right"><TMPL_VAR NAME="pp_number"></td>
             <td valign="middle"><TMPL_VAR NAME="pp_name">
                 (<TMPL_VAR NAME="pp_name_f">)</td>
+            <td><TMPL_VAR NAME="pp_title"></td>
             <td><TMPL_VAR NAME="pp_con"></td>
             <td><TMPL_VAR NAME="pp_grq"></td>
         </tr>

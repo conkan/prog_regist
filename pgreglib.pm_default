@@ -17,16 +17,39 @@ our %CONDEF_CONST = (
     'ENTADDR'    => '', # メールヘッダ差出人アドレス
     'ENVFROM'    => '', # ENVELOPE FROM アドレス
     'PGSTAFF'    => '', # 企画管理者アドレス (ML)
-    'MIMENAME'   => '', # '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
-    'MIMEPGSG'   => '', # 'XXXX企画受付' をMIME化した値
+    'MIMENAME'   => '',
+        # '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
+    'MIMEPGSG'   => '',
+        # 'XXXX企画受付' をMIME化した値
     'CONKANURL'  => '', # conkanトップURL
     'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード
     'SMTPSERVER' => '', # メールサーバ
     # 以下デバッグ用
-    'SPREGNUM1' => '',  # 直接申込jump用参加番号
-    'SPREGNUM2' => '',  # 直接申込jump&FinalMail確認用参加番号
-    'SPREGNUM3' => '',  # FirstMail確認用参加番号
-    'DEVENV'    => hostname =~ /s-rem.jp/ ? 1 : undef,
+    'SPREGNUM1'  => '', # 直接申込jump用参加番号
+    'SPREGNUM2'  => '', # 直接申込jump&FinalMail確認用参加番号
+    'SPREGNUM3'  => '', # FirstMail確認用参加番号
+    'SPPRIFIX'   => '', # 特殊動作用プリフィックス
+    'DEVENV'     => hostname =~ /s-rem.jp/ ? 1 : undef,
+    # 詳細動作指定デバッグ用 初期指定しているが、変更可能
+    # 参加番号に、 <参加番号> SP <SPPRIFIX> [ <オプション> ... ]で指定
+    'NOURLMAIL'  => 'NOURLMAIL',
+        # オプション:申し込みURL通知メールを送らず、直接phase1
+    'NOMAIL2U'   => 'NOMAIL2USER',
+        # オプション:申込者, メール発信者に申込受付メールを送らない
+    'NOMAIL2K'   => 'NOMAIL2ML',
+        # オプション:企画管理MLに申込受付メールを送らない
+    'NOALLMAIL'  => 'NOALLMAIL',
+        # オプション:全てのメールを送信しない
+    'SKIPVALID'  => 'SKIPVALID',
+        # オプション:パラメータバリデーションせず、直接phase2
+    'SKIPREGIST' => 'SKIPREGIST',
+        # オプション:実際の登録はしない
+    'SHOWUMAIL'  => 'SHOWURLMAIL',
+        # オプション:申し込みURL通知メール内容を表示
+    'SHOWMAIL2'  => 'SHOWREGMAIL',
+        # オプション:phase3で登録通知メール内容を表示
+    'SHOWJSON'   => 'SHOWREGJSON',
+        # オプション:phase3で登録用JSON表示
 );
 }
 #### <---- ここまで
@@ -49,27 +72,22 @@ my %pg_kind_cnv = (         # 企画種別table
 );
 my %pg_place_cnv = (        # 希望場所table
     'P-N'   => '特になし',
-    'P-C1'  => '会議室',
-    'P-H1'  => '小ホール(300人)',
-    'P-P1'  => '一般公開エリア',
+    'P-C1'  => '和室',
+    'P-H1'  => 'ホール',
     'P-X1'  => 'その他',
 );
 my %pg_layout_cnv = (       # レイアウトtable
-    '0' => 'シアター',
-    '1' => 'スクール',
-    '2' => 'ロの字',
-    '3' => '島組',
+    '0' => '座布団のみ(和室)',
+    '1' => '寺子屋(和室に低い机)',
     '9' => 'その他',
 );
 my %pg_time_cnv = (         # 希望日時table
     'T-N'       => '特になし',
     'T-1any'    => '09日(土)のどこでも',
-    'T-1am'     => '09日(土)午前',
     'T-1pm'     => '09日(土)午後',
-    'T-1ngt'    => '09日(土)夜(パーティ後)',
-    'T-2any'    => '10日(日)のどこでも',
-    'T-2am'     => '10日(日)午前',
-    'T-2pm'     => '10日(日)午後',
+    'T-1ngt'    => '09日(土)夜',
+    'T-1mid'    => '09日(土)深夜',
+    'T-2any'    => '10日(日)おたコス5野外ステージ',
     'T-wday'    => '両日',
     'T-X1'      => 'その他',
 );
@@ -86,6 +104,10 @@ my %pg_ninzu_cnv = (        # 予想参加者table
     'TN-3'  => '100人まで',
     'TN-4'  => '200人まで',
     'TN-5'  => '200人超',
+);
+my %pg_kafuka_cnv = (     # 可不可table
+    'CX-0'  => '可',
+    'CX-1'  => '不可',
 );
 my %pg_naiyou_k_cnv = (     # 内容事前公開table
     'CX-0'  => '事前公開可',
@@ -164,9 +186,9 @@ my %ppn_grq_cnv = (     # ゲスト申請table
 ### HTMLテンプレート置き換え定義
 # 単純置き換え パラメータ名配列
 my @org_pname = (
-    'p1_name', 'email', 'reg_num', 'tel', 'fax', 'cellphone',
+    'p1_name', 'email', 'reg_num', 'tel', 'fax', 'cellphone', 'phonetime',
     'prog_no', 'pg_name', 'pg_name_f', 'pg_naiyou', 'fc_other_naiyou',
-    'fc_mochikomi', 'pg_badprog',
+    'fc_mochikomi', 'pg_badprog', 'py_name', 'py_name_f', 'py_title',
     'fc_comment',
 );
 
@@ -181,6 +203,8 @@ my %tbl_pname = (
     'pg_time'       => [ \%pg_time_cnv,         'pg_time2', ],
     'pg_koma'       => [ \%pg_koma_cnv,         'pg_koma2', ],
     'pg_ninzu'      => [ \%pg_ninzu_cnv,        undef, ],
+    'pg_pgu18'      => [ \%pg_kafuka_cnv,       undef, ],
+    'pg_pggen'      => [ \%pg_kafuka_cnv,       undef, ],
     'pg_naiyou_k'   => [ \%pg_naiyou_k_cnv,     undef, ],
     'pg_kiroku_kb'  => [ \%pg_kiroku_kb_cnv,    undef, ],
     'pg_kiroku_ka'  => [ \%pg_kiroku_ka_cnv,    undef, ],
@@ -310,6 +334,7 @@ my %h_pname4mail = (
     'tel'           => ['電話番号', undef],
     'fax'           => ['FAX番号', undef],
     'cellphone'     => ['携帯番号', undef],
+    'phonetime'     => ['電話連絡可能な時間帯', undef],
     # 企画情報
     'pg_name'       => ['企画名', undef],
     'pg_name_f'     => ['企画名ふりがな', undef],
@@ -324,6 +349,8 @@ my %h_pname4mail = (
     'pg_koma'       => ['希望コマ数', \%pg_koma_cnv],
     'pg_koma2'      => ['希望コマ数その他内容', undef],
     'pg_ninzu'      => ['予想人数', \%pg_ninzu_cnv],
+    'pg_pgu18'      => ['未成年参加可否', \%pg_kafuka_cnv],
+    'pg_pggen'      => ['一般公開可否',   \%pg_kafuka_cnv],
     'pg_naiyou_k'   => ['内容事前公開', \%pg_naiyou_k_cnv],
     'pg_naiyou'     => ['企画内容', undef],
     'pg_kiroku_kb'  => ['リアルタイム公開', \%pg_kiroku_kb_cnv],
@@ -569,6 +596,7 @@ sub pg_HtmlTmpl_set {
             $row_data{'pp_number'}  = $ppcnt;
             $row_data{'pp_name'}    = $ppname;
             $row_data{'pp_name_f'}  = $sprm->param($prefix . '_name_f');
+            $row_data{'pp_title'}   = $sprm->param($prefix . '_title');
             $row_data{'pp_con'} = $ppn_con_cnv{$sprm->param($prefix . '_con')};
             $row_data{'pp_grq'} = $ppn_grq_cnv{$sprm->param($prefix . '_grq')};
             push(@loop_data, \%row_data);
@@ -636,20 +664,35 @@ sub pg_createRegParam {
             $reg_param{$pAval->[0]} = defined($val) ? $pAval->[1]->{$val} : '';
         }
     }
+    # 特殊処理
+    if ( my $ptval = $sprm->param('phonetime') ) {
+        $reg_param{'備考'} .= ' ' . '電話連絡可能な時間帯:' . $ptval;
+    }
 
     # 出演者情報:Loop処理なので埋め込み
-    my $ppcnt;
-    for ($ppcnt = 1; $ppcnt <= 8; $ppcnt++) {   # CONST: 出演者の最大値
+    my $ppbias = 0; # 申込者出演時、1番目は申込者なので一つずれる
+    if ( $reg_param{'申込者出演'} eq 'する' ) {
+        $reg_param{'出演者氏名1'}           = $sprm->param('py_name');
+        $reg_param{'出演者氏名ふりがな1'}   = $sprm->param('py_name_f');
+        $reg_param{'出演者肩書1'}           = $sprm->param('py_title');
+        $reg_param{'出演交渉1'}             = '出演了承済'; # 固定値
+        $reg_param{'ゲスト申請1'}           = 'しない';   # 固定値
+        $ppbias = 1;
+    }
+    for (my $ppcnt = 1; $ppcnt <= 8; $ppcnt++) {   # CONST: 出演者の最大値
         my $prefix = 'pp' . $ppcnt;
+        my $poscnt = $ppcnt + $ppbias;
         if (    defined($sprm->param($prefix . '_name') )
              && ( $sprm->param($prefix . '_name') ne '' ) ) {
-            $reg_param{'出演者氏名' . $ppcnt}
+            $reg_param{'出演者氏名' . $poscnt}
                 = $sprm->param($prefix . '_name');
-            $reg_param{'出演者氏名ふりがな' . $ppcnt}
+            $reg_param{'出演者氏名ふりがな' . $poscnt}
                 = $sprm->param($prefix . '_name_f');
-            $reg_param{'出演交渉' . $ppcnt}
+            $reg_param{'出演者肩書' . $poscnt}
+                = $sprm->param($prefix . '_title');
+            $reg_param{'出演交渉' . $poscnt}
                 = $ppn_con_cnv{$sprm->param($prefix . '_con')};
-            $reg_param{'ゲスト申請' . $ppcnt}
+            $reg_param{'ゲスト申請' . $poscnt}
                 = $ppn_grq_cnv{$sprm->param($prefix . '_grq')};
         }
     }
@@ -693,6 +736,23 @@ sub pg_HtmlMailChk_set {
         if ( $page->query(name => 'MAILBODY') );
     $page->param(MAILBODY2 => $mbody2)
         if ( $page->query(name => 'MAILBODY2') );
+}
+
+# 共通関数 テスト用 HTMLにJSONの値を埋め込む
+sub pg_HtmlJson_set {
+    my (
+        $page,      # HTML::Templateオブジェクト
+        $jsonbody,  # 埋め込むJSON値(テキスト化したもの)
+    ) = @_;
+        
+    $page->param(JSONPRES => '<pre>')
+        if ( $page->query(name => 'JSONPRES') );
+    $page->param(JSONPREE => '</pre>')
+        if ( $page->query(name => 'JSONPREE') );
+    $page->param(JSONHR => '<hr/>')
+        if ( $page->query(name => 'JSONHR') );
+    $page->param(JSONBODY => $jsonbody)
+        if ( $page->query(name => 'JSONBODY') );
 }
 
 1;

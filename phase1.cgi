@@ -33,7 +33,8 @@ if ( $CONDEF_CONST{'DEVENV'} || # 開発環境か
         $fobject    = $session;
 	} else {
         # 申し込み受付時チェック
-		if ( pgreglib::pg_input_check($input_page, $cgi) ) {
+		if ( !( $session->param('dbgflgs')->{'SKIPVALID'} )
+          && ( pgreglib::pg_input_check($input_page, $cgi) ) ) {
             # 入力内容不備時 申込画面再表示準備
 			$fobject    = $cgi;
 		} else {

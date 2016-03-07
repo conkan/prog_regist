@@ -3,8 +3,9 @@
   メールアドレス: <TMPL_VAR NAME="email">
   <TMPL_VAR NAME="CONNAME">番号: <TMPL_VAR NAME="reg_num">
   お電話番号: <TMPL_VAR NAME="tel">
-  FAX番号: <TMPL_VAR NAME="fax">
   携帯電話番号: <TMPL_VAR NAME="cellphone">
+  電話時刻: <TMPL_VAR NAME="phonetime">
+  FAX番号: <TMPL_VAR NAME="fax">
 
 ■企画情報
   企画番号: <TMPL_VAR NAME="prog_no">
@@ -18,6 +19,8 @@
   希望コマ数: <TMPL_VAR NAME="pg_koma">
   予想参加者: <TMPL_VAR NAME="pg_ninzu">
 
+  未成年者参加可否: <TMPL_VAR NAME="pg_pgu18">
+  一般公開可否: <TMPL_VAR NAME="pg_pggen">
   内容公開可否: <TMPL_VAR NAME="pg_naiyou_k">
   内容: <TMPL_VAR NAME="pg_naiyou">
   リアルタイム公開: <TMPL_VAR NAME="pg_kiroku_kb">
@@ -42,7 +45,7 @@
 ■出演者情報
   企画申込者は出演 <TMPL_VAR NAME="youdo">
 <TMPL_LOOP NAME="GUEST_LOOP">
-  No: <TMPL_VAR NAME="pp_number"> <TMPL_VAR NAME="pp_name"> (<TMPL_VAR NAME="pp_name_f">) 出演交渉: <TMPL_VAR NAME="pp_con"> ゲスト申請: <TMPL_VAR NAME="pp_grq">
+  No: <TMPL_VAR NAME="pp_number"> <TMPL_VAR NAME="pp_name"> (<TMPL_VAR NAME="pp_name_f">) 肩書: <TMPL_VAR NAME="pp_title"> 出演交渉: <TMPL_VAR NAME="pp_con"> ゲスト申請: <TMPL_VAR NAME="pp_grq">
 </TMPL_LOOP>
 
 ■備考欄

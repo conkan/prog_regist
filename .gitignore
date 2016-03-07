@@ -5,6 +5,7 @@ index.html
 testitem.cgi
 sample.html
 pgreglib.pm
+param_def.csv
 *~
 *.sw?
-
+*.bak
