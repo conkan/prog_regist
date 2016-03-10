@@ -609,7 +609,7 @@ sub pg_HtmlTmpl_set {
             push(@loop_data, \%row_data);
         }
     }
-    $page->param(GUEST_LOOP => \@loop_data);
+    $page->param(GUEST_LOOP => \@loop_data)
         if ( $page->query(name => 'GUEST_LOOP') );
 }
 
