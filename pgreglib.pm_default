@@ -519,7 +519,8 @@ sub pg_input_check {
         }
     }
     foreach my $vname ( keys( %AfailVnames ) ) {
-        $page->param($vname => $c_not_fill);
+        $page->param($vname => $c_not_fill)
+            if ( $page->query(name => $vname) );
     }
 
     return( scalar(%AfailVnames) ? 1 : 0 );
@@ -541,15 +542,18 @@ sub pg_HtmlTmpl_set {
         my $value = $sprm->param($pname);
         $value =~ s/[\r\n]+/<br\/>/mg
             if defined($value) && !defined($isMail);
-        $page->param( $pname => $value );
+        $page->param( $pname => $value )
+            if ( $page->query(name => $pname) );
     }
     # テーブル変換(その他解釈込み)
     while ( ($pname, $pAprm) = each %tbl_pname ) {
-        $page->param( $pname => cnv_radio_val($sprm, $pname, $pAprm ));
+        $page->param( $pname => cnv_radio_val($sprm, $pname, $pAprm ))
+            if ( $page->query(name => $pname) );
     }
     # 使用する/しない(本数解釈込み)
     while ( ($pname, $pAprm) = each %useunuse_pname ) {
-        $page->param( $pname => cnv_useunuse_val($sprm, $pname, $pAprm));
+        $page->param( $pname => cnv_useunuse_val($sprm, $pname, $pAprm))
+            if ( $page->query(name => $pname) );
     }
 
     my $add0 = $isMail ? "\n      利用方法:" : '<br/><b>利用方法</b>';
@@ -567,7 +571,8 @@ sub pg_HtmlTmpl_set {
                         . $add2;
             }
         }
-        $page->param( $pname => $value );
+        $page->param( $pname => $value )
+            if ( $page->query(name => $pname) );
     }
     # ネット接続に関する特殊処理
     if ( $motikomi_cnv{$sprm->param('fc_pc')} eq '持ち込む' ) {
@@ -580,12 +585,14 @@ sub pg_HtmlTmpl_set {
             }
             $value =~ s/[\r\n]+/<br\/>/mg
                 unless $isMail;
-            $page->param( $pname => $value );
+            $page->param( $pname => $value )
+                if ( $page->query(name => $pname) );
         }
     }
 
     # 出演者情報(LOOP)
-    $page->param( 'youdo' => $ppn_youdo_cnv{$sprm->param('youdo')} );
+    $page->param( 'youdo' => $ppn_youdo_cnv{$sprm->param('youdo')} )
+        if ( $page->query(name => 'youdo') );
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;
     for ($ppcnt = 1; $ppcnt <= 8; $ppcnt++) {   # CONST: 出演者の最大値
@@ -603,6 +610,7 @@ sub pg_HtmlTmpl_set {
         }
     }
     $page->param(GUEST_LOOP => \@loop_data);
+        if ( $page->query(name => 'GUEST_LOOP') );
 }
 
 # テーブル変換(その他解釈込み)
