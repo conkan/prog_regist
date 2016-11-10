@@ -68,6 +68,12 @@ elsif ($reg_num eq $CONDEF_CONST{'SPREGNUM2'}) {
 elsif ($reg_num eq $CONDEF_CONST{'SPREGNUM3'}) {
     $debflg{'SHOWUMAIL'} = 'true';
 }
+if ( $CONDEF_CONST{'ONLYUICHK'} ) {
+    $debflg{'NOURLMAIL'} = 'true';
+    $debflg{'NOMAIL2U'}  = 'true';
+    $debflg{'NOMAIL2K'}  = 'true';
+    $debflg{'SKIPREGIST'} = 'true';
+}
 
 # セッション生成
 my $session;

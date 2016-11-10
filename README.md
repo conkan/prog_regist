@@ -2,8 +2,6 @@
 
 ## 概要
 
-**index.html** は汎用化していません。(cgiにすれば可能ですが、本質的ではないので)
-
 大会ごとに必ず変更がある部分(大会名称とかメアドとか)は、すべて **pgreglib.pm** の中で定義し、吸収しています。  
 (企画を登録するconkanのWebIF-URLやそのパラメータも)
 
@@ -15,7 +13,11 @@
 > **images/favicon.ico**  
 > **images/header_logo.png**
 
+および
+>> **index.html**
+
 は、大会ごとに変更が必要です。
+(index.htmlをcgiにすれば可能ですが、本質的ではないので)
 
 それ以外の  
 > **\*.html**  
@@ -45,11 +47,20 @@
     - Data::Dumper
     - HTML::FillInForm
     - JSON
-    - LWP::Protocol::https
 
 ## インストール
 
 ### ファイル準備
+
+**index_stable.html, index_maintenance.html** を修正してください。
+> vi index_stable.html index_maintenance.html
+>> 大会名称が埋め込みになっていますので、修正してください。
+>> (将来的には自動的に対応できるようにします)
+
+画像ファイル  
+> **images/favicon.ico**  
+> **images/header_logo.png**
+を対応大会の物に上書きしてください。
 
 **index.html** をシンボリックリンクで生成して下さい
 > ln -s index_stable.html index.html  

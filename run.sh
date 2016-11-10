@@ -8,6 +8,12 @@ DEVMNT=''
 DEVMNT='-v '$(pwd)'/pgreg/prog_regist:/usr/local/apache2/htdocs/prog_regist'
 
 STAT=`docker inspect $NAME | grep Status | awk -F'"' '{print $4}'`
+if [ !${STAT} ]; then
+    STAT=`docker inspect $NAME | grep Running | awk '{print $2}'`
+    if [ ${STAT} == 'true,' ]; then
+        STAT='running'
+    fi
+fi
 if [ ${STAT} ]; then
     if [ ${STAT} == 'running' ]; then
         docker stop ${NAME}

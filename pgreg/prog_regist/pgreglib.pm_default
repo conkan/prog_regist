@@ -25,11 +25,12 @@ our %CONDEF_CONST = (
     'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード
     'SMTPSERVER' => '', # メールサーバ
     # 以下デバッグ用
+    # 'ONLYUICHK'  => 1, # UIチェック用 常にメール送信、登録をしない
+    # 'DEVENV'     => 1, # 開発環境
     'SPREGNUM1'  => '', # 直接申込jump用参加番号
     'SPREGNUM2'  => '', # 直接申込jump&FinalMail確認用参加番号
     'SPREGNUM3'  => '', # FirstMail確認用参加番号
     'SPPRIFIX'   => '', # 特殊動作用プリフィックス
-    'DEVENV'     => hostname =~ /s-rem.jp/ ? 1 : undef,
     # 詳細動作指定デバッグ用 初期指定しているが、変更可能
     # 参加番号に、 <参加番号> SP <SPPRIFIX> [ <オプション> ... ]で指定
     'NOURLMAIL'  => 'NOURLMAIL',
