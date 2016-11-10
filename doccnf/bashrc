@@ -1,0 +1,55 @@
+#aliases
+alias ll='ls -alF'
+alias vi='vim'
+alias q='exit'
+alias rm='rm -i'
+# Colorize directory listing
+alias ls="ls -ph --color=auto"
+# Colorize grep
+if echo hello|grep --color=auto l >/dev/null 2>&1; then
+    export GREP_OPTIONS="--color=auto" GREP_COLOR="1;31"
+fi
+
+# key binding
+bind '"\C-g": abort'
+bind '"\C-x\C-g": abort'
+bind '"\e\C-g": abort'
+bind '"\C-b": backward-char'
+bind '"\C-x\C-?": backward-kill-line'
+bind '"\e\C-h": backward-kill-word'
+bind '"\e\C-?": backward-kill-word'
+bind '"\eOd": backward-word'
+bind '"\e[1;5D": backward-word'
+bind '"\e[5D": backward-word'
+bind '"\eb": backward-word'
+bind '"\e<": beginning-of-history'
+bind '"\C-a": beginning-of-line'
+bind '"\e[1~": beginning-of-line'
+bind '"\C-xe": call-last-kbd-macro'
+bind '"\ec": capitalize-word'
+bind '"\C-]": character-search'
+bind '"\e\C-]": character-search-backward'
+bind '"\C-l": clear-screen'
+bind '"\e\e": complete'
+bind '"\e!": complete-command'
+bind '"\e/": complete-filename'
+bind '"\e@": complete-hostname'
+bind '"\e{": complete-into-braces'
+bind '"\e~": complete-username'
+bind '"\e$": complete-variable'
+bind '"\C-d": delete-char'
+bind '"\e\\": delete-horizontal-space'
+bind '"\C-e": end-of-line'
+bind '"\eOA": end-of-line'
+bind '"\e[A": end-of-line'
+bind '"\C-f": forward-char'
+bind '"\C-n": history-search-forward'
+bind '"\C-p": history-search-backward'
+bind '"\C-k": kill-line'
+
+# enviroment variable
+export TERM="xterm"
+export PATH
+export CLICOLOR="1"
+export PS1="\[\033[34m\][\u@\H:\[\033[36m\]\w\[\033[34m\]]$\[\033[0m\] "
+export LANG="ja_JP.UTF8"

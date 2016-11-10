@@ -1,0 +1,78 @@
+"---------------------------------------------------------------------------
+" 日本語対応のための設定:
+" <ファイルのコードの自動判別>
+" (UNIX と Windows ではコーディングに加えるもの(もしくは順番)を変える必要がある)
+" (UNIX - euc を最後, Widnows= cp932 を最後)
+if has('iconv')
+    set fileencodings+=iso-2022-jp-3          "JIS を加える
+    set fileencodings+=utf-8,ucs-bom,ucs-2le,ucs-2    "Unicode を加える
+    set fileencodings+=cp932                  "sjis を加える (UNIXの場合)
+    set fileencodings+=euc-jp,euc-jisx0213    "euc(JISX0213も含めて)加える (Windowsの場合)
+endif
+
+"---------------------------------------------------------------------------
+function! GetStatusEx()
+    let str = ''             "改行コード & 文字コード を見慣れた表現にする
+    let s:yujiformat = ''    "改行コード
+    let s:yujiencoding = ''  "文字コード
+
+    if &fileencoding == ''
+        let s:yujiencoding = 'EUC'
+    elseif &fileencoding == 'euc-jisx0213'
+        let s:yujiencoding = 'EUC'
+    elseif &fileencoding == 'euc-jp'
+        let s:yujiencoding = 'EUC'
+    elseif &fileencoding == 'cp932'
+        let s:yujiencoding = 'SJIS'
+    elseif &fileencoding == 'iso-2022-jp-3'
+        let s:yujiencoding = 'JIS'
+    elseif &fileencoding == 'ucs-2le'
+        let s:yujiencoding = 'Unicode'
+    elseif &fileencoding == 'utf-8'
+        let s:yujiencoding = 'Unicode (UTF8)'
+    elseif &fileencoding == 'ucs-2'
+        let s:yujiencoding = 'Unicode (Bid Endian)'
+    else
+        let s:yujiencoding = "Unknwon"
+    endif
+    "let s:yujiencoding = &fileencoding  "文字コードをそのまま表示
+    "
+    if &fileformat == 'unix'
+        let s:yujiformat = 'LF'
+    elseif &fileformat == 'dos'
+        let s:yujiformat = 'CR+LF'
+    elseif &fileformat == 'mac'    "CR+LF も CR も dos として扱われるが
+        let s:yujiformat = 'CR'
+    else
+        let s:yujiformat = "Unknwon"
+    endif
+    "
+    let s:str = '[' . s:yujiencoding . ']-[' . s:yujiformat . ']'
+    unlet s:yujiencoding
+    unlet s:yujiformat
+    return s:str
+endfunction
+" シンタックスに従った色分けを有効にする
+syntax on
+" パスのセパレータを変更 (\ -> /)
+set shellslash
+" タブ幅を4に
+set ts=4 sw=4 sts=0
+" タブをスペースに展開する (noexpandtab:展開しない)
+set expandtab
+" テキスト挿入中の自動折り返しを日本語に対応させる
+set formatoptions+=mM
+" 長い行を折り返す (nowrap:折り返さない)
+set wrap
+" 常にステータス行を表示 (詳細は:help laststatus)
+set laststatus=2
+" ステータスラインに表示する項目の指定 - <Function GetStatusEx()> を使用
+set statusline=\ %y\ %{GetStatusEx()}\ %-0.40F%m%r%=<C\ %c\ :\ L\ %l/%L>
+hi Visual term=reverse cterm=reverse ctermbg=7 guifg=Grey guibg=fg
+hi StatusLine cterm=bold ctermbg=blue ctermfg=yellow guibg=gold guifg=blue
+hi clear MatchParen
+
+map <C-j> "*p
+map <C-y> "*y
+set cmdheight=1
+"
