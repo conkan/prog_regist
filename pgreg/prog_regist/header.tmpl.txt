@@ -1,4 +1,0 @@
-<div class="header"><header>
-    <h1><img src="images/header_logo.png" alt="<TMPL_VAR NAME=FULLNAME>" /></h1>
-</header></div>
-

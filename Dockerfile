@@ -36,9 +36,9 @@ WORKDIR /root
 COPY ./pgreg/httpd.conf /usr/local/apache2/conf/httpd.conf
 
 #----------------------------------------------------------
-# prog_regist実体格納(開発時はマウント)
+# program_entry実体格納(開発時はマウント)
 #----------------------------------------------------------
-COPY ./pgreg/prog_regist /usr/local/apache2/htdocs/prog_regist
+COPY ./pgreg/program_entry /usr/local/apache2/htdocs/program_entry
 
 #----------------------------------------------------------
 # 起動
