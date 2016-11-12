@@ -1,0 +1,7 @@
+<meta charset="UTF-8">
+<title><TMPL_VAR NAME="FULLNAME">申し込みサイト</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/content.css">
+<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />

@@ -1,0 +1,31 @@
+<b>持ち込み映像機器</b><br />
+大会が用意するプロジェクタまたは大型モニタに接続する機材を持ち込むかどうかと、<br/>
+その接続方式を記載して下さい。<br>
+<div class="commtext">
+    接続方式によっては、大会が用意する方式への変換ケーブルやコンバータも持ち込んで頂く場合があります。
+</div>
+<div>
+    <input type="radio" name="fc_vid" value="0">持ち込む
+    <input type="radio" name="fc_vid" value="1" checked>持ち込まない
+</div>
+<P/>
+<div class="risttext">以下持ち込む場合のみ</div>
+<div class="indent">
+    <div id="av-v" class="spacing">
+        <b>映像接続形式</b><br/>
+        <input type="radio" name="av-v" value="hdmi">HDMI
+        <input type="radio" name="av-v" value="svideo">S-Video
+        <input type="radio" name="av-v" value="rca">RCAコンポジット(黄)<br/>
+        <input type="radio" name="av-v" value="other">その他
+            <input type="text" name="av-v_velse" size="30" style="ime-mode: active;"><br>
+    </div>
+    <div id="av-a" class="spacing">
+        <b>音声接続形式</b>
+        <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
+        <input type="radio" name="av-a" value="none">不要
+        <input type="radio" name="av-a" value="tsr">ステレオミニ(3.5mmTSR)
+        <input type="radio" name="av-a" value="rca">RCAコンポジット(赤白)<br/>
+        <input type="radio" name="av-a" value="other">その他
+            <input type="text" name="av-a_velse" size="30" style="ime-mode: active;"><br>
+    </div>
+</div>

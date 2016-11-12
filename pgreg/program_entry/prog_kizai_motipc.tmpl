@@ -1,0 +1,44 @@
+<b>持ち込みパソコン</b><br />
+企画で使用するパソコンを持ち込むかどうかと、接続形式などを記載して下さい。<br/>
+<div class="commtext">
+    接続方式によっては、大会が用意する方式への変換ケーブルやコンバータも持ち込んで頂く場合があります。<br/>
+    特にMacの場合、HDMIあるいはD-Sub15への変換ケーブルは各自用意し、どちらへの変換であるかを記載して下さい。
+</div>
+<div>
+    <input type="radio" name="fc_pc" value="0">持ち込む
+    <input type="radio" name="fc_pc" value="1" checked>持ち込まない
+</div>
+<P/>
+<div class="risttext">以下持ち込む場合のみ</div>
+<div class="indent">
+    <div id="pc-v" class="spacing">
+        <b>映像接続形式</b><br/>
+        <input type="radio" name="pc-v" value="none">接続しない
+        <input type="radio" name="pc-v" value="hdmi">HDMI
+        <input type="radio" name="pc-v" value="vga">D-Sub15(VGA)<br/>
+        <input type="radio" name="pc-v" value="other">その他
+            <input type="text" name="pc-v_velse" size="30" style="ime-mode: active;"><br>
+    </div>
+    <div id="pc-a" class="spacing">
+        <b>音声接続形式</b>
+        <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
+        <input type="radio" name="pc-a" value="none">不要
+        <input type="radio" name="pc-a" value="svideo">ステレオミニ(3.5mmTSR)
+        <input type="radio" name="pc-a" value="rca">RCAコンポジット(赤白)<br/>
+        <input type="radio" name="pc-a" value="other">その他
+            <input type="text" name="pc-a_velse" size="30" style="ime-mode: active;"><br>
+    </div>
+    <div id="lan" class="spacing">
+        <b>インタネット接続形式</b><br/>
+        <input type="radio" name="lan" value="none">接続しない
+        <input type="radio" name="lan" value="lan">有線(RJ-45)
+        <input type="radio" name="lan" value="wifi">無線<br/>
+        <input type="radio" name="lan" value="other">その他
+            <input type="text" name="pc-l_velse" size="30" style="ime-mode: active;"><br>
+        <div class="indent spacing">
+            <b>インタネット利用方法</b>(接続する場合)
+            <div class="commtext">有線を希望される場合は、有線LANが必要な理由も記載して下さい</div>
+            <textarea name="lanreason" cols="60" rows="3" style="ime-mode: active;"></textarea><br>
+        </div>
+    </div>
+</div>

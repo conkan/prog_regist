@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+    <TMPL_INCLUDE NAME="metahead.tmpl.txt">
+</head>
+<body><div class="wrap">
+
+<TMPL_INCLUDE NAME="header.tmpl.txt">
+
+<div class="content"><article>
+
+<TMPL_INCLUDE NAME="bodytop.tmpl.txt">
+<IMG SRC="images/Guide-pe.png" ALT="入力ガイド" WIDTH="520" HEIGHT="44"/>
+<h3>登録エラー</h3>
+<dl class="register">
+    企画申し込み登録エラーが発生しました。<br>
+    お手数をおかけしますが、下記情報を事務局まで通知願います。<br>
+</dl>
+<pre>
+<TMPL_VAR NAME="catcherr">
+</pre>
+<div align="right" style="margin-top:3em">
+	<table class="noborder"><tr>
+        <td class="tclm"></td>
+            <form name = "mailform" method="get" action="./index.html">
+	            <input type="submit" name="submit" value="最初に戻る">
+            </form>
+        </td>
+    </tr></table>
+</div>
+</article></div>
+
+<TMPL_INCLUDE NAME="footer.tmpl.txt">
+
+</div></body>
+</html>
