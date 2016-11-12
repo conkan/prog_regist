@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 # 企画申込フェーズ０
 #
-use lib ((getpwuid($<))[7]) . '/local/lib/perl5';
 use strict;
 use warnings;
 use CGI;
