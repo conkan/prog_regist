@@ -64,17 +64,10 @@ if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
 if ( $input_page ) { # リダイレクトではない
     # HTMLテンプレート変数置き換え
     pgreglib::pg_stdHtmlTmpl_set( $input_page, $sid );
-    # CGIパラメータ置き換え
-    if ( $fobject ) {
-        my $form_out = HTML::FillInForm->new;
-		$html_out = $form_out->fill(
-			                        scalarref => \$input_page->output,
-			                        target => "mailform",
-			                        fobject => $fobject,
-		                        );
-    } else {
-        $html_out = $input_page->output;
-    }
+    $input_page->param(P1NAME   => $fobject->param('p1_name'));
+    $input_page->param(EMAIL    => $fobject->param('email'));
+    $input_page->param(REGNUM   => $fobject->param('reg_num'));
+    $html_out = $input_page->output;
     # リダイレクトでない場合のみ、HTTPヘッダを出力
 	print $http_header;
 	print "\n\n";
