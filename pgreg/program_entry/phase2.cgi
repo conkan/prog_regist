@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-use lib ((getpwuid($<))[7]) . '/local/lib/perl5';
 use strict;
 use warnings;
 use CGI;
@@ -32,7 +31,7 @@ if(defined $sid && $sid eq $session->id){
 		  $session->delete;
 	}
     # 取得したセッションidが無効:エラー画面表示
-    $input_page=HTML::Template->new(filename => 'error.html');
+    $input_page=HTML::Template->new(filename => 'error-tmpl.html');
 	$http_header = $cgi->header(-charset=>'UTF-8');
 }
 # 共通のTMPL変数置き換え

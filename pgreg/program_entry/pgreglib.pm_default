@@ -6,51 +6,75 @@ use Encode qw/ encode decode /;
 use Net::SMTP;
 
 #### 起動前に設定しておく項目 ---->
-#### 大会独自項目 定数定義
 {
 package main;
 use Sys::Hostname;
 our %CONDEF_CONST = (
-    'CONNAME'    => '', # 大会愛称      ex. CCCC
-    'CONPERIOD'  => '', # 有効期間      ex. 2015-2016
-    'FULLNAME'   => '', # 大会正式名称  ex. 第NN回日本SF大会 CCCC
-    'ENTADDR'    => '', # メールヘッダ差出人アドレス
-    'ENVFROM'    => '', # ENVELOPE FROM アドレス
-    'PGSTAFF'    => '', # 企画管理者アドレス (ML)
+#### デバッグ,メンテナンスフラグ
+    ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
+    ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
+    # 'ONLYUICHK'  => 1,
+    # 'MAINTENANCE' => 1,
+
+#### 大会独自項目 定数定義
+    ## CONNAME :    大会愛称      ex. CCCC
+    ## CONPERIOD:   有効期間      ex. 2015-2016
+    ## FULLNAME:    大会正式名称  ex. 第NN回日本SF大会 CCCC
+    ## MIMENAME:    '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
+    ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
+    ## ENTADDR:     メールヘッダ差出人アドレス
+    ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
+    ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
+    'CONNAME'    => '',
+    'CONPERIOD'  => '',
+    'FULLNAME'   => '',
     'MIMENAME'   => '',
-        # '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
     'MIMEPGSG'   => '',
-        # 'XXXX企画受付' をMIME化した値
-    'CONKANURL'  => '', # conkanトップURL
-    'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード
-    'SMTPSERVER' => '', # メールサーバ
-    # 以下デバッグ用
-    # 'ONLYUICHK'  => 1, # UIチェック用 常にメール送信、登録をしない
-    # 'DEVENV'     => 1, # 開発環境
-    'SPREGNUM1'  => '', # 直接申込jump用参加番号
-    'SPREGNUM2'  => '', # 直接申込jump&FinalMail確認用参加番号
-    'SPREGNUM3'  => '', # FirstMail確認用参加番号
-    'SPPRIFIX'   => '', # 特殊動作用プリフィックス
-    # 詳細動作指定デバッグ用 初期指定しているが、変更可能
-    # 参加番号に、 <参加番号> SP <SPPRIFIX> [ <オプション> ... ]で指定
+    'ENTADDR'    => '',
+    'ENVFROM'    => '',
+    'PGSTAFF'    => '',
+    ## CONKANURL:   conkan_programトップURL
+    ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
+    'CONKANURL'  => '',
+    'CONKANPASS' => '',
+    ## SMTPSERVER:  メールサーバFQDN
+    'SMTPSERVER' => '',
+
+#### 環境依存フラグ
+    ## PROTTHRU:    独自SSL対応しない(下流のnginxなどでSSL解釈)
+    'PROTTHRU'   => 1,
+            # このCGIを起動するhttpサーバでSSL解釈する時はコメントイン
+
+#### 評価用特殊参加番号
+    ## SPREGNUM1:   直接申込jump用参加番号
+    ## SPREGNUM2:   直接申込jump&FinalMail確認用参加番号
+    ## SPREGNUM3:   FirstMail確認用参加番号
+    'SPREGNUM1'  => '2017DIRECTPGREGIST082627',
+    'SPREGNUM2'  => '2017DIRECTMAILCHEC082627',
+    'SPREGNUM3'  => '2017MAILBODYCHECK082627', 
+
+#### 詳細動作指定デバッグ用オプション 初期指定しているが、変更可能
+    # 参加番号に、 <参加番号> <SPPRIFIX> [ <オプション> ... ]で指定
+    ## SPPRIFIX:    特殊動作用プリフィックス
+    ## NOURLMAIL:   オプション:申し込みURL通知メールを送らず、直接phase1
+    ## NOMAIL2U:    オプション:申込者, メール発信者に申込受付メールを送らない
+    ## NOMAIL2K:    オプション:企画管理MLに申込受付メールを送らない
+    ## NOALLMAIL:   オプション:全てのメールを送信しない
+    ## SKIPVALID:   オプション:パラメータバリデーションせず、直接phase2
+    ## SKIPREGIST:  オプション:実際の登録はしない
+    ## SHOWUMAIL:   オプション:申し込みURL通知メール内容を表示
+    ## SHOWMAIL2:   オプション:phase3で登録通知メール内容を表示
+    ## SHOWJSON:    オプション:phase3で登録用JSON表示
+    'SPPRIFIX'   => '--SP', 
     'NOURLMAIL'  => 'NOURLMAIL',
-        # オプション:申し込みURL通知メールを送らず、直接phase1
     'NOMAIL2U'   => 'NOMAIL2USER',
-        # オプション:申込者, メール発信者に申込受付メールを送らない
     'NOMAIL2K'   => 'NOMAIL2ML',
-        # オプション:企画管理MLに申込受付メールを送らない
     'NOALLMAIL'  => 'NOALLMAIL',
-        # オプション:全てのメールを送信しない
     'SKIPVALID'  => 'SKIPVALID',
-        # オプション:パラメータバリデーションせず、直接phase2
     'SKIPREGIST' => 'SKIPREGIST',
-        # オプション:実際の登録はしない
     'SHOWUMAIL'  => 'SHOWURLMAIL',
-        # オプション:申し込みURL通知メール内容を表示
     'SHOWMAIL2'  => 'SHOWREGMAIL',
-        # オプション:phase3で登録通知メール内容を表示
     'SHOWJSON'   => 'SHOWREGJSON',
-        # オプション:phase3で登録用JSON表示
 );
 }
 #### <---- ここまで

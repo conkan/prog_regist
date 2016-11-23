@@ -5,7 +5,7 @@ RUNOPT='-d --restart=always'
 LOGMNT='-v /var/log/http4pgreg:/var/log/http'
 DEVMNT=''
 # 開発時はgit checkout先をmountする
-DEVMNT='-v '$(pwd)'/pgreg/prog_regist:/usr/local/apache2/htdocs/prog_regist'
+DEVMNT='-v '$(pwd)'/pgreg/program_entry:/usr/local/apache2/htdocs/program_entry'
 
 STAT=`docker inspect $NAME | grep Status | awk -F'"' '{print $4}'`
 if [ !${STAT} ]; then

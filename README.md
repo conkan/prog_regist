@@ -13,11 +13,7 @@
 > **images/favicon.ico**  
 > **images/header_logo.png**
 
-および
->> **index.html**
-
 は、大会ごとに変更が必要です。
-(index.htmlをcgiにすれば可能ですが、本質的ではないので)
 
 それ以外の  
 > **\*.html**  
@@ -52,19 +48,10 @@
 
 ### ファイル準備
 
-**index_stable.html, index_maintenance.html** を修正してください。
-> vi index_stable.html index_maintenance.html
->> 大会名称が埋め込みになっていますので、修正してください。
->> (将来的には自動的に対応できるようにします)
-
 画像ファイル  
 > **images/favicon.ico**  
 > **images/header_logo.png**
 を対応大会の物に上書きしてください。
-
-**index.html** をシンボリックリンクで生成して下さい
-> ln -s index_stable.html index.html  
->> これは、メンテナンス時に表示を切り替えるための仕組みです。
 
 **pgreglib.pm** をcopyして生成して下さい
 > cp pgreglib.pm_default pgreglib.pm  
@@ -72,24 +59,32 @@
 
 ### パラメータ設定
 
-**pgreglib.pm** の、以下の部分を環境に合わせて設定して下さい。  
->    'CONNAME'    => '', # 大会愛称      ex. CCCC  
->    'CONPERIOD'  => '', # 有効期間      ex. 2015-2016  
->    'FULLNAME'   => '', # 大会正式名称  ex. 第NN回日本SF大会 CCCC  
->    'ENTADDR'    => '', # メールヘッダ差出人アドレス  
->    'ENVFROM'    => '', # ENVELOPE FROM アドレス  
->    'PGSTAFF'    => '', # 企画管理者アドレス (ML)  
->    'MIMENAME'   => '', # '第XX回日本SF大会 XXXX実行委員会' をMIME化した値  
->    'MIMEPGSG'   => '', # 'XXXX企画受付' をMIME化した値  
->    'CONKANURL'  => '', # conkanトップURL  
->    'CONKANPASS' => '', # conkan WebIF利用者(admin)パスワード  
->    # 以下デバッグ用  
->    'SPREGNUM1' => '',  # 直接申込jump用参加番号  
->    'SPREGNUM2' => '',  # 直接申込jump&FinalMail確認用参加番号  
->    'SPREGNUM3' => '',  # FirstMail確認用参加番号  
->    'SPPRIFIX'  => '',  # 特殊動作用プリフィックス
->    'DEVENV'    => hostname =~ /s-rem.jp/ ? 1 : undef,  
->> *MIMENAME および MIMEPGSG は、nkfなどでMIME化した値を設定*
+**pgreglib.pm** の、以下の定数を環境に合わせて設定して下さい。  
+
+ここは基本的にコメントアウトしたままでOKです。
+> #### デバッグ,メンテナンスフラグ
+>     ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
+>     ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
+
+大会ごとに異なる部分なので設定してください。
+> #### 大会独自項目 定数定義
+>     ## CONNAME :    大会愛称      ex. CCCC
+>     ## CONPERIOD:   有効期間      ex. 2015-2016
+>     ## FULLNAME:    大会正式名称  ex. 第NN回日本SF大会 CCCC
+>     ## ENTADDR:     メールヘッダ差出人アドレス
+>     ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
+>     ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
+>     ## MIMENAME:    '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
+>     ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
+>     ## CONKANURL:   conkan_programトップURL
+>     ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
+>     ## SMTPSERVER:  メールサーバFQDN
+
+そのままでもかまいませんが、大会ごとに変えたほうが良いでしょう
+> #### 評価用特殊参加番号
+>     ## SPREGNUM1:   直接申込jump用参加番号
+>     ## SPREGNUM2:   直接申込jump&FinalMail確認用参加番号
+>     ## SPREGNUM3:   FirstMail確認用参加番号
 
 ### 評価用特殊参加番号
 

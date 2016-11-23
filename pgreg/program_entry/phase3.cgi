@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-use lib ((getpwuid($<))[7]) . '/local/lib/perl5';
 use strict;
 use warnings;
 use CGI;
@@ -93,14 +92,14 @@ try {
             $session->delete;
         }
         # エラー画面表示
-        $input_page=HTML::Template->new(filename => 'error.html');
+        $input_page=HTML::Template->new(filename => 'error-tmpl.html');
     }
 } catch {
     # システムエラー時セッションを削除
     $session->close;
     $session->delete;
     # エラー画面表示
-    $input_page = HTML::Template->new(filename => 'regerr.html');
+    $input_page = HTML::Template->new(filename => 'regerr-tmpl.html');
     $input_page->param( 'catcherr' => $_ );
 };
 

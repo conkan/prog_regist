@@ -17,6 +17,7 @@
 .content img.justifyright  {margin-left:10px;float:right;}
 .content div.justifyleft   {margin-right:10px;float:left;line-height:1.6;}
 .content div.justifyright  {margin-left:10px;float:right;line-height:1.6;}
+.content div.invalid       {border: 1px solid red;}
 
 .content table             {border-collapse:collapse;width:100%;background-color:#fff;border:2px solid #555;}
 .content table td,
@@ -49,6 +50,14 @@ textarea #cfMessage         {width:500px;height:150px;}
                             padding:3px;
                            }
 .content input.button      {background-color:#6b7881;color:#fff;padding:5px;cursor:pointer;cursor:hand;border:1px solid #ccc;}
+
+.content input.ng-invalid {
+    border: solid 1px red;
+}
+
+.content textarea.ng-invalid {
+    border: 1px solid red;
+}
 
 td.mceToolbar,
 td.mceIframeContainer,

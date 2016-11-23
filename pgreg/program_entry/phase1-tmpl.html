@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="progRegist">
+<head>
+    <TMPL_INCLUDE NAME="metahead.tmpl.txt">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+</head>
+<body><div class="wrap">
+
+<TMPL_INCLUDE NAME="header.tmpl.txt">
+
+<div class="content" ng-controller="progRegistController"><article>
+
+<TMPL_INCLUDE NAME="bodytop.tmpl.txt">
+<IMG SRC="images/Guide-p1.png" ALT="入力ガイド" WIDTH="520" HEIGHT="44"/>
+<FORM method="post" role="form" name="pgrgform" id="pgrgform" novalidate action="./phase1.cgi">
+    <input type="hidden" name="ID"      ng-model="pgrg.id">
+    <input type="hidden" name="_code"   ng-model="pgrg._code">
+    <input type="hidden" name="orders"  ng-model="pgrg.orders">
+    <input type="hidden" name="self"    ng-model="pgrg.self">
+    <h3>主催者情報</h3>
+    <dl class="register"><table border="0" align="center" cellpadding="5">
+        <tr >
+            <th align="right" <TMPL_VAR NAME=C_P1_NAME>>
+                <font color="blue">※</font>お名前：
+            </th>
+            <td >
+                <div class="rubytext">例：S田F子</div>
+                <input type="text" name="p1_name" ng-model="pgrg.p1Name"
+                  size="30" style="ime-mode: active;" ng-required="true"/>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_EMAIL>>
+                <font color="blue">※</font>メールアドレス：
+            </th>
+            <td><input type="email" name="email" ng-model="pgrg.email"
+                 size="40" style="ime-mode: inactive;" ng-required="true"/>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_REG_NUMBER>>
+                <font color="blue">※</font><TMPL_VAR NAME="CONNAME">番号：
+            </th>
+            <td>
+                <input type="text" name="reg_num" ng-model="pgrg.regNum"
+                 size="40" style="ime-mode: inactive;" ng-required="true">
+            </td>
+        </tr>
+        <tr>
+            <th align="right">
+                お電話番号：
+                <div class="rubytext">電話・携帯/PHS等について<br/>
+                どちらか一方は入力してください</div>
+            </th>
+            <td>
+                <div class="rubytext">例：03-0000-9999</div>
+                <input type="text" name="tel" ng-model="pgrg.tel"
+                 size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
+                 ng-change="checktelcel()"
+                 ng-required="pgrg.chktelcel"
+                 style="ime-mode: inactive;"/>
+            </td>
+        </tr>
+        <tr>
+            <th align="right">
+                携帯/PHS等：
+            </th>
+            <td>
+                <div class="rubytext">例：090-0000-9999</div>
+                <input type="text" name="cellphone" ng-model="pgrg.celphone"
+                 size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
+                 ng-change="checktelcel()"
+                 ng-required="pgrg.chktelcel"
+                 style="ime-mode: inactive;"/>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_TIME>>
+                <div class="rubytext">電話連絡を希望する場合</div>連絡可能な時間帯：
+            </th>
+            <td>
+                <div class="rubytext">例：平日 20時から23時まで 土日祝 朝9時から23時まで</div>
+                <input type="text" name="phonetime" ng-model="pgrg.phonetime"
+                 size="60" style="ime-mode: active;"/>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_FAX>>
+                FAX番号：
+            </th>
+            <td>
+                <div class="rubytext">例：03-0000-9999</div>
+                <input type="text" name="fax" ng-model="pgrg.fax"
+                 size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
+                 style="ime-mode: inactive;"/>
+            </td>
+        </tr>
+    </table></dl>
+    <h3>企画情報</h3> 
+    <dl class="register"><table border="0" align="center" cellpadding="5">
+        <tr>
+            <th align="right" width = "120" <TMPL_VAR NAME=C_CO_PG_NAME>>
+                <font color="blue">※</font>
+                企画名称：
+            </th>
+            <td width = "450" >
+                <div class="rubytext">例：日本SFの歴史</div>
+                <input type="text" name="pg_name" ng-model="pgrg.pgName"
+                 size="60" style="ime-mode: active;" ng-required="true">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_NAME_F>>
+                <font color="blue">※</font>
+                フリガナ：
+            </th>
+            <td>
+                <div class="rubytext">例：ニホンエスエフノレキシ</div>
+                <input type="text" name="pg_name_f" ng-model="pgrg.pgNameF"
+                 size="60" style="ime-mode: active;" ng-required="true"/>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_KIND>>
+                <font color="blue">※</font>
+                企画種別：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kind.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_PLACE>>
+                <font color="blue">※</font>
+                希望場所：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_place.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_TIME>>
+                <font color="blue">※</font>
+                希望日時：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_time.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_KOMA>>
+                <font color="blue">※</font>
+                希望コマ数：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_koma.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_NINZU>>
+                <font color="blue">※</font>
+                予想参加者：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_ninzu.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_U18>>
+                <font color="blue">※</font>
+                未成年参加可否：
+            </th>
+            <td>
+              <div ng-class="{invalid: pgrg.unsetPgu18}">
+                <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
+                 value="CX-0"/>可
+                <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
+                 value="CX-1"/>不可<br>
+              </div>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_GEN>>
+                <font color="blue">※</font>
+                一般公開可否：
+            </th>
+            <td>
+              <div ng-class="{invalid: pgrg.unsetPggen}">
+                <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
+                 value="CX-0"/>可
+                <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
+                 value="CX-1"/>不可<br>
+                <div class="ruby">
+                    大会参加者以外にも公開して良いかどうかを選択してください。
+                </div>
+              </div>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_NAIYOU>>
+                <font color="blue">※</font>
+                内容説明：
+            </th>
+            <td>
+              <div ng-class="{invalid: pgrg.unsetNaiyouK}">
+                <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
+                 value="CX-0"/>事前公開可
+                <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
+                 value="CX-1"/>事前公開不可<br>
+                <textarea name="pg_naiyou" ng-model="pgrg.pgNaiyou"
+                 cols="60" rows="5" ng-required="true" style="ime-mode: active;">
+                </textarea>
+              </div>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_KIROKU_KB>>
+                <font color="blue">※</font>
+                リアルタイム公開：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kiroku_kb.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_KIROKU_KA>>
+                <font color="blue">※</font>
+                事後公開：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kiroku_ka.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <th rowspan="5" align="right" <TMPL_VAR NAME=C_CO_PG_KIZAI>>
+                使用機材：
+            </th>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kizai_teikyo.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kizai_youbou.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kizai_motikomi.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <TMPL_INCLUDE NAME="prog_kizai_motipc.tmpl">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>その他持ち込み予定機材</b><br>
+                映像機器、パソコン以外で持ち込む予定の機材を記載して下さい。<br/>
+                電源容量の見積もりや企画場所決定の参考情報とします。<br/>
+                なお、場合によっては持ち込みをご遠慮いただく場合があることをご了承下さい。
+                <textarea name="fc_mochikomi" ng-model="pgrg.fcMochikomi"
+                 cols="60" rows="3" style="ime-mode: active;">
+                </textarea>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_ENQUETE>>
+                <font color="blue">※</font>
+                企画を立てるのは:
+            </th>
+            <td>
+              <div ng-class="{invalid: pgrg.unsetEnquete}">
+                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
+                 value="0"/>初めて
+                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
+                 value="1"/>昨年に続いて2回目
+                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
+                 value="2"/>継続して3～5回目
+                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
+                 value="3"/>ひさしぶり
+                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
+                 value="4"/>6回目以上
+              </div>
+            </td>
+        </tr>
+        <tr>
+            <th align="right" >
+                重なると困る企画：
+            </th>
+            <td>
+                具体的な企画名がわかっている場合はその名称を、<br/>
+                そうでない場合は企画内容のジャンルなどを記述して下さい。<br/>
+                <div class="commtext">
+                    出演者のバッティングに関しては、下記出演者情報で調整しますので、ここに記載されなくても構いません。
+                </div>
+                <textarea name="pg_badprog" ng-model="pgrg.pgBadprog"
+                 cols="60" rows="3" style="ime-mode: active;">
+                </textarea>
+            </td>
+        </tr>
+    </table></dl>
+    <h3>出演者情報</h3> 
+    ※出演者のうち、該当分野のプロであると実行委員会が判断した方はゲストとして案内状の発送をいたします。出演者のご職業や所属組織をお書き添えいただけると、判断しやすくなりますのでご協力をお願いします。<br/>
+    先方の都合などにより、ご希望に添えない場合もございます。<br/>
+    必ず読み仮名をご記入ください
+    <dl class="register"><table border="0" align="center" cellpadding="5">
+        <tr>
+            <th width="200px">
+                <font color="blue">※</font>
+                企画申込者自身は出演
+            </th>
+            <td colspan="2">
+              <div ng-class="{invalid: pgrg.unsetYouDo}">
+                <input type="radio" name="youdo" ng-model="pgrg.youdo"
+                 value="0"/>する
+                <input type="radio" name="youdo" ng-model="pgrg.youdo"
+                 value="1"/>しない
+              </div>
+            </td>
+        </tr>
+        <tr ng-if="pgrg.youdo=='0'">
+            <td align="right" >出演する場合</td>
+            <th align="left" >出演者氏名/フリガナ</th>
+            <th align="left" >肩書</th>
+        </tr>
+        <tr ng-if="pgrg.youdo=='0'">
+            <td align="right"></td>
+            <td valign="middle">
+                <input type="text" name="py_name" ng-model="pgrg.pyName"
+                 size="30" style="ime-mode: active;" ng-required="true"/>
+                <br/><br/>
+                <input type="text" name="py_name_f" ng-model="pgrg.pyNameF"
+                 size="30" style="ime-mode: active;" ng-required="true"/>
+            </td>
+            <td valign="middle">
+                <textarea name="py_title" ng-model="pgrg.pyTitle"
+                 cols="20" rows="2" style="ime-mode: active;" ng-required="true">
+                </textarea>
+            </td>
+        </tr>
+    </table></dl>
+    <dl class="register">
+      <table border="0" align="center" cellpadding="5">
+        <tr>
+            <th align="right" >No.</th>
+            <th align="left" >出演者氏名/フリガナ</th>
+            <th align="left" >出演者肩書</th>
+            <th align="left" >出演交渉</th>
+            <th align="left" >ゲスト申請</th>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST1>>
+            <td align="right">1</td>
+            <td valign="middle">
+                <div class="rubytext">例：カーティス・ニュートン</div>
+                <input type="text" ng-model="pgrg.ppGuest[0].name"
+                 name="pp1_name" id="pp1_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <div class="rubytext">例：カーティス・ニュートン</div>
+                <input type="text" ng-model="pgrg.ppGuest[0].namef"
+                 name="pp1_name_f" id="pp1_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <div class="rubytext">例：キャプテン・フューチャー</div>
+                <textarea ng-model="pgrg.ppGuest[0].title"
+                 name="pp1_title" id="pp1_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp1_con">
+                <input type="radio" ng-model="pgrg.ppGuest[0].con"
+                 name="pp1_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[0].con"
+                 name="pp1_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[0].con"
+                 name="pp1_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[0].con"
+                 name="pp1_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp1_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[0].grq"
+                 name="pp1_grq" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[0].grq"
+                 name="pp1_grq" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST2>>
+            <td align="right">2</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[1].name"
+                 name="pp2_name" id="pp2_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[1].namef"
+                 name="pp2_name_f" id="pp2_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[1].title"
+                 name="pp2_title" id="pp2_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp2_con">
+                <input type="radio" ng-model="pgrg.ppGuest[1].con"
+                 name="pp2_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[1].con"
+                 name="pp2_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[1].con"
+                 name="pp2_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[1].con"
+                 name="pp2_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp2_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[1].grq"
+                 name="pp2_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[1].grq"
+                 name="pp2_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST3>>
+            <td align="right">3</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[2].name"
+                 name="pp3_name" id="pp3_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[2].namef"
+                 name=pp3_name_f" id="pp3_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[2].title"
+                 name="pp3_title" id="pp3_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp3_con">
+                <input type="radio" ng-model="pgrg.ppGuest[2].con"
+                 name="pp3_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[2].con"
+                 name="pp3_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[2].con"
+                 name="pp3_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[2].con"
+                 name="pp3_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp3_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[2].grq"
+                 name="pp3_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[2].grq"
+                 name="pp3_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST4>>
+            <td align="right">4</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[3].name"
+                 name="pp4_name" id="pp4_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[3].namef"
+                 name=pp4_name_f" id="pp4_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[3].title"
+                 name="pp4_title" id="pp4_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp4_con">
+                <input type="radio" ng-model="pgrg.ppGuest[3].con"
+                 name="pp4_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[3].con"
+                 name="pp4_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[3].con"
+                 name="pp4_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[3].con"
+                 name="pp4_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp4_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[3].grq"
+                 name="pp4_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[3].grq"
+                 name="pp4_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST5>>
+            <td align="right">5</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[4].name"
+                 name="pp5_name" id="pp5_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[4].namef"
+                 name=pp5_name_f" id="pp5_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[4].title"
+                 name="pp5_title" id="pp5_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp5_con">
+                <input type="radio" ng-model="pgrg.ppGuest[4].con"
+                 name="pp5_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[4].con"
+                 name="pp5_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[4].con"
+                 name="pp5_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[4].con"
+                 name="pp5_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp5_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[4].grq"
+                 name="pp5_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[4].grq"
+                 name="pp5_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST6>>
+            <td align="right">6</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[5].name"
+                 name="pp6_name" id="pp6_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[5].namef"
+                 name=pp6_name_f" id="pp6_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[5].title"
+                 name="pp6_title" id="pp6_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp6_con">
+                <input type="radio" ng-model="pgrg.ppGuest[5].con"
+                 name="pp6_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[5].con"
+                 name="pp6_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[5].con"
+                 name="pp6_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[5].con"
+                 name="pp6_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp6_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[5].grq"
+                 name="pp6_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[5].grq"
+                 name="pp6_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST7>>
+            <td align="right">7</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[6].name"
+                 name="pp7_name" id="pp7_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[6].namef"
+                 name=pp7_name_f" id="pp7_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[6].title"
+                 name="pp7_title" id="pp7_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp7_con">
+                <input type="radio" ng-model="pgrg.ppGuest[6].con"
+                 name="pp7_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[6].con"
+                 name="pp7_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[6].con"
+                 name="pp7_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[6].con"
+                 name="pp7_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp7_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[6].grq"
+                 name="pp7_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[6].grq"
+                 name="pp7_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+        <tr <TMPL_VAR NAME=C_CO_PG_GUEST8>>
+            <td align="right">8</td>
+            <td valign="middle">
+                <input type="text" ng-model="pgrg.ppGuest[7].name"
+                 name="pp8_name" id="pp8_name"
+                 size="30" style="ime-mode: active;"/><br>
+                <input type="text" ng-model="pgrg.ppGuest[7].namef"
+                 name=pp8_name_f" id="pp8_name_f"
+                 size="30" style="ime-mode: active;"/>
+            </td>
+            <td valign="middle">
+                <textarea ng-model="pgrg.ppGuest[7].title"
+                 name="pp8_title" id="pp8_title"
+                 cols="20" rows="2" style="ime-mode: active;">
+                </textarea>
+            </td>
+            <td id="pp8_con">
+                <input type="radio" ng-model="pgrg.ppGuest[7].con"
+                 name="pp8_con" value="PP-A"/>交渉を大会に依頼<br>
+                <input type="radio" ng-model="pgrg.ppGuest[7].con"
+                 name="pp8_con" value="PP-B1"/>出演了承済<br>
+                <input type="radio" ng-model="pgrg.ppGuest[7].con"
+                 name="pp8_con" value="PP-B2"/>交渉中<br>
+                <input type="radio" ng-model="pgrg.ppGuest[7].con"
+                 name="pp8_con" value="PP-B3"/>未交渉<br>
+            </td>
+            <td id="pp8_grq">
+                <input type="radio" ng-model="pgrg.ppGuest[7].grq"
+                 name="pp8_grp" value="PP-A"/>する<br>
+                <input type="radio" ng-model="pgrg.ppGuest[7].grq"
+                 name="pp8_grp" value="PP-B"/>しない
+            </td>
+        </tr>
+      </table>
+    </dl>
+    <h3>備考欄</h3> 
+    <dl class="register"><table border="0" align="center" cellpadding="5">
+        <tr>
+            <th align="right" <TMPL_VAR NAME=C_CO_PG_COMMENT>>
+                備考：
+            </th>
+            <td>
+                その他、企画担当スタッフに伝えたい事柄<br>
+                <textarea name="fc_comment" ng-model="pgrg.fcComment"
+                 cols="80" rows="3" style="ime-mode: active;">
+                </textarea>
+            </td>
+        </tr>
+    </table></dl>
+    <div align="center">
+        <input type="submit" name="submit" id="submitBtn" value="入力内容確認"
+         ng-disabled="pgrgform.$invalid"
+         ng-click="DoSubmit()">
+    </div>
+</FORM>
+</article></div>
+
+<TMPL_INCLUDE NAME="footer.tmpl.txt">
+
+</div>
+<script type="text/javascript">
+  // ProgRegモジュールの生成
+  var ProgRegModule = angular.module('progRegist', [ ] );
+
+  // 企画登録コントローラ
+  ProgRegModule.controller( 'progRegistController',
+    [ '$scope',
+      function( $scope ) {
+        // 初期値設定
+        $scope.pgrg = {
+      //      phase1-tmpl.html hidden
+          id :              '<TMPL_VAR NAME=ID>',
+          _code :           'application',
+          orders :          '<TMPL_VAR NAME=CONNAME>企画申込み',
+          self :            'true',
+      //      phase1-tmpl.html
+          p1Name :          '<TMPL_VAR NAME=P1NAME>',
+          email :           '<TMPL_VAR NAME=EMAIL>',
+          regNum :          '<TMPL_VAR NAME=REGNUM>',
+          tel :             '',
+          celphone :        '',
+          chktelcel :       true,   // 最初は両方空白
+          phonetime :       '',
+          fax :             '',
+          pgName :          '',
+          pgNameF :         '',
+      //      prog_kind.tmpl
+          unsetKind :       true,
+          pgKind :          '',
+          pgKind2 :         '',
+      //      prog_place.tmpl
+          pgPlace :         'P-N',
+          pgPlace2 :        '',
+          pgLayout :        '0',
+          pgLayout2 :       '',
+      //      prog_time.tmpl
+          unsetTime :       true,
+          pgTime :          '',
+          pgTime2 :         '',
+      //      prog_koma.tmpl
+          unsetKoma :       true,
+          pgKoma :          '',
+          pgKoma2 :         '',
+      //      prog_ninzu.tmpl
+          unsetNinzu :      true,
+          pgNinzu :         '',
+      //      phase1-tmpl.html
+          unsetPgu18 :      true,
+          pgPgu18 :         '',
+          unsetPggen :      true,
+          pgPggen :         '',
+          unsetNakyouK :    true,
+          pgNaiyouK :       '',
+          pgNaiyou :        '',
+      //      prog_kiroku_kb.tmpl
+          unsetKirokuKb :   true,
+          pgKirokuKb :      '',
+      //      prog_kiroku_ka.tmpl
+          unsetKirokuKa :   true,
+          pgKirokuKa :      '',
+      //      prog_kizai_teikyo.tmpl
+          wbd :             false,
+          mic :             false,
+          miccnt :          '',
+          mic2 :            false,
+          miccnt2 :         '',
+          mon :             false,
+          dvd :             false,
+          syo :             false,
+      //      prog_kizai_youbou.tmpl
+          fcOther :         '',
+      //      prog_kizai_motikomi.tmpl
+          fcVid :           '1',
+          unsetAvV :        true,
+          avV :             '',
+          avVelse :         '',
+          unsetAvA :        true,
+          avA :             '',
+          avAelse :         '',
+      //      prog_kizai_motipc.tmpl
+          fcPc :            '1',
+          unsetPcV :        true,
+          pcV :             '',
+          pcVelse :         '',
+          unsetPcA :        true,
+          pcA :             '',
+          pcAelse :         '',
+          unsetLan :        true,
+          lan :             '',
+          lanelse :         '',
+          lanreason :       '',
+      //      phase1-tmpl.html
+          fcMochikomi :     '',
+          unsetEnquete :    true,
+          pgEnquete :       '',
+          pgBadprog :       '',
+          unsetYouDo :      true,
+          youdo :           '',
+          pyName :          '',
+          pyNameF :         '',
+          pyTitle :         '',
+          ppGuestNum :      0,
+          ppGuest :   [
+                          {
+                              name :  '',
+                              namef : '',
+                              title : '',
+                              con :   '',
+                              grq :   '',
+                          }
+                      ],
+          fcComment :     '',
+        };
+
+        // ng-Changeハンドラ
+        $scope.checktelcel = function() {
+            if ( ( !$scope.pgrg.tel || $scope.pgrg.tel.length == 0 ) &&
+                 ( !$scope.pgrg.celphone || $scope.pgrg.celphone.length == 0 )
+               ) {
+                $scope.pgrg.chktelcel = true;
+            } else {
+                $scope.pgrg.chktelcel = false;
+            }
+        };
+
+        // 監視設定
+        $scope.$watch('pgrg.pgKind', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKind = false; }
+        });
+        $scope.$watch('pgrg.pgTime', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetTime = false; }
+        });
+        $scope.$watch('pgrg.pgKoma', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKoma = false; }
+        });
+        $scope.$watch('pgrg.pgNinzu', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetNinzu = false; }
+        });
+        $scope.$watch('pgrg.pgPgu18', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPgu18 = false; }
+        });
+        $scope.$watch('pgrg.pgPggen', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPggen = false; }
+        });
+        $scope.$watch('pgrg.pgNaiyouK', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetNaiyouK = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKb', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKirokuKb = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKa', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKirokuKa = false; }
+        });
+        $scope.$watch('pgrg.pgavV', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetAvV = false; }
+        });
+        $scope.$watch('pgrg.pgavA', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetAvA = false; }
+        });
+        $scope.$watch('pgrg.pgpcV', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPcV = false; }
+        });
+        $scope.$watch('pgrg.pgpcA', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPcA = false; }
+        });
+        $scope.$watch('pgrg.pglan', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetLan = false; }
+        });
+        $scope.$watch('pgrg.pgEnquete', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetEnquete = false; }
+        });
+
+        $scope.$watch('pgrg.youdo', function( n, o, scope ) {
+          if ( n ) {
+            scope.pgrg.unsetYouDo = false;
+          }
+          if ( ( n == '0' ) && ( scope.pgrg.pyName == '' ) ){
+            scope.pgrg.pyName = scope.pgrg.p1Name;
+          }
+        });
+
+        // 更新実施
+        $scope.DoSubmit = function() {
+          var inFail = false;
+          // 二重クリック回避
+          angular.element('#submitBtn').attr('disabled', 'disabled');
+          // バリデーション
+          if ( inFail ) {
+            angular.element('#submitBtn').removeAttr('disabled');
+            return;
+          }
+          angular.element('#pgrgform').submit();
+        }
+      }
+    ]
+  );
+</script>
+</body>
+</html>

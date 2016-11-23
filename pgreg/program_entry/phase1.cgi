@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-use lib ((getpwuid($<))[7]) . '/local/lib/perl5';
 use strict;
 use warnings;
 use CGI;
@@ -23,7 +22,7 @@ my $fobject     = undef; # HTML FormFillパラメータ
 my $html_out    = undef; # 出力するHTML
 my $http_header = $cgi->header( -charset => 'UTF-8', );
 
-if ( $CONDEF_CONST{'DEVENV'} || # 開発環境か
+if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
     ( defined $sid && $sid eq $session->id ) ) { # 取得したセッションidが有効
     # 申し込み画面 or 確認画面表示準備
     $input_page = HTML::Template->new(filename => 'phase1-tmpl.html');
@@ -53,7 +52,7 @@ if ( $CONDEF_CONST{'DEVENV'} || # 開発環境か
 		  $session->delete;
 	}
     # エラー画面表示準備
-    $input_page = HTML::Template->new(filename => 'error.html');
+    $input_page = HTML::Template->new(filename => 'error-tmpl.html');
 	my $cookie_path = $ENV{SCRIPT_NAME};
 	$cookie_path =~ s/[^\/]+$//g ;
 	my $cookie = $cgi->cookie(  -name => "ID",     -value => "$sid",
@@ -65,17 +64,10 @@ if ( $CONDEF_CONST{'DEVENV'} || # 開発環境か
 if ( $input_page ) { # リダイレクトではない
     # HTMLテンプレート変数置き換え
     pgreglib::pg_stdHtmlTmpl_set( $input_page, $sid );
-    # CGIパラメータ置き換え
-    if ( $fobject ) {
-        my $form_out = HTML::FillInForm->new;
-		$html_out = $form_out->fill(
-			                        scalarref => \$input_page->output,
-			                        target => "mailform",
-			                        fobject => $fobject,
-		                        );
-    } else {
-        $html_out = $input_page->output;
-    }
+    $input_page->param(P1NAME   => $fobject->param('p1_name'));
+    $input_page->param(EMAIL    => $fobject->param('email'));
+    $input_page->param(REGNUM   => $fobject->param('reg_num'));
+    $html_out = $input_page->output;
     # リダイレクトでない場合のみ、HTTPヘッダを出力
 	print $http_header;
 	print "\n\n";

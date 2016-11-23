@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 # 企画申込フェーズ０
 #
-use lib ((getpwuid($<))[7]) . '/local/lib/perl5';
 use strict;
 use warnings;
 use CGI;
@@ -88,8 +87,8 @@ $session->param('dbgflgs',  \%debflg);  # デバッグフラグ
 
 # 申し込みURL生成
 my ($filename, $pathname) = fileparse($cgi->self_url);
-$pathname =~ s/^http:/https:/g      # 開発環境ではhttpのまま
-    unless $CONDEF_CONST{'DEVENV'};
+$pathname =~ s/^http:/https:/g      # CGI起動httpサーバがSSL解釈する時は書換
+    unless $CONDEF_CONST{'PROTTHRU'};   # 普通、その場合もともとhttpsだが、念為
 my $next_uri = $pathname . 'phase1.cgi?ID=' . $session->id;
 
 # テスト用(申し込みURL送信省略)
