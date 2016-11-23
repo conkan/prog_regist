@@ -17,6 +17,7 @@
 .content img.justifyright  {margin-left:10px;float:right;}
 .content div.justifyleft   {margin-right:10px;float:left;line-height:1.6;}
 .content div.justifyright  {margin-left:10px;float:right;line-height:1.6;}
+.content div.invalid       {border: 1px solid red;}
 
 .content table             {border-collapse:collapse;width:100%;background-color:#fff;border:2px solid #555;}
 .content table td,

@@ -1,11 +1,15 @@
-<input type="radio" name="pg_place" value="P-N" checked>特になし
-<input type="radio" name="pg_place" value="P-C1"       >和室
-<input type="radio" name="pg_place" value="P-H1"       >ホール<br/>
-<input type="radio" name="pg_place" value="P-X1"       >その他
-    <input type="text" name="pg_place2" size="30" style="ime-mode: active;">
+<input type="radio" ng-model="pgrg.pgPlace" name="pg_place" value="P-N"/>特になし
+<input type="radio" ng-model="pgrg.pgPlace" name="pg_place" value="P-C1"       />和室
+<input type="radio" ng-model="pgrg.pgPlace" name="pg_place" value="P-H1"       />ホール<br/>
+<input type="radio" ng-model="pgrg.pgPlace" name="pg_place" value="P-X1"       />その他
+  <span ng-if="pgrg.pgPlace=='P-X1'">
+    <input type="text" ng-model="pgrg.pgPlace2" name="pg_place2" size="30" style="ime-mode: active;" ng-required="true"/>
+  </span>
 <P/>
 希望レイアウト<br/>
-<input type="radio" name="pg_layout" value="0" checked>座布団のみ(和室)
-<input type="radio" name="pg_layout" value="1"        >寺子屋(和室に低い机)<br/>
-<input type="radio" name="pg_layout" value="9"        >その他
-    <input type="text" name="pg_layout2" size="30" style="ime-mode: active;"><br/>
+<input type="radio" ng-model="pgrg.pgLayout" name="pg_layout" value="0"/>座布団のみ(和室)
+<input type="radio" ng-model="pgrg.pgLayout" name="pg_layout" value="1"        />寺子屋(和室に低い机)<br/>
+<input type="radio" ng-model="pgrg.pgLayout" name="pg_layout" value="9"        />その他
+  <span ng-if="pgrg.pgLayout==9">
+    <input type="text" ng-model="pgLayout2" name="pg_layout2" size="30" style="ime-mode: active;" ng-required="true"/>
+  </span><br/>

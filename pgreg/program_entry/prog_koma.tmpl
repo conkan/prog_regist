@@ -1,5 +1,9 @@
-<input type="radio" name="pg_koma" value="TK-1">１コマ(90分+準備30分)
-<input type="radio" name="pg_koma" value="TK-2">２コマ(210分+準備30分)
-<input type="radio" name="pg_koma" value="TK-A">終日<br/>
-<input type="radio" name="pg_koma" value="TK-X1">その他
-    <input type="text" name="pg_koma2" size="30" style="ime-mode: active;">
+<div ng-class="{invalid: pgrg.unsetKoma}">
+<input type="radio" ng-model="pgrg.pgKoma" name="pg_koma" value="TK-1"/>１コマ(90分+準備30分)
+<input type="radio" ng-model="pgrg.pgKoma" name="pg_koma" value="TK-2"/>２コマ(210分+準備30分)
+<input type="radio" ng-model="pgrg.pgKoma" name="pg_koma" value="TK-A"/>終日<br/>
+<input type="radio" ng-model="pgrg.pgKoma" name="pg_koma" value="TK-X1"/>その他
+  <span ng-if="pgrg.pgKoma=='TK-X1'">
+    <input type="text" ng-model="pgrg.pgKoma2" name="pg_koma2" size="30" style="ime-mode: active;" ng-required="true"/>
+  </span>
+</div>

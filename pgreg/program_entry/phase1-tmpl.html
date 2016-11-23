@@ -47,7 +47,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_TEL>>
+            <th align="right">
                 お電話番号：
                 <div class="rubytext">電話・携帯/PHS等について<br/>
                 どちらか一方は入力してください</div>
@@ -55,18 +55,22 @@
             <td>
                 <div class="rubytext">例：03-0000-9999</div>
                 <input type="text" name="tel" ng-model="pgrg.tel"
-                 size="30" ng-pattarn="/^[0-9]+[0-9\-]+[0-9]$/"
+                 size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
+                 ng-change="checktelcel()"
+                 ng-required="pgrg.chktelcel"
                  style="ime-mode: inactive;"/>
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_HP>>
+            <th align="right">
                 携帯/PHS等：
             </th>
             <td>
                 <div class="rubytext">例：090-0000-9999</div>
                 <input type="text" name="cellphone" ng-model="pgrg.celphone"
-                 size="30" ng-pattarn="/^[0-9]+[0-9\-]+[0-9]$/"
+                 size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
+                 ng-change="checktelcel()"
+                 ng-required="pgrg.chktelcel"
                  style="ime-mode: inactive;"/>
             </td>
         </tr>
@@ -87,7 +91,7 @@
             <td>
                 <div class="rubytext">例：03-0000-9999</div>
                 <input type="text" name="fax" ng-model="pgrg.fax"
-                 size="30" ng-pattarn="/^[0-9]+[0-9\-]+[0-9]$/"
+                 size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
                  style="ime-mode: inactive;"/>
             </td>
         </tr>
@@ -167,10 +171,12 @@
                 未成年参加可否：
             </th>
             <td>
+              <div ng-class="{invalid: pgrg.unsetPgu18}">
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
                  value="CX-1"/>不可<br>
+              </div>
             </td>
         </tr>
         <tr>
@@ -179,6 +185,7 @@
                 一般公開可否：
             </th>
             <td>
+              <div ng-class="{invalid: pgrg.unsetPggen}">
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
@@ -186,6 +193,7 @@
                 <div class="ruby">
                     大会参加者以外にも公開して良いかどうかを選択してください。
                 </div>
+              </div>
             </td>
         </tr>
         <tr>
@@ -194,13 +202,15 @@
                 内容説明：
             </th>
             <td>
+              <div ng-class="{invalid: pgrg.unsetNaiyouK}">
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
                  value="CX-0"/>事前公開可
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
                  value="CX-1"/>事前公開不可<br>
                 <textarea name="pg_naiyou" ng-model="pgrg.pgNaiyou"
-                 cols="60" rows="5" ng-requied="true" style="ime-mode: active;">
+                 cols="60" rows="5" ng-required="true" style="ime-mode: active;">
                 </textarea>
+              </div>
             </td>
         </tr>
         <tr>
@@ -261,6 +271,7 @@
                 企画を立てるのは:
             </th>
             <td>
+              <div ng-class="{invalid: pgrg.unsetEnquete}">
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
                  value="0"/>初めて
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
@@ -271,6 +282,7 @@
                  value="3"/>ひさしぶり
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
                  value="4"/>6回目以上
+              </div>
             </td>
         </tr>
         <tr>
@@ -295,23 +307,25 @@
     必ず読み仮名をご記入ください
     <dl class="register"><table border="0" align="center" cellpadding="5">
         <tr>
-            <th width="200px">>
+            <th width="200px">
                 <font color="blue">※</font>
                 企画申込者自身は出演
             </th>
             <td colspan="2">
+              <div ng-class="{invalid: pgrg.unsetYouDo}">
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
                  value="0"/>する
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
                  value="1"/>しない
+              </div>
             </td>
         </tr>
-        <tr ng-if="pgrg.youdo == '0'">
+        <tr ng-if="pgrg.youdo=='0'">
             <td align="right" >出演する場合</td>
             <th align="left" >出演者氏名/フリガナ</th>
             <th align="left" >肩書</th>
         </tr>
-        <tr ng-if="pgrg.youdo == '0'">
+        <tr ng-if="pgrg.youdo=='0'">
             <td align="right"></td>
             <td valign="middle">
                 <input type="text" name="py_name" ng-model="pgrg.pyName"
@@ -640,42 +654,98 @@
       function( $scope ) {
         // 初期値設定
         $scope.pgrg = {
-          id :        '<TMPL_VAR NAME=ID>',
-          _code :     'application',
-          orders :    '<TMPL_VAR NAME=CONNAME>企画申込み',
-          self :      'true',
-          p1Name :    '<TMPL_VAR NAME=P1NAME>',
-          email :     '<TMPL_VAR NAME=EMAIL>',
-          regNum :    '<TMPL_VAR NAME=REGNUM>',
-          tel :       '',
-          celphone :  '',
-          phonetime : '',
-          fax :       '',
-          pgName :    '',
-          pgNameF :   '',
-      //                prog_kind.tmpl
-      //                prog_place.tmpl
-      //                prog_time.tmpl
-      //                prog_koma.tmpl
-      //                prog_ninzu.tmpl
-          pgPgu18 :   'CX-0',
-          pgPggen :   'CX-0',
-          pgNaiyouK : 'CX-0',
-          pgNaiyou :  '',
-      //                prog_kiroku_kb.tmpl
-      //                prog_kiroku_ka.tmpl
-      //                prog_kizai_teikyo.tmpl
-      //                prog_kizai_youbou.tmpl
-      //                prog_kizai_motikomi.tmpl
-      //                prog_kizai_motipc.tmpl
-          fcMochikomi :   '',
-          pgEnquete :     '0',
-          pgBadprog :     '',
-          youdo :         '0',
-          pyName :        '',
-          pyNameF :       '',
-          pyTitle :       '',
-          ppGuestNum :     0,
+      //      phase1-tmpl.html hidden
+          id :              '<TMPL_VAR NAME=ID>',
+          _code :           'application',
+          orders :          '<TMPL_VAR NAME=CONNAME>企画申込み',
+          self :            'true',
+      //      phase1-tmpl.html
+          p1Name :          '<TMPL_VAR NAME=P1NAME>',
+          email :           '<TMPL_VAR NAME=EMAIL>',
+          regNum :          '<TMPL_VAR NAME=REGNUM>',
+          tel :             '',
+          celphone :        '',
+          chktelcel :       true,   // 最初は両方空白
+          phonetime :       '',
+          fax :             '',
+          pgName :          '',
+          pgNameF :         '',
+      //      prog_kind.tmpl
+          unsetKind :       true,
+          pgKind :          '',
+          pgKind2 :         '',
+      //      prog_place.tmpl
+          pgPlace :         'P-N',
+          pgPlace2 :        '',
+          pgLayout :        '0',
+          pgLayout2 :       '',
+      //      prog_time.tmpl
+          unsetTime :       true,
+          pgTime :          '',
+          pgTime2 :         '',
+      //      prog_koma.tmpl
+          unsetKoma :       true,
+          pgKoma :          '',
+          pgKoma2 :         '',
+      //      prog_ninzu.tmpl
+          unsetNinzu :      true,
+          pgNinzu :         '',
+      //      phase1-tmpl.html
+          unsetPgu18 :      true,
+          pgPgu18 :         '',
+          unsetPggen :      true,
+          pgPggen :         '',
+          unsetNakyouK :    true,
+          pgNaiyouK :       '',
+          pgNaiyou :        '',
+      //      prog_kiroku_kb.tmpl
+          unsetKirokuKb :   true,
+          pgKirokuKb :      '',
+      //      prog_kiroku_ka.tmpl
+          unsetKirokuKa :   true,
+          pgKirokuKa :      '',
+      //      prog_kizai_teikyo.tmpl
+          wbd :             false,
+          mic :             false,
+          miccnt :          '',
+          mic2 :            false,
+          miccnt2 :         '',
+          mon :             false,
+          dvd :             false,
+          syo :             false,
+      //      prog_kizai_youbou.tmpl
+          fcOther :         '',
+      //      prog_kizai_motikomi.tmpl
+          fcVid :           '1',
+          unsetAvV :        true,
+          avV :             '',
+          avVelse :         '',
+          unsetAvA :        true,
+          avA :             '',
+          avAelse :         '',
+      //      prog_kizai_motipc.tmpl
+          fcPc :            '1',
+          unsetPcV :        true,
+          pcV :             '',
+          pcVelse :         '',
+          unsetPcA :        true,
+          pcA :             '',
+          pcAelse :         '',
+          unsetLan :        true,
+          lan :             '',
+          lanelse :         '',
+          lanreason :       '',
+      //      phase1-tmpl.html
+          fcMochikomi :     '',
+          unsetEnquete :    true,
+          pgEnquete :       '',
+          pgBadprog :       '',
+          unsetYouDo :      true,
+          youdo :           '',
+          pyName :          '',
+          pyNameF :         '',
+          pyTitle :         '',
+          ppGuestNum :      0,
           ppGuest :   [
                           {
                               name :  '',
@@ -688,12 +758,70 @@
           fcComment :     '',
         };
 
-        // 監視設定
-        $scope.$watch('pgrg.youdo', function( n, o, scope ) {
-          if ( n != o ) {
-            if ( ( n == '0' ) && ( scope.pgrg.pyName == '' ) ){
-              scope.pgrg.pyName = scope.pgrg.p1Name;
+        // ng-Changeハンドラ
+        $scope.checktelcel = function() {
+            if ( ( !$scope.pgrg.tel || $scope.pgrg.tel.length == 0 ) &&
+                 ( !$scope.pgrg.celphone || $scope.pgrg.celphone.length == 0 )
+               ) {
+                $scope.pgrg.chktelcel = true;
+            } else {
+                $scope.pgrg.chktelcel = false;
             }
+        };
+
+        // 監視設定
+        $scope.$watch('pgrg.pgKind', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKind = false; }
+        });
+        $scope.$watch('pgrg.pgTime', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetTime = false; }
+        });
+        $scope.$watch('pgrg.pgKoma', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKoma = false; }
+        });
+        $scope.$watch('pgrg.pgNinzu', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetNinzu = false; }
+        });
+        $scope.$watch('pgrg.pgPgu18', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPgu18 = false; }
+        });
+        $scope.$watch('pgrg.pgPggen', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPggen = false; }
+        });
+        $scope.$watch('pgrg.pgNaiyouK', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetNaiyouK = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKb', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKirokuKb = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKa', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetKirokuKa = false; }
+        });
+        $scope.$watch('pgrg.pgavV', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetAvV = false; }
+        });
+        $scope.$watch('pgrg.pgavA', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetAvA = false; }
+        });
+        $scope.$watch('pgrg.pgpcV', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPcV = false; }
+        });
+        $scope.$watch('pgrg.pgpcA', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetPcA = false; }
+        });
+        $scope.$watch('pgrg.pglan', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetLan = false; }
+        });
+        $scope.$watch('pgrg.pgEnquete', function( n, o, scope ) {
+            if ( n ) { scope.pgrg.unsetEnquete = false; }
+        });
+
+        $scope.$watch('pgrg.youdo', function( n, o, scope ) {
+          if ( n ) {
+            scope.pgrg.unsetYouDo = false;
+          }
+          if ( ( n == '0' ) && ( scope.pgrg.pyName == '' ) ){
+            scope.pgrg.pyName = scope.pgrg.p1Name;
           }
         });
 
