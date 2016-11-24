@@ -86,9 +86,8 @@ $session->param('phase','1-1');         # フェーズ番号
 $session->param('dbgflgs',  \%debflg);  # デバッグフラグ
 
 # 申し込みURL生成
-my ($filename, $pathname) = fileparse($cgi->self_url);
-$pathname =~ s/^http:/https:/g      # CGI起動httpサーバがSSL解釈する時は書換
-    unless $CONDEF_CONST{'PROTTHRU'};   # 普通、その場合もともとhttpsだが、念為
+# referer()を元に生成するので、プロトコルの変更は不要
+my ($filename, $pathname) = fileparse($cgi->referer());
 my $next_uri = $pathname . 'phase1.cgi?ID=' . $session->id;
 
 # テスト用(申し込みURL送信省略)
