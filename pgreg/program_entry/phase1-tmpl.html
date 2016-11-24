@@ -13,14 +13,14 @@
 <TMPL_INCLUDE NAME="bodytop.tmpl.txt">
 <IMG SRC="images/Guide-p1.png" ALT="入力ガイド" WIDTH="520" HEIGHT="44"/>
 <FORM method="post" role="form" name="pgrgform" id="pgrgform" novalidate action="./phase1.cgi">
-    <input type="hidden" name="ID"      ng-model="pgrg.id">
-    <input type="hidden" name="_code"   ng-model="pgrg._code">
-    <input type="hidden" name="orders"  ng-model="pgrg.orders">
-    <input type="hidden" name="self"    ng-model="pgrg.self">
+    <input type="hidden" name="ID"      value="<TMPL_VAR NAME=ID>">
+    <input type="hidden" name="_code"   value="application">
+    <input type="hidden" name="orders"  value="<TMPL_VAR NAME=CONNAME>企画申し込み">
+    <input type="hidden" name="self"    value="true">
     <h3>主催者情報</h3>
     <dl class="register"><table border="0" align="center" cellpadding="5">
         <tr >
-            <th align="right" <TMPL_VAR NAME=C_P1_NAME>>
+            <th align="right">
                 <font color="blue">※</font>お名前：
             </th>
             <td >
@@ -30,7 +30,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_EMAIL>>
+            <th align="right">
                 <font color="blue">※</font>メールアドレス：
             </th>
             <td><input type="email" name="email" ng-model="pgrg.email"
@@ -38,7 +38,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_REG_NUMBER>>
+            <th align="right">
                 <font color="blue">※</font><TMPL_VAR NAME="CONNAME">番号：
             </th>
             <td>
@@ -57,7 +57,7 @@
                 <input type="text" name="tel" ng-model="pgrg.tel"
                  size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
                  ng-change="checktelcel()"
-                 ng-required="pgrg.chktelcel"
+                 ng-required="reqchk.chktelcel"
                  style="ime-mode: inactive;"/>
             </td>
         </tr>
@@ -70,12 +70,12 @@
                 <input type="text" name="cellphone" ng-model="pgrg.celphone"
                  size="30" ng-pattern="/^[0-9]+[0-9\-]+[0-9]$/"
                  ng-change="checktelcel()"
-                 ng-required="pgrg.chktelcel"
+                 ng-required="reqchk.chktelcel"
                  style="ime-mode: inactive;"/>
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_TIME>>
+            <th align="right">
                 <div class="rubytext">電話連絡を希望する場合</div>連絡可能な時間帯：
             </th>
             <td>
@@ -85,7 +85,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_FAX>>
+            <th align="right">
                 FAX番号：
             </th>
             <td>
@@ -99,7 +99,7 @@
     <h3>企画情報</h3> 
     <dl class="register"><table border="0" align="center" cellpadding="5">
         <tr>
-            <th align="right" width = "120" <TMPL_VAR NAME=C_CO_PG_NAME>>
+            <th align="right" width = "120">
                 <font color="blue">※</font>
                 企画名称：
             </th>
@@ -110,7 +110,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_NAME_F>>
+            <th align="right">
                 <font color="blue">※</font>
                 フリガナ：
             </th>
@@ -121,7 +121,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_KIND>>
+            <th align="right">
                 <font color="blue">※</font>
                 企画種別：
             </th>
@@ -130,7 +130,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_PLACE>>
+            <th align="right">
                 <font color="blue">※</font>
                 希望場所：
             </th>
@@ -139,7 +139,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_TIME>>
+            <th align="right">
                 <font color="blue">※</font>
                 希望日時：
             </th>
@@ -148,7 +148,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_KOMA>>
+            <th align="right">
                 <font color="blue">※</font>
                 希望コマ数：
             </th>
@@ -157,7 +157,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_NINZU>>
+            <th align="right">
                 <font color="blue">※</font>
                 予想参加者：
             </th>
@@ -166,12 +166,12 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_U18>>
+            <th align="right">
                 <font color="blue">※</font>
                 未成年参加可否：
             </th>
             <td>
-              <div ng-class="{invalid: pgrg.unsetPgu18}">
+              <div ng-class="{invalid: reqchk.unsetPgu18}">
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
@@ -180,12 +180,12 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_GEN>>
+            <th align="right">
                 <font color="blue">※</font>
                 一般公開可否：
             </th>
             <td>
-              <div ng-class="{invalid: pgrg.unsetPggen}">
+              <div ng-class="{invalid: reqchk.unsetPggen}">
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
@@ -197,24 +197,24 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_NAIYOU>>
+            <th align="right">
                 <font color="blue">※</font>
                 内容説明：
             </th>
             <td>
-              <div ng-class="{invalid: pgrg.unsetNaiyouK}">
+              <div ng-class="{invalid: reqchk.unsetNaiyouK}">
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
                  value="CX-0"/>事前公開可
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
                  value="CX-1"/>事前公開不可<br>
-                <textarea name="pg_naiyou" ng-model="pgrg.pgNaiyou"
-                 cols="60" rows="5" ng-required="true" style="ime-mode: active;">
-                </textarea>
               </div>
+              <textarea name="pg_naiyou" ng-model="pgrg.pgNaiyou"
+               cols="60" rows="5" ng-required="true" style="ime-mode: active;">
+              </textarea>
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_KIROKU_KB>>
+            <th align="right">
                 <font color="blue">※</font>
                 リアルタイム公開：
             </th>
@@ -223,7 +223,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_KIROKU_KA>>
+            <th align="right">
                 <font color="blue">※</font>
                 事後公開：
             </th>
@@ -232,7 +232,7 @@
             </td>
         </tr>
         <tr>
-            <th rowspan="5" align="right" <TMPL_VAR NAME=C_CO_PG_KIZAI>>
+            <th rowspan="5" align="right">
                 使用機材：
             </th>
             <td>
@@ -266,12 +266,12 @@
             </td>
         </tr>
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_ENQUETE>>
+            <th align="right">
                 <font color="blue">※</font>
                 企画を立てるのは:
             </th>
             <td>
-              <div ng-class="{invalid: pgrg.unsetEnquete}">
+              <div ng-class="{invalid: reqchk.unsetEnquete}">
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
                  value="0"/>初めて
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
@@ -312,7 +312,7 @@
                 企画申込者自身は出演
             </th>
             <td colspan="2">
-              <div ng-class="{invalid: pgrg.unsetYouDo}">
+              <div ng-class="{invalid: reqchk.unsetYouDo}">
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
                  value="0"/>する
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
@@ -350,7 +350,7 @@
             <th align="left" >出演交渉</th>
             <th align="left" >ゲスト申請</th>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST1>>
+        <tr>
             <td align="right">1</td>
             <td valign="middle">
                 <div class="rubytext">例：カーティス・ニュートン</div>
@@ -386,7 +386,7 @@
                  name="pp1_grq" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST2>>
+        <tr>
             <td align="right">2</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[1].name"
@@ -419,7 +419,7 @@
                  name="pp2_grp" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST3>>
+        <tr>
             <td align="right">3</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[2].name"
@@ -452,7 +452,7 @@
                  name="pp3_grp" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST4>>
+        <tr>
             <td align="right">4</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[3].name"
@@ -485,7 +485,7 @@
                  name="pp4_grp" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST5>>
+        <tr>
             <td align="right">5</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[4].name"
@@ -518,7 +518,7 @@
                  name="pp5_grp" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST6>>
+        <tr>
             <td align="right">6</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[5].name"
@@ -551,7 +551,7 @@
                  name="pp6_grp" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST7>>
+        <tr>
             <td align="right">7</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[6].name"
@@ -584,7 +584,7 @@
                  name="pp7_grp" value="PP-B"/>しない
             </td>
         </tr>
-        <tr <TMPL_VAR NAME=C_CO_PG_GUEST8>>
+        <tr>
             <td align="right">8</td>
             <td valign="middle">
                 <input type="text" ng-model="pgrg.ppGuest[7].name"
@@ -622,8 +622,8 @@
     <h3>備考欄</h3> 
     <dl class="register"><table border="0" align="center" cellpadding="5">
         <tr>
-            <th align="right" <TMPL_VAR NAME=C_CO_PG_COMMENT>>
-                備考：
+            <th align="right">
+              備考：
             </th>
             <td>
                 その他、企画担当スタッフに伝えたい事柄<br>
@@ -652,178 +652,191 @@
   ProgRegModule.controller( 'progRegistController',
     [ '$scope',
       function( $scope ) {
-        // 初期値設定
-        $scope.pgrg = {
-      //      phase1-tmpl.html hidden
-          id :              '<TMPL_VAR NAME=ID>',
-          _code :           'application',
-          orders :          '<TMPL_VAR NAME=CONNAME>企画申込み',
-          self :            'true',
-      //      phase1-tmpl.html
-          p1Name :          '<TMPL_VAR NAME=P1NAME>',
-          email :           '<TMPL_VAR NAME=EMAIL>',
-          regNum :          '<TMPL_VAR NAME=REGNUM>',
-          tel :             '',
-          celphone :        '',
-          chktelcel :       true,   // 最初は両方空白
-          phonetime :       '',
-          fax :             '',
-          pgName :          '',
-          pgNameF :         '',
-      //      prog_kind.tmpl
-          unsetKind :       true,
-          pgKind :          '',
-          pgKind2 :         '',
-      //      prog_place.tmpl
-          pgPlace :         'P-N',
-          pgPlace2 :        '',
-          pgLayout :        '0',
-          pgLayout2 :       '',
-      //      prog_time.tmpl
-          unsetTime :       true,
-          pgTime :          '',
-          pgTime2 :         '',
-      //      prog_koma.tmpl
-          unsetKoma :       true,
-          pgKoma :          '',
-          pgKoma2 :         '',
-      //      prog_ninzu.tmpl
-          unsetNinzu :      true,
-          pgNinzu :         '',
-      //      phase1-tmpl.html
-          unsetPgu18 :      true,
-          pgPgu18 :         '',
-          unsetPggen :      true,
-          pgPggen :         '',
-          unsetNakyouK :    true,
-          pgNaiyouK :       '',
-          pgNaiyou :        '',
-      //      prog_kiroku_kb.tmpl
-          unsetKirokuKb :   true,
-          pgKirokuKb :      '',
-      //      prog_kiroku_ka.tmpl
-          unsetKirokuKa :   true,
-          pgKirokuKa :      '',
-      //      prog_kizai_teikyo.tmpl
-          wbd :             false,
-          mic :             false,
-          miccnt :          '',
-          mic2 :            false,
-          miccnt2 :         '',
-          mon :             false,
-          dvd :             false,
-          syo :             false,
-      //      prog_kizai_youbou.tmpl
-          fcOther :         '',
-      //      prog_kizai_motikomi.tmpl
-          fcVid :           '1',
-          unsetAvV :        true,
-          avV :             '',
-          avVelse :         '',
-          unsetAvA :        true,
-          avA :             '',
-          avAelse :         '',
-      //      prog_kizai_motipc.tmpl
-          fcPc :            '1',
-          unsetPcV :        true,
-          pcV :             '',
-          pcVelse :         '',
-          unsetPcA :        true,
-          pcA :             '',
-          pcAelse :         '',
-          unsetLan :        true,
-          lan :             '',
-          lanelse :         '',
-          lanreason :       '',
-      //      phase1-tmpl.html
-          fcMochikomi :     '',
-          unsetEnquete :    true,
-          pgEnquete :       '',
-          pgBadprog :       '',
-          unsetYouDo :      true,
-          youdo :           '',
-          pyName :          '',
-          pyNameF :         '',
-          pyTitle :         '',
-          ppGuestNum :      0,
-          ppGuest :   [
-                          {
-                              name :  '',
-                              namef : '',
-                              title : '',
-                              con :   '',
-                              grq :   '',
-                          }
-                      ],
-          fcComment :     '',
-        };
-
         // ng-Changeハンドラ
         $scope.checktelcel = function() {
             if ( ( !$scope.pgrg.tel || $scope.pgrg.tel.length == 0 ) &&
                  ( !$scope.pgrg.celphone || $scope.pgrg.celphone.length == 0 )
                ) {
-                $scope.pgrg.chktelcel = true;
+                $scope.reqchk.chktelcel = true;
             } else {
-                $scope.pgrg.chktelcel = false;
+                $scope.reqchk.chktelcel = false;
             }
         };
 
         // 監視設定
         $scope.$watch('pgrg.pgKind', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetKind = false; }
+            if ( n ) { scope.reqchk.unsetKind = false; }
+        });
+        $scope.$watch('pgrg.pgPlace', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPlace = false; }
+        });
+        $scope.$watch('pgrg.pgLayout', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetLayout = false; }
         });
         $scope.$watch('pgrg.pgTime', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetTime = false; }
+            if ( n ) { scope.reqchk.unsetTime = false; }
         });
         $scope.$watch('pgrg.pgKoma', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetKoma = false; }
+            if ( n ) { scope.reqchk.unsetKoma = false; }
         });
         $scope.$watch('pgrg.pgNinzu', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetNinzu = false; }
+            if ( n ) { scope.reqchk.unsetNinzu = false; }
         });
         $scope.$watch('pgrg.pgPgu18', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetPgu18 = false; }
+            if ( n ) { scope.reqchk.unsetPgu18 = false; }
         });
         $scope.$watch('pgrg.pgPggen', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetPggen = false; }
+            if ( n ) { scope.reqchk.unsetPggen = false; }
         });
         $scope.$watch('pgrg.pgNaiyouK', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetNaiyouK = false; }
+            if ( n ) { scope.reqchk.unsetNaiyouK = false; }
         });
         $scope.$watch('pgrg.pgKirokuKb', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetKirokuKb = false; }
+            if ( n ) { scope.reqchk.unsetKirokuKb = false; }
         });
         $scope.$watch('pgrg.pgKirokuKa', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetKirokuKa = false; }
+            if ( n ) { scope.reqchk.unsetKirokuKa = false; }
         });
         $scope.$watch('pgrg.pgavV', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetAvV = false; }
+            if ( n ) { scope.reqchk.unsetAvV = false; }
         });
         $scope.$watch('pgrg.pgavA', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetAvA = false; }
+            if ( n ) { scope.reqchk.unsetAvA = false; }
         });
         $scope.$watch('pgrg.pgpcV', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetPcV = false; }
+            if ( n ) { scope.reqchk.unsetPcV = false; }
         });
         $scope.$watch('pgrg.pgpcA', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetPcA = false; }
+            if ( n ) { scope.reqchk.unsetPcA = false; }
         });
         $scope.$watch('pgrg.pglan', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetLan = false; }
+            if ( n ) { scope.reqchk.unsetLan = false; }
         });
         $scope.$watch('pgrg.pgEnquete', function( n, o, scope ) {
-            if ( n ) { scope.pgrg.unsetEnquete = false; }
+            if ( n ) { scope.reqchk.unsetEnquete = false; }
         });
 
         $scope.$watch('pgrg.youdo', function( n, o, scope ) {
           if ( n ) {
-            scope.pgrg.unsetYouDo = false;
+            scope.reqchk.unsetYouDo = false;
           }
           if ( ( n == '0' ) && ( scope.pgrg.pyName == '' ) ){
             scope.pgrg.pyName = scope.pgrg.p1Name;
           }
         });
+
+        // パラメータ定義
+        $scope.pgrg = {
+      //      phase1-tmpl.html
+          p1Name :          '<TMPL_VAR NAME=p1_name>',
+          email :           '<TMPL_VAR NAME=email>',
+          regNum :          '<TMPL_VAR NAME=reg_num>',
+          tel :             '<TMPL_VAR NAME=tel>',
+          fax :             '<TMPL_VAR NAME=fax>',
+          celphone :        '<TMPL_VAR NAME=cellphone>',
+          phonetime :       '<TMPL_VAR NAME=phonetime>',
+          pgName :          '<TMPL_VAR NAME=pg_name>',
+          pgNameF :         '<TMPL_VAR NAME=pg_name_f>',
+      //      prog_kind.tmpl
+          pgKind :          '<TMPL_VAR NAME=pg_kind>',
+          pgKind2 :         '<TMPL_VAR NAME=pg_kind2>',
+      //      prog_place.tmpl
+          pgPlace :         '<TMPL_VAR NAME=pg_place>',
+          pgPlace2 :        '<TMPL_VAR NAME=pg_place2>',
+          pgLayout :        '<TMPL_VAR NAME=pg_layout>',
+          pgLayout2 :       '<TMPL_VAR NAME=pg_layout2>',
+      //      prog_time.tmpl
+          pgTime :          '<TMPL_VAR NAME=pg_time>',
+          pgTime2 :         '<TMPL_VAR NAME=pg_time2>',
+      //      prog_koma.tmpl
+          pgKoma :          '<TMPL_VAR NAME=pg_koma>',
+          pgKoma2 :         '<TMPL_VAR NAME=pg_koma2>',
+      //      prog_ninzu.tmpl
+          pgNinzu :         '<TMPL_VAR NAME=pg_ninzu>',
+      //      phase1-tmpl.html
+          pgPgu18 :         '<TMPL_VAR NAME=pg_pgu18>',
+          pgPggen :         '<TMPL_VAR NAME=pg_pggen>',
+          pgNaiyouK :       '<TMPL_VAR NAME=pg_naiyou_k>',
+          pgNaiyou :        '<TMPL_VAR NAME=pg_naiyou>',
+      //      prog_kiroku_kb.tmpl
+          pgKirokuKb :      '<TMPL_VAR NAME=pg_kiroku_kb>',
+      //      prog_kiroku_ka.tmpl
+          pgKirokuKa :      '<TMPL_VAR NAME=pg_kiroku_ka>',
+      //      prog_kizai_teikyo.tmpl
+          wbd :             '<TMPL_VAR NAME=wbd>',
+          mic :             '<TMPL_VAR NAME=mic>',
+          miccnt :          '<TMPL_VAR NAME=miccnt>',
+          mic2 :            '<TMPL_VAR NAME=mic2>',
+          miccnt2 :         '<TMPL_VAR NAME=mic2cnt>',
+          mon :             '<TMPL_VAR NAME=mon>',
+          dvd :             '<TMPL_VAR NAME=dvd>',
+          syo :             '<TMPL_VAR NAME=syo>',
+      //      prog_kizai_youbou.tmpl
+          fcOther :         '<TMPL_VAR NAME=fc_other_naiyou>',
+      //      prog_kizai_motikomi.tmpl
+          fcVid :           '<TMPL_VAR NAME=fc_vid>',
+          avV :             '<TMPL_VAR NAME=av-v>',
+          avVelse :         '<TMPL_VAR NAME=av-v_velse>',
+          avA :             '<TMPL_VAR NAME=av-a>',
+          avAelse :         '<TMPL_VAR NAME=av-a_velse>',
+      //      prog_kizai_motipc.tmpl
+          fcPc :            '<TMPL_VAR NAME=fc_pc>',
+          pcV :             '<TMPL_VAR NAME=pc-v>',
+          pcVelse :         '<TMPL_VAR NAME=pc-v_velse>',
+          pcA :             '<TMPL_VAR NAME=pc-a>',
+          pcAelse :         '<TMPL_VAR NAME=pc-a_velse>',
+          lan :             '<TMPL_VAR NAME=lan>',
+          lanelse :         '<TMPL_VAR NAME=pc-l_velse>',
+          lanreason :       '<TMPL_VAR NAME=lanreason>',
+      //      phase1-tmpl.html
+          fcMochikomi :     '<TMPL_VAR NAME=fc_mochikomi>',
+          pgEnquete :       '<TMPL_VAR NAME=pg_enquete>',
+          pgBadprog :       '<TMPL_VAR NAME=pg_badprog>',
+          youdo :           '<TMPL_VAR NAME=youdo>',
+          pyName :          '<TMPL_VAR NAME=py_name>',
+          pyNameF :         '<TMPL_VAR NAME=py_name_f>',
+          pyTitle :         '<TMPL_VAR NAME=py_title>',
+          ppGuestNum :      0,
+          ppGuest :   [
+                          {
+                            name :  '',
+                            namef : '',
+                            title : '',
+                            con :   '',
+                            grq :   '',
+                          }
+                      ],
+          fcComment :     '<TMPL_VAR NAME=fc_comment>',
+        };
+        // 必須チェックフラグ(radio)定義
+        $scope.reqchk = {
+          chktelcel :       true,
+          unsetKind :       true,
+          unsetPlace :      true,
+          unsetLayout :     true,
+          unsetTime :       true,
+          unsetKoma :       true,
+          unsetNinzu :      true,
+          unsetPgu18 :      true,
+          unsetPggen :      true,
+          unsetNaiyouK :    true,
+          unsetKirokuKb :   true,
+          unsetKirokuKa :   true,
+          unsetAvV :        true,
+          unsetAvA :        true,
+          unsetPcV :        true,
+          unsetPcA :        true,
+          unsetLan :        true,
+          unsetEnquete :    true,
+          unsetYouDo :      true,
+        };
+
+        // 初期値設定
+        (function() {
+         $scope.checktelcel();
+         if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
+         if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
+        })();
 
         // 更新実施
         $scope.DoSubmit = function() {

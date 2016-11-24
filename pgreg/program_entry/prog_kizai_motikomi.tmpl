@@ -14,7 +14,7 @@
   <div class="indent">
     <div id="av-v" class="spacing">
       <b>映像接続形式</b><br/>
-      <div ng-class="{invalid: pgrg.unsetAvV}">
+      <div ng-class="{invalid: reqchk.unsetAvV}">
         <input type="radio" ng-model="pgrg.avV" name="av-v" value="hdmi"/>HDMI
         <input type="radio" ng-model="pgrg.avV" name="av-v" value="svideo"/>S-Video
         <input type="radio" ng-model="pgrg.avV" name="av-v" value="rca"/>RCAコンポジット(黄)<br/>
@@ -26,7 +26,7 @@
     </div>
     <div id="av-a" class="spacing">
       <b>音声接続形式</b>
-      <div ng-class="{invalid: pgrg.unsetAvA}">
+      <div ng-class="{invalid: reqchk.unsetAvA}">
         <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
         <input type="radio" ng-model="pgrg.avA" name="av-a" value="none"/>不要
         <input type="radio" ng-model="pgrg.avA" name="av-a" value="tsr"/>ステレオミニ(3.5mmTSR)

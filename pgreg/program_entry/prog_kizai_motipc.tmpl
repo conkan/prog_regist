@@ -14,7 +14,7 @@
     <div class="indent">
       <div id="pc-v" class="spacing">
         <b>映像接続形式</b><br/>
-        <div ng-class="{invalid: pgrg.unsetPcV}">
+        <div ng-class="{invalid: reqchk.unsetPcV}">
         <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="none"/>接続しない
         <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="hdmi"/>HDMI
         <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="vga"/>D-Sub15(VGA)<br/>
@@ -26,7 +26,7 @@
       </div>
       <div id="pc-a" class="spacing">
         <b>音声接続形式</b>
-        <div ng-class="{invalid: pgrg.unsetPcA}">
+        <div ng-class="{invalid: reqchk.unsetPcA}">
         <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
         <input type="radio" ng-model="pgrg.pcA" name="pc-a" value="none"/>不要
         <input type="radio" ng-model="pgrg.pcA" name="pc-a" value="svideo"/>ステレオミニ(3.5mmTSR)
@@ -39,7 +39,7 @@
       </div>
       <div id="lan" class="spacing">
         <b>インタネット接続形式</b><br/>
-        <div ng-class="{invalid: pgrg.unsetLan}">
+        <div ng-class="{invalid: reqchk.unsetLan}">
         <input type="radio" ng-model="pgrg.lan" name="lan" value="none"/>接続しない
         <input type="radio" ng-model="pgrg.lan" name="lan" value="lan"/>有線(RJ-45)
         <input type="radio" ng-model="pgrg.lan" name="lan" value="wifi"/>無線<br/>
