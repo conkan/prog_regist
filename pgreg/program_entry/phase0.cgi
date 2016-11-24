@@ -20,7 +20,8 @@ my $reg_num  = $cgi->param("reg_num");
 # 登録番号からデバッグフラグを設定
 my %debflg;
 my @reg_dbg = split( ' ', $reg_num );
-if ( $reg_dbg[1] eq $CONDEF_CONST{'SPPRIFIX'} ) {
+if ( ( 1 < scalar(@reg_dbg) ) &&
+     ( $reg_dbg[1] eq $CONDEF_CONST{'SPPRIFIX'} ) ) {
     $reg_num = shift( @reg_dbg );
     shift( @reg_dbg );
     foreach my $dbgstr (@reg_dbg) {

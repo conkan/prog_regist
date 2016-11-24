@@ -26,36 +26,32 @@ if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
     ( defined $sid && $sid eq $session->id ) ) { # 取得したセッションidが有効
     # 申し込み画面 or 確認画面表示準備
     $input_page = HTML::Template->new(filename => 'phase1-tmpl.html');
-	if($session->param('phase') ne '1-2' || $cgi->param('self') ne 'true') {
+    if( $session->param('phase') ne '1-2' ||
+        !defined($cgi->param('self'))     ||
+        $cgi->param('self') ne 'true' ) {
         # 申し込み画面初期表示準備
-		$session->param('phase','1-2');
+        $session->param('phase','1-2');
         $fobject    = $session;
-	} else {
-        # 申し込み受付時チェック
-		if ( !( $session->param('dbgflgs')->{'SKIPVALID'} )
-          && ( pgreglib::pg_input_check($input_page, $cgi) ) ) {
-            # 入力内容不備時 申込画面再表示準備
-			$fobject    = $cgi;
-		} else {
-            # チェック成功 -> 入力値をセッションに保存し、phase2にredirect
-			$session->save_param($cgi);
-            my $wkid = defined($cgi->cookie('ID')) ? $cgi->cookie('ID') : '';
-            my $urlparam = ( $wkid eq  $session->id ) ? '' : '?ID=' . $sid;
-            $input_page = undef;
-			$html_out = $cgi->redirect('./phase2.cgi' . $urlparam);
-		}
-	}
+    } else {
+        # 申し込み受付時チェックはクライアント側で実施するので、
+        # 常にチェック成功 -> 入力値をセッションに保存し、phase2にredirect
+        $session->save_param($cgi);
+        my $wkid = defined($cgi->cookie('ID')) ? $cgi->cookie('ID') : '';
+        my $urlparam = ( $wkid eq  $session->id ) ? '' : '?ID=' . $sid;
+        $input_page = undef;
+        $html_out = $cgi->redirect('./phase2.cgi' . $urlparam);
+    }
 } else {    # セッションタイムアウト
     # まずセッション開放
-	if(defined $sid && $sid ne $session->id){
-		  $session->close;
-		  $session->delete;
-	}
+    if(defined $sid && $sid ne $session->id){
+        $session->close;
+        $session->delete;
+    }
     # エラー画面表示準備
     $input_page = HTML::Template->new(filename => 'error-tmpl.html');
-	my $cookie_path = $ENV{SCRIPT_NAME};
-	$cookie_path =~ s/[^\/]+$//g ;
-	my $cookie = $cgi->cookie(  -name => "ID",     -value => "$sid",
+    my $cookie_path = $ENV{SCRIPT_NAME};
+    $cookie_path =~ s/[^\/]+$//g ;
+    my $cookie = $cgi->cookie(  -name => "ID",     -value => "$sid",
                                 -expires => "+3h", -path => "$cookie_path");
     $http_header  = $cgi->header( -charset => 'UTF-8',
                                   -expires => 'now', -cookie => $cookie);
@@ -64,13 +60,13 @@ if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
 if ( $input_page ) { # リダイレクトではない
     # HTMLテンプレート変数置き換え
     pgreglib::pg_stdHtmlTmpl_set( $input_page, $sid );
-    $input_page->param(P1NAME   => $fobject->param('p1_name'));
-    $input_page->param(EMAIL    => $fobject->param('email'));
-    $input_page->param(REGNUM   => $fobject->param('reg_num'));
+    # パラメータをng-modelの初期値として登録
+    pgreglib::pg_prmModelTmpl_set( $input_page, $fobject );
+    
     $html_out = $input_page->output;
     # リダイレクトでない場合のみ、HTTPヘッダを出力
-	print $http_header;
-	print "\n\n";
+    print $http_header;
+    print "\n\n";
 }
 
 # HTML本体出力
