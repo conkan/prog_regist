@@ -15,18 +15,10 @@
       <div id="pc-v" class="spacing">
         <b>映像接続形式</b><br/>
         <div ng-class="{invalid: reqchk.unsetPcV}">
-        <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="none"/>接続しない
-        <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="hdmi"/>HDMI
-        <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="vga"/>D-Sub15(VGA)<br/>
-        <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="other"/>その他
+        <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="none"/>接続しない
+        <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="hdmi"/>HDMI
+        <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="vga"/>D-Sub15(VGA)<br/>
+        <input type="radio" ng-model="pgrg.pcV" name="pc-v" value="other"/>その他
         <span ng-if="pgrg.pcV=='other'">
             <input type="text" ng-model="pgrg.pcVelse" name="pc-v_velse" size="30" style="ime-mode: active;" ng-required="true"/>
         </span><br/>
@@ -36,18 +28,10 @@
         <b>音声接続形式</b>
         <div ng-class="{invalid: reqchk.unsetPcA}">
         <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
-        <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-          ng-change="radioChg( pgrg.pcA, 'unsetPcA' )"
-          value="none"/>不要
-        <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="svideo"/>ステレオミニ(3.5mmTSR)
-        <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="rca"/>RCAコンポジット(赤白)<br/>
-        <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-          ng-change="radioChg( pgrg.pcV, 'unsetPcV' )"
-          value="other"/>その他
+        <input type="radio" ng-model="pgrg.pcA" name="pc-a" value="none"/>不要
+        <input type="radio" ng-model="pgrg.pcA" name="pc-a" value="svideo"/>ステレオミニ(3.5mmTSR)
+        <input type="radio" ng-model="pgrg.pcA" name="pc-a" value="rca"/>RCAコンポジット(赤白)<br/>
+        <input type="radio" ng-model="pgrg.pcA" name="pc-a" value="other"/>その他
         <span ng-if="pgrg.pcA=='other'">
             <input type="text" ng-model="pgrg.pcAelse" name="pc-a_velse" size="30" style="ime-mode: active;" ng-required="true"/>
         </span><br/>
@@ -56,18 +40,10 @@
       <div id="lan" class="spacing">
         <b>インタネット接続形式</b><br/>
         <div ng-class="{invalid: reqchk.unsetLan}">
-        <input type="radio" ng-model="pgrg.lan" name="lan"
-          ng-change="radioChg( pgrg.lan, 'unsetLan' )"
-          value="none"/>接続しない
-        <input type="radio" ng-model="pgrg.lan" name="lan"
-          ng-change="radioChg( pgrg.lan, 'unsetLan' )"
-          value="lan"/>有線(RJ-45)
-        <input type="radio" ng-model="pgrg.lan" name="lan"
-          ng-change="radioChg( pgrg.lan, 'unsetLan' )"
-          value="wifi"/>無線<br/>
-        <input type="radio" ng-model="pgrg.lan" name="lan"
-          ng-change="radioChg( pgrg.lan, 'unsetLan' )"
-          value="other"/>その他
+        <input type="radio" ng-model="pgrg.lan" name="lan" value="none"/>接続しない
+        <input type="radio" ng-model="pgrg.lan" name="lan" value="lan"/>有線(RJ-45)
+        <input type="radio" ng-model="pgrg.lan" name="lan" value="wifi"/>無線<br/>
+        <input type="radio" ng-model="pgrg.lan" name="lan" value="other"/>その他
         <span ng-if="pgrg.lan=='other'">
             <input type="text" ng-model="pgrg.lanelse" name="pc-l_velse" size="30" style="ime-mode: active;" ng-required="true"/>
         </span><br/>

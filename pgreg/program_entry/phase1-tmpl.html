@@ -176,10 +176,8 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetPgu18}">
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
-                 ng-change="radioChg( pgrg.pgPgu18, 'unsetPgu18' )"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
-                 ng-change="radioChg( pgrg.pgPgu18, 'unsetPgu18' )"
                  value="CX-1"/>不可<br/>
               </div>
             </td>
@@ -192,10 +190,8 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetPggen}">
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
-                 ng-change="radioChg( pgrg.pgPggen, 'unsetPggen' )"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
-                 ng-change="radioChg( pgrg.pgPggen, 'unsetPggen' )"
                  value="CX-1"/>不可<br/>
                 <div class="ruby">
                     大会参加者以外にも公開して良いかどうかを選択してください。
@@ -211,15 +207,13 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetNaiyouK}">
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
-                 ng-change="radioChg( pgrg.pgNaiyouK, 'unsetNaiyouK' )"
                  value="CX-0"/>事前公開可
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
-                 ng-change="radioChg( pgrg.pgNaiyouK, 'unsetNaiyouK' )"
                  value="CX-1"/>事前公開不可<br/>
               </div>
               <textarea name="pg_naiyou" ng-model="pgrg.pgNaiyou"
-               cols="60" rows="5" ng-required="true" style="ime-mode: active;">
-              </textarea>
+               cols="60" rows="5" ng-required="true"
+               style="ime-mode: active;"></textarea>
             </td>
         </tr>
         <tr>
@@ -270,8 +264,7 @@
                 電源容量の見積もりや企画場所決定の参考情報とします。<br/>
                 なお、場合によっては持ち込みをご遠慮いただく場合があることをご了承下さい。
                 <textarea name="fc_mochikomi" ng-model="pgrg.fcMochikomi"
-                 cols="60" rows="3" style="ime-mode: active;">
-                </textarea>
+                 cols="60" rows="3" style="ime-mode: active;"></textarea>
             </td>
         </tr>
         <tr>
@@ -282,19 +275,14 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetEnquete}">
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
-                 ng-change="radioChg( pgrg.pgEnquete, 'unsetEnquete' )"
                  value="0"/>初めて
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 ng-change="radioChg( pgrg.pgEnquete, 'unsetEnquete' )"
                  value="1"/>昨年に続いて2回目
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 ng-change="radioChg( pgrg.pgEnquete, 'unsetEnquete' )"
                  value="2"/>継続して3～5回目
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 ng-change="radioChg( pgrg.pgEnquete, 'unsetEnquete' )"
                  value="3"/>ひさしぶり
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
-                 ng-change="radioChg( pgrg.pgEnquete, 'unsetEnquete' )"
                  value="4"/>6回目以上
               </div>
             </td>
@@ -310,8 +298,7 @@
                     出演者のバッティングに関しては、下記出演者情報で調整しますので、ここに記載されなくても構いません。
                 </div>
                 <textarea name="pg_badprog" ng-model="pgrg.pgBadprog"
-                 cols="60" rows="3" style="ime-mode: active;">
-                </textarea>
+                 cols="60" rows="3" style="ime-mode: active;"></textarea>
             </td>
         </tr>
     </table></dl>
@@ -328,10 +315,8 @@
             <td colspan="2">
               <div ng-class="{invalid: reqchk.unsetYouDo}">
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
-                 ng-change="checkYoudo()"
                  value="0"/>する
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
-                 ng-change="checkYoudo()"
                  value="1"/>しない
               </div>
             </td>
@@ -352,74 +337,26 @@
             </td>
             <td valign="middle">
                 <textarea name="py_title" ng-model="pgrg.pyTitle"
-                 cols="20" rows="2" style="ime-mode: active;" ng-required="true">
-                </textarea>
+                 cols="20" rows="2" style="ime-mode: active;"
+                 ng-required="true"></textarea>
             </td>
         </tr>
     </table></dl>
     <dl class="register">
-      <table border="0" align="center" cellpadding="5">
+      <table id="addGuest" border="0" align="center" cellpadding="5">
+        <tr>
+          <td colspan="5">
+            <button type="button" class="btn" ng-click="AddppGuest()">
+              出演者追加
+            </button>
+          </td>
+        </tr>
         <tr>
             <th align="right" >No.</th>
             <th align="left" >出演者氏名/フリガナ</th>
             <th align="left" >出演者肩書</th>
             <th align="left" >出演交渉</th>
             <th align="left" >ゲスト申請</th>
-        </tr>
-        <tr>
-            <td align="right">1</td>
-            <td valign="middle">
-                <input type="text" ng-model="pgrg.ppGuest[0].name"
-                 name="pp1_name" id="pp1_name"
-                 placeholder="例:カーティス・ニュートン"
-                 size="30" style="ime-mode: active;"/><br/>
-                <input type="text" ng-model="pgrg.ppGuest[0].namef"
-                 name="pp1_name_f" id="pp1_name_f"
-                 placeholder="例:カーティス・ニュートン"
-                 ng-required="pgrg.ppGuest[0].name"
-                 size="30" style="ime-mode: active;"/>
-            </td>
-            <td valign="middle">
-                <textarea ng-model="pgrg.ppGuest[0].title"
-                 name="pp1_title" id="pp1_title"
-                 placeholder="例:キャプテン・フューチャー"
-                 ng-required="pgrg.ppGuest[0].name"
-                 cols="20" rows="2" style="ime-mode: active;">
-                </textarea>
-            </td>
-            <td id="pp1_con">
-              <div ng-class="{invalid: pgrg.ppGuest[0].name && reqchk.unsetppGcon[0]}">
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                 ng-change="radioAryChg( pgrg.ppGuest[0].con, 'unsetppGcon', 0 )"
-                 name="pp1_con" value="PP-A"/>交渉を大会に依頼<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                 ng-change="radioAryChg( pgrg.ppGuest[0].con, 'unsetppGcon', 0 )"
-                 name="pp1_con" value="PP-B1"/>出演了承済<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                 ng-change="radioAryChg( pgrg.ppGuest[0].con, 'unsetppGcon', 0 )"
-                 name="pp1_con" value="PP-B2"/>交渉中<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                 ng-change="radioAryChg( pgrg.ppGuest[0].con, 'unsetppGcon', 0 )"
-                 name="pp1_con" value="PP-B3"/>未交渉<br/>
-              </div>
-            </td>
-            <td id="pp1_grq">
-              <div ng-class="{invalid: pgrg.ppGuest[0].name && reqchk.unsetppGgrq[0]}">
-                <input type="radio" ng-model="pgrg.ppGuest[0].grq"
-                 ng-change="radioAryChg( pgrg.ppGuest[0].grq, 'unsetppGgrq', 0 )"
-                 name="pp1_grq" value="PP-A"/>する<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].grq"
-                 ng-change="radioAryChg( pgrg.ppGuest[0].grq, 'unsetppGgrq', 0 )"
-                 name="pp1_grq" value="PP-B"/>しない
-              </div>
-            </td>
-        </tr>
-        <tr id="addGuest">
-          <td colspan="5">
-            <button type="button" class="btn" ng-click="AddppGuest()">
-              出演者追加
-            </button>
-          </td>
         </tr>
       </table>
     </dl>
@@ -432,8 +369,7 @@
             <td>
                 その他、企画担当スタッフに伝えたい事柄<br/>
                 <textarea name="fc_comment" ng-model="pgrg.fcComment"
-                 cols="80" rows="3" style="ime-mode: active;">
-                </textarea>
+                 cols="80" rows="3" style="ime-mode: active;"></textarea>
             </td>
         </tr>
     </table></dl>
@@ -469,8 +405,7 @@
         name="pp%%_gno%%_title" id="pp%%_gno%%_title"
         placeholder="例:キャプテン・フューチャー"
         ng-required="pgrg.ppGuest[%%_pno%%].name"
-        cols="20" rows="2" style="ime-mode: active;">
-      </textarea>
+        cols="20" rows="2" style="ime-mode: active;"></textarea>
     </td>
     <td id="pp%%_gno%%_con">
       <div ng-class="{invalid: pgrg.ppGuest[%%_pno%%].name && reqchk.unsetppGcon[%%_pno%%]}">
@@ -506,8 +441,8 @@
 
   // 企画登録コントローラ
   ProgRegModule.controller( 'progRegistController',
-    [ '$scope',
-      function( $scope ) {
+    [ '$scope', '$compile',
+      function( $scope, $compile ) {
         // ng-Changeハンドラ
         $scope.checktelcel = function() {
             if ( ( !$scope.pgrg.tel || $scope.pgrg.tel.length == 0 ) &&
@@ -518,20 +453,71 @@
                 $scope.reqchk.chktelcel = false;
             }
         };
-        $scope.radioChg = function( val, unset ) {
-            if ( val ) { $scope.reqchk[unset] = false; }
-        };
         $scope.radioAryChg = function( val, unset, no ) {
             if ( val ) { $scope.reqchk[unset][no] = false; }
         };
-        $scope.checkYoudo = function() {
-          if ( $scope.pgrg.youdo && $scope.pgrg.youdo.length > 0 ) {
-            $scope.reqchk.unsetYouDo = false;
-            if ( ( $scope.pgrg.youdo == '0' ) && ( $scope.pgrg.pyName == '' ) ){
-              $scope.pgrg.pyName = $scope.pgrg.p1Name;
-            }
+
+        // 監視設定
+        $scope.$watch('pgrg.pgKind', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKind = false; }
+        });
+        $scope.$watch('pgrg.pgPlace', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPlace = false; }
+        });
+        $scope.$watch('pgrg.pgLayout', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetLayout = false; }
+        });
+        $scope.$watch('pgrg.pgTime', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetTime = false; }
+        });
+        $scope.$watch('pgrg.pgKoma', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKoma = false; }
+        });
+        $scope.$watch('pgrg.pgNinzu', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetNinzu = false; }
+        });
+        $scope.$watch('pgrg.pgPgu18', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPgu18 = false; }
+        });
+        $scope.$watch('pgrg.pgPggen', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPggen = false; }
+        });
+        $scope.$watch('pgrg.pgNaiyouK', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetNaiyouK = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKb', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKirokuKb = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKa', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKirokuKa = false; }
+        });
+        $scope.$watch('pgrg.pgavV', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetAvV = false; }
+        });
+        $scope.$watch('pgrg.pgavA', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetAvA = false; }
+        });
+        $scope.$watch('pgrg.pgpcV', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPcV = false; }
+        });
+        $scope.$watch('pgrg.pgpcA', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPcA = false; }
+        });
+        $scope.$watch('pgrg.pglan', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetLan = false; }
+        });
+        $scope.$watch('pgrg.pgEnquete', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetEnquete = false; }
+        });
+
+        $scope.$watch('pgrg.youdo', function( n, o, scope ) {
+          if ( n ) {
+            scope.reqchk.unsetYouDo = false;
           }
-        };
+          if ( ( n == '0' ) && ( scope.pgrg.pyName == '' ) ){
+            scope.pgrg.pyName = scope.pgrg.p1Name;
+          }
+        });
 
         // パラメータ定義
         $scope.pgrg = {
@@ -641,37 +627,46 @@
           unsetppGgrq :     [ true ],
         };
 
+        // 出演者欄追加内部関数
+        var _doAddGuest = function() {
+          var pno, gno, guestForm, dstElm, addElm;
+
+          pno = $scope.pgrg.ppGuestNum;
+          gno = pno + 1;
+          dstElm = angular.element($('#addGuest')).find('tbody');
+          guestForm = $scope.addGuestTmpl.replace(/%%_pno%%/g, pno);
+          guestForm = guestForm.replace(/%%_gno%%/g, gno);
+          addElm = angular.element( guestForm );
+          dstElm.append(addElm);
+          $compile(addElm.contents())($scope);
+        };
+
         // 初期値設定
         (function() {
           $scope.checktelcel();
           if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
           if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
-          // var guestForm = angular.element('#guestForm');
-          // guestForm.replace('%%_pno%%', 0);
-          // guestForm.replace('%%_gno%%', 1);
-          // angular.element('#addGuset').before(guestForm);
+
+          $scope.addGuestTmpl = angular.element('#guestForm').html();
+          _doAddGuest();
         })();
 
         // 出演者欄追加
         $scope.AddppGuest = function() {
+          var pno, guestForm, dstElm, addElm;
           $scope.pgrg.ppGuestNum += 1;
-          var _pno = $scope.pgrg.ppGuestNum;
-          var _gno = _pno + 1;
-          $scope.pgrg.ppGuest[_pno] = {
+          pno = $scope.pgrg.ppGuestNum;
+          $scope.pgrg.ppGuest[pno] = {
                             name :  '',
                             namef : '',
                             title : '',
                             con :   '',
                             grq :   '',
                           };
-          $scope.reqchk.unsetppGcon[_pno] = true;
-          $scope.reqchk.unsetppGgrq[_pno] = true;
+          $scope.reqchk.unsetppGcon[pno] = true;
+          $scope.reqchk.unsetppGgrq[pno] = true;
 
-          var guestForm = angular.element('#guestForm').html();
-          guestForm = guestForm.replace(/%%_pno%%/g, _pno);
-          guestForm = guestForm.replace(/%%_gno%%/g, _gno);
-          var addElm = angular.element( guestForm );
-          angular.element('#addGuset').before(addElm);
+          _doAddGuest();
         };
 
         // 更新実施
