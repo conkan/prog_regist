@@ -347,14 +347,24 @@
         </tr>
     </table></dl>
     <dl class="register">
+      <input type="hidden" name="GuestCnt" ng-model="pgrg.ppGuestNum"
+        name="pp_cnt" id="pp_cnt"/>
       <table border="0" align="center" cellpadding="5">
-        <tr>
+        <tbody id="addGuest">
+          <tr>
+            <td colspan="5">
+              <button type="button" class="btn" ng-click="AddppGuest()">
+                出演者追加
+              </button>
+            </td>
+          </tr>
+          <tr>
             <th align="right" >No.</th>
             <th align="left" >出演者氏名/フリガナ</th>
             <th align="left" >出演者肩書</th>
             <th align="left" >出演交渉</th>
             <th align="left" >ゲスト申請</th>
-        </tr>
+          </tr>
         <tr>
             <td align="right">1</td>
             <td valign="middle">
@@ -404,6 +414,7 @@
               </div>
             </td>
         </tr>
+        </tbody>
       </table>
     </dl>
     <h3>備考欄</h3> 
@@ -420,9 +431,8 @@
         </tr>
     </table></dl>
     <div align="center">
-        <input type="submit" name="submit" id="submitBtn" value="入力内容確認"
-         ng-disabled="pgrgform.$invalid"
-         ng-click="DoSubmit()">
+      <input type="submit" name="submit" id="submitBtn" value="入力内容確認"
+        ng-disabled="pgrgform.$invalid">
     </div>
 </FORM>
 </article></div>
@@ -437,8 +447,8 @@
 
   // 企画登録コントローラ
   ProgRegModule.controller( 'progRegistController',
-    [ '$scope',
-      function( $scope ) {
+    [ '$scope', '$compile',
+      function( $scope, $compile ) {
         // ng-Changeハンドラ
         $scope.checktelcel = function() {
             if ( ( !$scope.pgrg.tel || $scope.pgrg.tel.length == 0 ) &&
@@ -630,6 +640,86 @@
           unsetppGcon :     [ true ],
           unsetppGgrq :     [ true ],
         };
+        // 出演者情報テンプレート定義
+        $scope.guestTmpl = function(){/*
+<tr>
+  <td align="right">%g%</td>
+  <td valign="middle">
+    <input type="text" ng-model="pgrg.ppGuest[%p%].name"
+      name="pp%g%_name" id="pp%g%_name"
+      placeholder="例:カーティス・ニュートン"
+      size="30" style="ime-mode: active;"/><br/>
+    <input type="text" ng-model="pgrg.ppGuest[%p%].namef"
+      name="pp%g%_name_f" id="pp%g%_name_f"
+      placeholder="例:カーティス・ニュートン"
+      ng-required="pgrg.ppGuest[%p%].name"
+      size="30" style="ime-mode: active;"/>
+  </td>
+  <td valign="middle">
+    <textarea ng-model="pgrg.ppGuest[%p%].title"
+      name="pp%g%_title" id="pp%g%_title"
+      placeholder="例:キャプテン・フューチャー"
+      ng-required="pgrg.ppGuest[%p%].name"
+      cols="20" rows="2" style="ime-mode: active;"></textarea>
+  </td>
+  <td id="pp%g%_con">
+    <div ng-class="{invalid: pgrg.ppGuest[%p%].name && reqchk.unsetppGcon[%p%]}">
+      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
+        ng-required="pgrg.ppGuest[%p%].name"
+        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
+        name="pp%g%_con" value="PP-A"/>交渉を大会に依頼<br/>
+      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
+        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
+        name="pp%g%_con" value="PP-B1"/>出演了承済<br/>
+      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
+        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
+        name="pp%g%_con" value="PP-B2"/>交渉中<br/>
+      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
+        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
+        name="pp%g%_con" value="PP-B3"/>未交渉<br/>
+    </div>
+  </td>
+  <td id="pp%g%_grq">
+    <div ng-class="{invalid: pgrg.ppGuest[%p%].name && reqchk.unsetppGgrq[%p%]}">
+      <input type="radio" ng-model="pgrg.ppGuest[%p%].grq"
+        ng-required="pgrg.ppGuest[%p%].name"
+        ng-change="radioAryChg( pgrg.ppGuest[%p%].grq, 'unsetppGgrq', %p% )"
+        name="pp%g%_grq" value="PP-A"/>する<br/>
+      <input type="radio" ng-model="pgrg.ppGuest[%p%].grq"
+        ng-change="radioAryChg( pgrg.ppGuest[%p%].grq, 'unsetppGgrq', %p% )"
+        name="pp%g%_grq" value="PP-B"/>しない
+    </div>
+  </td>
+</tr>
+        */}.toString().split("\n").slice(1,-1).join("\n");
+
+        // 出演者欄追加内部関数
+        var _doAddGuest = function() {
+          var pno = $scope.pgrg.ppGuestNum;
+          var gno = pno + 1;
+          var src = $scope.guestTmpl.replace(/%p%/g, pno).replace(/%g%/g, gno);
+          var addElm = angular.element( src );
+          var dstElm = angular.element(document.getElementById('addGuest'));
+          dstElm.append(addElm);
+          $compile(addElm.contents())($scope);
+        };
+
+        // 出演者欄追加
+        $scope.AddppGuest = function() {
+          $scope.pgrg.ppGuestNum += 1;
+          var pno = $scope.pgrg.ppGuestNum;
+          $scope.pgrg.ppGuest[pno] = {
+                            name :  '',
+                            namef : '',
+                            title : '',
+                            con :   '',
+                            grq :   '',
+                          };
+          $scope.reqchk.unsetppGcon[pno] = true;
+          $scope.reqchk.unsetppGgrq[pno] = true;
+
+          _doAddGuest();
+        };
 
         // 初期値設定
         (function() {
@@ -637,19 +727,6 @@
          if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
          if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
         })();
-
-        // 更新実施
-        $scope.DoSubmit = function() {
-          var inFail = false;
-          // 二重クリック回避
-          angular.element('#submitBtn').attr('disabled', 'disabled');
-          // バリデーション
-          if ( inFail ) {
-            angular.element('#submitBtn').removeAttr('disabled');
-            return;
-          }
-          angular.element('#pgrgform').submit();
-        };
       }
     ]
   );
