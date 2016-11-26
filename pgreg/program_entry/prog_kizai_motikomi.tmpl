@@ -5,8 +5,13 @@
     接続方式によっては、大会が用意する方式への変換ケーブルやコンバータも持ち込んで頂く場合があります。
 </div>
 <div>
-    <input type="radio" ng-model="pgrg.fcVid" name="fc_vid" value="0"/>持ち込む
-    <input type="radio" ng-model="pgrg.fcVid" name="fc_vid" value="1"/>持ち込まない
+  <div ng-class="{invalid: reqchk.unsetFcVid}">
+    <input type="radio" ng-model="pgrg.fcVid" name="fc_vid"
+      ng-required="true"
+      value="0"/>持ち込む
+    <input type="radio" ng-model="pgrg.fcVid" name="fc_vid"
+      value="1"/>持ち込まない
+  </div>
 </div>
 <P/>
 <div ng-if="pgrg.fcVid==0">
@@ -15,12 +20,17 @@
     <div id="av-v" class="spacing">
       <b>映像接続形式</b><br/>
       <div ng-class="{invalid: reqchk.unsetAvV}">
-        <input type="radio" ng-model="pgrg.avV" name="av-v" value="hdmi"/>HDMI
-        <input type="radio" ng-model="pgrg.avV" name="av-v" value="svideo"/>S-Video
-        <input type="radio" ng-model="pgrg.avV" name="av-v" value="rca"/>RCAコンポジット(黄)<br/>
-        <input type="radio" ng-model="pgrg.avV" name="av-v" value="other"/>その他
+        <input type="radio" ng-model="pgrg.avV" name="av-v"
+          ng-required="true"
+          value="hdmi"/>HDMI
+        <input type="radio" ng-model="pgrg.avV" name="av-v"
+          value="svideo"/>S-Video
+        <input type="radio" ng-model="pgrg.avV" name="av-v"
+          value="rca"/>RCAコンポジット(黄)<br/>
+        <input type="radio" ng-model="pgrg.avV" name="av-v"
+          value="other"/>その他
         <span ng-if="pgrg.avV=='other'">
-            <input type="text" ng-model="pgrg.avVelse" name="av-v_velse" size="30" style="ime-mode: active;" ng-required="true"/>
+          <input type="text" ng-model="pgrg.avVelse" name="av-v_velse" size="30" style="ime-mode: active;" ng-required="true"/>
         </span><br/>
       </div>
     </div>
@@ -28,10 +38,15 @@
       <b>音声接続形式</b>
       <div ng-class="{invalid: reqchk.unsetAvA}">
         <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
-        <input type="radio" ng-model="pgrg.avA" name="av-a" value="none"/>不要
-        <input type="radio" ng-model="pgrg.avA" name="av-a" value="tsr"/>ステレオミニ(3.5mmTSR)
-        <input type="radio" ng-model="pgrg.avA" name="av-a" value="rca"/>RCAコンポジット(赤白)<br/>
-        <input type="radio" ng-model="pgrg.avA" name="av-a" value="other"/>その他
+        <input type="radio" ng-model="pgrg.avA" name="av-a"
+          ng-required="true"
+          value="none"/>不要
+        <input type="radio" ng-model="pgrg.avA" name="av-a"
+          value="tsr"/>ステレオミニ(3.5mmTSR)
+        <input type="radio" ng-model="pgrg.avA" name="av-a"
+          value="rca"/>RCAコンポジット(赤白)<br/>
+        <input type="radio" ng-model="pgrg.avA" name="av-a"
+          value="other"/>その他
         <span ng-if="pgrg.avA=='other'">
             <input type="text" ng-model="pgrg.avAelse" name="av-a_velse" size="30" style="ime-mode: active;" ng-required="true"/>
         </span><br/>

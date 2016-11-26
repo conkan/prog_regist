@@ -81,8 +81,8 @@
                 <div class="rubytext">電話連絡を希望する場合</div>連絡可能な時間帯：
             </th>
             <td>
-                <div class="rubytext">例：平日 20時から23時まで 土日祝 朝9時から23時まで</div>
                 <input type="text" name="phonetime" ng-model="pgrg.phonetime"
+                 placeholder="例:平日 20時から23時まで 土日祝 朝9時から23時まで"
                  size="60" style="ime-mode: active;"/>
             </td>
         </tr>
@@ -175,6 +175,7 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetPgu18}">
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
+                 ng-required="true"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
                  value="CX-1"/>不可<br/>
@@ -189,6 +190,7 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetPggen}">
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
+                 ng-required="true"
                  value="CX-0"/>可
                 <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
                  value="CX-1"/>不可<br/>
@@ -206,6 +208,7 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetNaiyouK}">
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
+                 ng-required="true"
                  value="CX-0"/>事前公開可
                 <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
                  value="CX-1"/>事前公開不可<br/>
@@ -274,6 +277,7 @@
             <td>
               <div ng-class="{invalid: reqchk.unsetEnquete}">
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
+                 ng-required="true"
                  value="0"/>初めて
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
                  value="1"/>昨年に続いて2回目
@@ -314,6 +318,7 @@
             <td colspan="2">
               <div ng-class="{invalid: reqchk.unsetYouDo}">
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
+                 ng-required="true"
                  value="0"/>する
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
                  value="1"/>しない
@@ -373,6 +378,7 @@
             <td id="pp1_con">
               <div ng-class="{invalid: pgrg.ppGuest[0].name && reqchk.unsetppGcon[0]}">
                 <input type="radio" ng-model="pgrg.ppGuest[0].con"
+                  ng-required="pgrg.ppGuest[0].name"
                   ng-change="radioAryChg(pgrg.ppGuest[0].con, 'unsetppGcon', 0)"
                   name="pp1_con" value="PP-A"/>交渉を大会に依頼<br/>
                 <input type="radio" ng-model="pgrg.ppGuest[0].con"
@@ -389,6 +395,7 @@
             <td id="pp1_grq">
               <div ng-class="{invalid: pgrg.ppGuest[0].name && reqchk.unsetppGgrq[0]}">
                 <input type="radio" ng-model="pgrg.ppGuest[0].grq"
+                  ng-required="pgrg.ppGuest[0].name"
                   ng-change="radioAryChg(pgrg.ppGuest[0].grq, 'unsetppGgrq', 0)"
                   name="pp1_grq" value="PP-A"/>する<br/>
                 <input type="radio" ng-model="pgrg.ppGuest[0].grq"
@@ -480,19 +487,25 @@
         $scope.$watch('pgrg.pgKirokuKa', function( n, o, scope ) {
             if ( n ) { scope.reqchk.unsetKirokuKa = false; }
         });
-        $scope.$watch('pgrg.pgavV', function( n, o, scope ) {
+        $scope.$watch('pgrg.fcVid', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetFcVid = false; }
+        });
+        $scope.$watch('pgrg.avV', function( n, o, scope ) {
             if ( n ) { scope.reqchk.unsetAvV = false; }
         });
-        $scope.$watch('pgrg.pgavA', function( n, o, scope ) {
+        $scope.$watch('pgrg.avA', function( n, o, scope ) {
             if ( n ) { scope.reqchk.unsetAvA = false; }
         });
-        $scope.$watch('pgrg.pgpcV', function( n, o, scope ) {
+        $scope.$watch('pgrg.fcPc', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetFcPc = false; }
+        });
+        $scope.$watch('pgrg.pcV', function( n, o, scope ) {
             if ( n ) { scope.reqchk.unsetPcV = false; }
         });
-        $scope.$watch('pgrg.pgpcA', function( n, o, scope ) {
+        $scope.$watch('pgrg.pcA', function( n, o, scope ) {
             if ( n ) { scope.reqchk.unsetPcA = false; }
         });
-        $scope.$watch('pgrg.pglan', function( n, o, scope ) {
+        $scope.$watch('pgrg.lan', function( n, o, scope ) {
             if ( n ) { scope.reqchk.unsetLan = false; }
         });
         $scope.$watch('pgrg.pgEnquete', function( n, o, scope ) {
@@ -605,8 +618,10 @@
           unsetNaiyouK :    true,
           unsetKirokuKb :   true,
           unsetKirokuKa :   true,
+          unsetFcVid :      true,
           unsetAvV :        true,
           unsetAvA :        true,
+          unsetFcPc :       true,
           unsetPcV :        true,
           unsetPcA :        true,
           unsetLan :        true,
