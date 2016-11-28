@@ -347,7 +347,7 @@
         </tr>
     </table></dl>
     <dl class="register">
-      <input type="hidden" name="GuestCnt" ng-model="pgrg.ppGuestNum"
+      <input type="text" ng-model="pgrg.ppGuestNum" ng-hide="true"
         name="pp_cnt" id="pp_cnt"/>
       <table border="0" align="center" cellpadding="5">
         <tbody id="addGuest">
@@ -365,55 +365,6 @@
             <th align="left" >出演交渉</th>
             <th align="left" >ゲスト申請</th>
           </tr>
-        <tr>
-            <td align="right">1</td>
-            <td valign="middle">
-              <input type="text" ng-model="pgrg.ppGuest[0].name"
-                name="pp1_name" id="pp1_name"
-                placeholder="例:カーティス・ニュートン"
-                size="30" style="ime-mode: active;"/><br/>
-              <input type="text" ng-model="pgrg.ppGuest[0].namef"
-                name="pp1_name_f" id="pp1_name_f"
-                placeholder="例:カーティス・ニュートン"
-                ng-required="pgrg.ppGuest[0].name"
-                size="30" style="ime-mode: active;"/>
-            </td>
-            <td valign="middle">
-                <textarea ng-model="pgrg.ppGuest[0].title"
-                 name="pp1_title" id="pp1_title"
-                 placeholder="例:キャプテン・フューチャー"
-                 ng-required="pgrg.ppGuest[0].name"
-                 cols="20" rows="2" style="ime-mode: active;"></textarea>
-            </td>
-            <td id="pp1_con">
-              <div ng-class="{invalid: pgrg.ppGuest[0].name && reqchk.unsetppGcon[0]}">
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                  ng-required="pgrg.ppGuest[0].name"
-                  ng-change="radioAryChg(pgrg.ppGuest[0].con, 'unsetppGcon', 0)"
-                  name="pp1_con" value="PP-A"/>交渉を大会に依頼<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                  ng-change="radioAryChg(pgrg.ppGuest[0].con, 'unsetppGcon', 0)"
-                  name="pp1_con" value="PP-B1"/>出演了承済<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                  ng-change="radioAryChg(pgrg.ppGuest[0].con, 'unsetppGcon', 0)"
-                  name="pp1_con" value="PP-B2"/>交渉中<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].con"
-                  ng-change="radioAryChg(pgrg.ppGuest[0].con, 'unsetppGcon', 0)"
-                  name="pp1_con" value="PP-B3"/>未交渉<br/>
-              </div>
-            </td>
-            <td id="pp1_grq">
-              <div ng-class="{invalid: pgrg.ppGuest[0].name && reqchk.unsetppGgrq[0]}">
-                <input type="radio" ng-model="pgrg.ppGuest[0].grq"
-                  ng-required="pgrg.ppGuest[0].name"
-                  ng-change="radioAryChg(pgrg.ppGuest[0].grq, 'unsetppGgrq', 0)"
-                  name="pp1_grq" value="PP-A"/>する<br/>
-                <input type="radio" ng-model="pgrg.ppGuest[0].grq"
-                  ng-change="radioAryChg(pgrg.ppGuest[0].grq, 'unsetppGgrq', 0)"
-                  name="pp1_grq" value="PP-B"/>しない
-              </div>
-            </td>
-        </tr>
         </tbody>
       </table>
     </dl>
@@ -602,7 +553,7 @@
           pyName :          '<TMPL_VAR NAME=py_name>',
           pyNameF :         '<TMPL_VAR NAME=py_name_f>',
           pyTitle :         '<TMPL_VAR NAME=py_title>',
-          ppGuestNum :      0,
+          ppGuestNum :      <TMPL_VAR NAME=pp_cnt>,
           ppGuest :   [
                           {
                             name :  '',
@@ -640,6 +591,8 @@
           unsetppGcon :     [ true ],
           unsetppGgrq :     [ true ],
         };
+        // 出演者情報JSON文字列(確認後修正のため)
+        $scope.guestJson = '<TMPL_VAR NAME=guestJson>';
         // 出演者情報テンプレート定義
         $scope.guestTmpl = function(){/*
 <tr>
@@ -717,15 +670,21 @@
                           };
           $scope.reqchk.unsetppGcon[pno] = true;
           $scope.reqchk.unsetppGgrq[pno] = true;
-
           _doAddGuest();
         };
 
         // 初期値設定
         (function() {
-         $scope.checktelcel();
-         if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
-         if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
+          $scope.checktelcel();
+          if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
+          if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
+          if ( $scope.pgrg.ppGuestNum == '' ) { $scope.pgrg.ppGuestNum = 0; };
+          var ppcnt = $scope.pgrg.ppGuestNum;
+          $scope.pgrg.ppGuestNum = 0;
+          _doAddGuest(); // 最初の一つ
+          for ( var cnt=0; cnt<ppcnt; cnt++) {
+            $scope.AddppGuest();
+          }
         })();
       }
     ]

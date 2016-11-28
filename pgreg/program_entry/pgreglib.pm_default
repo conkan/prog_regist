@@ -208,7 +208,7 @@ my %ppn_grq_cnv = (     # ゲスト申請table
 my @org_pname = (
     'p1_name', 'email', 'reg_num', 'tel', 'fax', 'cellphone', 'phonetime',
     'prog_no', 'pg_name', 'pg_name_f', 'pg_naiyou', 'fc_other_naiyou',
-    'fc_mochikomi', 'pg_badprog', 'py_name', 'py_name_f', 'py_title',
+    'fc_mochikomi', 'pg_badprog', 'py_name', 'py_name_f', 'py_title', 'pp_cnt',
     'fc_comment',
 );
 
@@ -335,9 +335,14 @@ my %h_pname4mail = (
     'pg_enquete'    => ['企画経験', \%pg_enquete_cnv],
     # 重なると困る企画
     'pg_badprog'    => ['重なると困る企画', undef],
-    # 出演者情報
+    # 申込者出演情報
     'youdo'         => ['申込者出演', \%ppn_youdo_cnv],
-    ## 申込者以外の出演者は、Loop処理するのでプログラム埋め込み
+    'py_name'       => ['申込者氏名', undef],
+    'py_name_f'     => ['申込者氏名フリガナ', undef],
+    'py_title'      => ['申込者肩書', undef],
+    # 出演者情報
+    'pp_cnt'        => ['出演者数', undef],
+    # 出演者情報実体は、JSON文字列化して渡す
     # 備考
     'fc_comment'    => ['備考', undef],
 );
@@ -512,12 +517,9 @@ sub pg_prmModelTmpl_set {
             $page->param($pname   => $obj->param($pname));
         }
     }
-    # 申込者出演時情報(とりあえず、ね)
-    foreach my $pname ('py_name', 'py_name_f', 'py_title') {
-        if ( ( $page->query(name => $pname) ) && $obj->param($pname) ) {
-            $page->param($pname   => $obj->param($pname));
-        }
-    }
+    # ここで、出演者情報をJSON化して渡す
+    $page->param('guestJson' => $obj->param('pp_cnt') );
+    # $page->param('guestJson' => $JSON文字列 );
 }
 
 # 共通関数 企画登録パラメータ生成(抽出)
