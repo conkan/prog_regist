@@ -39,6 +39,8 @@ our %CONDEF_CONST = (
     'CONKANPASS' => '',
     ## SMTPSERVER:  メールサーバFQDN
     'SMTPSERVER' => '',
+    ## MAXGCNT:     最大出演者数 (既定値 8)
+    'MAXGCNT'    => 8,
 
 #### 評価用特殊参加番号
     ## SPREGNUM1:   直接申込jump用参加番号
@@ -74,7 +76,7 @@ our %CONDEF_CONST = (
 }
 #### <---- ここまで
 
-#### 企画登録情報 テーブル定義
+#### 大会独自項目 企画登録情報 テーブル定義
 # CGI値変換テーブル
 my %pg_kind_cnv = (         # 企画種別table
     'K-A1'  => '講演',
@@ -202,6 +204,8 @@ my %ppn_grq_cnv = (     # ゲスト申請table
     'PP-A'  => 'する',
     'PP-B'  => 'しない',
 );
+
+#### <---- ここまで
 
 ### HTMLテンプレート置き換え定義
 # 単純置き換え パラメータ名配列
@@ -517,9 +521,6 @@ sub pg_prmModelTmpl_set {
             $page->param($pname   => $obj->param($pname));
         }
     }
-    # ここで、出演者情報をJSON化して渡す
-    $page->param('guestJson' => $obj->param('pp_cnt') );
-    # $page->param('guestJson' => $JSON文字列 );
 }
 
 # 共通関数 企画登録パラメータ生成(抽出)

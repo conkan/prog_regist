@@ -365,6 +365,61 @@
             <th align="left" >出演交渉</th>
             <th align="left" >ゲスト申請</th>
           </tr>
+<!-- 出演者情報入力欄 -->
+<div ng-repeat='i in range("<TMPL_VAR NAME=MAXGCNT>")'>
+  <!-- <tr ng-if="{{i.p}}<=pgrg.ppGuestNum"> -->
+  <tr>
+    <td align="right">{{$index}}</td>
+    <td valign="middle">
+        <!-- <input type="text" ng-model="{{i.nameModel}}"  -->
+      <input type="text">
+        name="{{i.nameId}}" id="{{i.nameId}}"
+        placeholder="例:カーティス・ニュートン"
+        size="30" style="ime-mode: active;"/><br/>
+      <input type="text" ng-model="{{i.namefModel}}"
+        name="{{i.namefId}}" id="{{i.namefId}}"
+        placeholder="例:カーティス・ニュートン"
+        <-- ng-required="{{i.nameModel}}" -->
+        size="30" style="ime-mode: active;"/>
+    </td>
+    <td valign="middle">
+      <textarea ng-model="{{i.titleModel}}"
+        name="{{i.titleId}}" id="{{i.titleId}}"
+        placeholder="例:キャプテン・フューチャー"
+        <-- ng-required="{{i.nameModel}}" -->
+        cols="20" rows="2" style="ime-mode: active;"></textarea>
+    </td>
+    <td id="{{i.conId}}">
+      <div ng-class="{{i.conClass}}">
+        <input type="radio" ng-model="{{i.conModel}}"
+          <!-- ng-required="{{i.nameModel}}"-->
+          ng-change="radioAryChg( {{i.conModel}}, 'unsetppGcon', {{i.idx}} )"
+          name="{{i.conId}}" value="PP-A"/>交渉を大会に依頼<br/>
+        <input type="radio" ng-model="{{i.conModel}}"
+          ng-change="radioAryChg( {{i.conModel}}, 'unsetppGcon', {{i.idx}} )"
+          name="{{i.conId}}" value="PP-B1"/>出演了承済<br/>
+        <input type="radio" ng-model="{{i.conModel}}"
+          ng-change="radioAryChg( {{i.conModel}}, 'unsetppGcon', {{i.idx}} )"
+          name="{{i.conId}}" value="PP-B2"/>交渉中<br/>
+        <input type="radio" ng-model="{{i.conModel}}"
+          ng-change="radioAryChg( {{i.conModel}}, 'unsetppGcon', {{i.idx}} )"
+          name="{{i.conId}}" value="PP-B3"/>未交渉<br/>
+      </div>
+    </td>
+    <td id="{{i.grqId}}">
+      <div ng-class="{{i.grqClass}}">
+        <input type="radio" ng-model="{{i.grqModel}}"
+          <!-- ng-required="{{i.nameModel}}" -->
+          ng-change="radioAryChg( {{i.grqModel}}, 'unsetppGgrq', {{i.idx}} )"
+          name="{{i.grpId}}" value="PP-A"/>する<br/>
+        <input type="radio" ng-model="{{i.grqModel}}"
+          ng-change="radioAryChg( {{i.grqModel}}, 'unsetppGgrq', {{i.idx}} )"
+          name="{{i.grpId}}" value="PP-B"/>しない
+      </div>
+    </td>
+  </tr>
+</div>
+<!-- 出演者情報入力欄 -->
         </tbody>
       </table>
     </dl>
@@ -553,7 +608,7 @@
           pyName :          '<TMPL_VAR NAME=py_name>',
           pyNameF :         '<TMPL_VAR NAME=py_name_f>',
           pyTitle :         '<TMPL_VAR NAME=py_title>',
-          ppGuestNum :      <TMPL_VAR NAME=pp_cnt>,
+          ppGuestNum :      '<TMPL_VAR NAME=pp_cnt>',
           ppGuest :   [
                           {
                             name :  '',
@@ -591,86 +646,34 @@
           unsetppGcon :     [ true ],
           unsetppGgrq :     [ true ],
         };
-        // 出演者情報JSON文字列(確認後修正のため)
-        $scope.guestJson = '<TMPL_VAR NAME=guestJson>';
-        // 出演者情報テンプレート定義
-        $scope.guestTmpl = function(){/*
-<tr>
-  <td align="right">%g%</td>
-  <td valign="middle">
-    <input type="text" ng-model="pgrg.ppGuest[%p%].name"
-      name="pp%g%_name" id="pp%g%_name"
-      placeholder="例:カーティス・ニュートン"
-      size="30" style="ime-mode: active;"/><br/>
-    <input type="text" ng-model="pgrg.ppGuest[%p%].namef"
-      name="pp%g%_name_f" id="pp%g%_name_f"
-      placeholder="例:カーティス・ニュートン"
-      ng-required="pgrg.ppGuest[%p%].name"
-      size="30" style="ime-mode: active;"/>
-  </td>
-  <td valign="middle">
-    <textarea ng-model="pgrg.ppGuest[%p%].title"
-      name="pp%g%_title" id="pp%g%_title"
-      placeholder="例:キャプテン・フューチャー"
-      ng-required="pgrg.ppGuest[%p%].name"
-      cols="20" rows="2" style="ime-mode: active;"></textarea>
-  </td>
-  <td id="pp%g%_con">
-    <div ng-class="{invalid: pgrg.ppGuest[%p%].name && reqchk.unsetppGcon[%p%]}">
-      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
-        ng-required="pgrg.ppGuest[%p%].name"
-        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
-        name="pp%g%_con" value="PP-A"/>交渉を大会に依頼<br/>
-      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
-        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
-        name="pp%g%_con" value="PP-B1"/>出演了承済<br/>
-      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
-        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
-        name="pp%g%_con" value="PP-B2"/>交渉中<br/>
-      <input type="radio" ng-model="pgrg.ppGuest[%p%].con"
-        ng-change="radioAryChg( pgrg.ppGuest[%p%].con, 'unsetppGcon', %p% )"
-        name="pp%g%_con" value="PP-B3"/>未交渉<br/>
-    </div>
-  </td>
-  <td id="pp%g%_grq">
-    <div ng-class="{invalid: pgrg.ppGuest[%p%].name && reqchk.unsetppGgrq[%p%]}">
-      <input type="radio" ng-model="pgrg.ppGuest[%p%].grq"
-        ng-required="pgrg.ppGuest[%p%].name"
-        ng-change="radioAryChg( pgrg.ppGuest[%p%].grq, 'unsetppGgrq', %p% )"
-        name="pp%g%_grq" value="PP-A"/>する<br/>
-      <input type="radio" ng-model="pgrg.ppGuest[%p%].grq"
-        ng-change="radioAryChg( pgrg.ppGuest[%p%].grq, 'unsetppGgrq', %p% )"
-        name="pp%g%_grq" value="PP-B"/>しない
-    </div>
-  </td>
-</tr>
-        */}.toString().split("\n").slice(1,-1).join("\n");
-
-        // 出演者欄追加内部関数
-        var _doAddGuest = function() {
-          var pno = $scope.pgrg.ppGuestNum;
-          var gno = pno + 1;
-          var src = $scope.guestTmpl.replace(/%p%/g, pno).replace(/%g%/g, gno);
-          var addElm = angular.element( src );
-          var dstElm = angular.element(document.getElementById('addGuest'));
-          dstElm.append(addElm);
-          $compile(addElm.contents())($scope);
+        // 出演者情報loopのための配列作成関数定義
+        $scope.range = function(n) {
+          var arr = [];
+          for (var i=0; i<n; ++i) {
+            var j = i + 1;
+            arr.push(
+            {
+              idx:          i,
+              nameModel:    'pgrg.ppGuest[' + i + '].name',
+              nameId:       'pp' + j + '_name',
+              namefModel:   'pgrg.ppGuest[' + i + '].namef',
+              namefId:      'pp' + j + '_name_f',
+              titleModel:   'pgrg.ppGuest[' + i + ']title',
+              titleId:      'pp' + j + '_title',
+              conModel:     'pgrg.ppGuest[' + i + ']con',
+              conId:        'pp' + j + '_con',
+              conClass:     '{invalid: pgrg.ppGuest[' + i + '].name && reqchk.unsetppGcon[' + i + ']}',
+              grqModel:     'pgrg.ppGuest[' + i + ']grq',
+              grqId:        'pp' + j + '_grq',
+              grqClass:     '{invalid: pgrg.ppGuest[' + i + '].name && reqchk.unsetppGgrq[' + i + ']}',
+            })
+          }
+          return arr;
         };
 
         // 出演者欄追加
         $scope.AddppGuest = function() {
           $scope.pgrg.ppGuestNum += 1;
-          var pno = $scope.pgrg.ppGuestNum;
-          $scope.pgrg.ppGuest[pno] = {
-                            name :  '',
-                            namef : '',
-                            title : '',
-                            con :   '',
-                            grq :   '',
-                          };
-          $scope.reqchk.unsetppGcon[pno] = true;
-          $scope.reqchk.unsetppGgrq[pno] = true;
-          _doAddGuest();
         };
 
         // 初期値設定
@@ -679,12 +682,6 @@
           if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
           if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
           if ( $scope.pgrg.ppGuestNum == '' ) { $scope.pgrg.ppGuestNum = 0; };
-          var ppcnt = $scope.pgrg.ppGuestNum;
-          $scope.pgrg.ppGuestNum = 0;
-          _doAddGuest(); // 最初の一つ
-          for ( var cnt=0; cnt<ppcnt; cnt++) {
-            $scope.AddppGuest();
-          }
         })();
       }
     ]
