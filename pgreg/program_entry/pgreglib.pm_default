@@ -293,7 +293,7 @@ my %h_pname4mail = (
     'phonetime'     => ['電話連絡可能な時間帯', undef],
     # 企画情報
     'pg_name'       => ['企画名', undef],
-    'pg_name_f'     => ['企画名ふりがな', undef],
+    'pg_name_f'     => ['企画名フリガナ', undef],
     'pg_kind'       => ['企画種別', \%pg_kind_cnv],
     'pg_kind2'      => ['企画種別その他内容', undef],
     'pg_place'      => ['希望場所', \%pg_place_cnv],
@@ -341,12 +341,11 @@ my %h_pname4mail = (
     'pg_badprog'    => ['重なると困る企画', undef],
     # 申込者出演情報
     'youdo'         => ['申込者出演', \%ppn_youdo_cnv],
-    'py_name'       => ['申込者氏名', undef],
-    'py_name_f'     => ['申込者氏名フリガナ', undef],
+    'py_name'       => ['申込者企画ネーム', undef],
+    'py_name_f'     => ['申込者企画ネームフリガナ', undef],
     'py_title'      => ['申込者肩書', undef],
     # 出演者情報
     'pp_cnt'        => ['出演者数', undef],
-    # 出演者情報実体は、JSON文字列化して渡す
     # 備考
     'fc_comment'    => ['備考', undef],
 );
@@ -366,6 +365,8 @@ sub pg_stdHtmlTmpl_set {
         if ( $page->query(name => 'FULLNAME'));
     $page->param(CONPERIOD  => $main::CONDEF_CONST{'CONPERIOD'})
         if ( $page->query(name => 'CONPERIOD'));
+    $page->param(MAXGCNT  => $main::CONDEF_CONST{'MAXGCNT'})
+        if ( $page->query(name => 'MAXGCNT'));
 }
 
 # 共通関数 MailBodyテンプレート共通変数設定
@@ -389,7 +390,7 @@ sub pg_stdMailTmpl_set {
         if ( $page->query(name => 'CONNAME') );
 }
 
-# 共通関数 テンプレート変数設定
+# 共通関数 設定値確認テンプレート変数設定
 sub pg_HtmlTmpl_set {
     my (
         $page,  # HTML::Templateオブジェクト
@@ -453,12 +454,14 @@ sub pg_HtmlTmpl_set {
         }
     }
 
-    # 出演者情報(LOOP)
+    # 申込者出演情報
     $page->param( 'youdo' => $ppn_youdo_cnv{$sprm->param('youdo')} )
         if ( $page->query(name => 'youdo') );
+    # 出演者情報(LOOP)
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;
-    for ($ppcnt = 1; $ppcnt <= 8; $ppcnt++) {   # CONST: 出演者の最大値
+    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
         my $ppname = $sprm->param($prefix . '_name');
         if ( defined($ppname) && $ppname  ne '') {
@@ -505,8 +508,8 @@ sub cnv_useunuse_val {
     }
     return ($value);
 }
-#
-# 共通関数 企画登録パラメータ設定
+
+# 共通関数 企画登録画面テンプレートパラメータ設定
 sub pg_prmModelTmpl_set {
     my (
         $page,  # HTML::Templateオブジェクト
@@ -521,6 +524,32 @@ sub pg_prmModelTmpl_set {
             $page->param($pname   => $obj->param($pname));
         }
     }
+    # 出演者情報(LOOP)
+    my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
+    my $ppcnt;
+    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
+        my %row_data;
+        my $ppno = $ppcnt - 1;
+        my $prefix = 'pp' . $ppcnt;
+        $row_data{'pp_no'}      = $ppno;
+        $row_data{'pp_number'}  = $ppcnt;
+        $row_data{'mod_pre'}    = 'pgrg.ppGuest[' . $ppno . ']';
+        $row_data{'mod_name'}   = 'pgrg.ppGuest[' . $ppno . '].name';
+        $row_data{'mod_con'}    = 'pgrg.ppGuest[' . $ppno . '].con';
+        $row_data{'mod_grq'}    = 'pgrg.ppGuest[' . $ppno . '].grq';
+        $row_data{'id_pre'}     = $prefix;
+        $row_data{'id_con'}     = $prefix . '_con';
+        $row_data{'id_grq'}     = $prefix . '_grq';
+        $row_data{'pp_name'}    = $obj->param($prefix . '_name');
+        $row_data{'pp_name_f'}  = $obj->param($prefix . '_name_f');
+        $row_data{'pp_title'}   = $obj->param($prefix . '_title');
+        $row_data{'pp_con'}     = $obj->param($prefix . '_con');
+        $row_data{'pp_grq'}     = $obj->param($prefix . '_grq');
+        push(@loop_data, \%row_data);
+    }
+    $page->param(GUEST_LOOP => \@loop_data)
+        if ( $page->query(name => 'GUEST_LOOP') );
 }
 
 # 共通関数 企画登録パラメータ生成(抽出)
@@ -557,30 +586,27 @@ sub pg_createRegParam {
         $reg_param{'備考'} .= ' ' . '電話連絡可能な時間帯:' . $ptval;
     }
 
-    # 出演者情報:Loop処理なので埋め込み
-    my $ppbias = 0; # 申込者出演時、1番目は申込者なので一つずれる
+    # 申込者出演情報
     if ( $reg_param{'申込者出演'} eq 'する' ) {
-        $reg_param{'出演者氏名1'}           = $sprm->param('py_name');
-        $reg_param{'出演者氏名ふりがな1'}   = $sprm->param('py_name_f');
-        $reg_param{'出演者肩書1'}           = $sprm->param('py_title');
-        $reg_param{'出演交渉1'}             = '出演了承済'; # 固定値
-        $reg_param{'ゲスト申請1'}           = 'しない';   # 固定値
-        $ppbias = 1;
+        $reg_param{'申込者企画ネーム'}          = $sprm->param('py_name');
+        $reg_param{'申込者企画ネームフリガナ'}  = $sprm->param('py_name_f');
+        $reg_param{'申込者肩書'}                = $sprm->param('py_title');
     }
-    for (my $ppcnt = 1; $ppcnt <= 8; $ppcnt++) {   # CONST: 出演者の最大値
+    # 出演者情報:(Loop)
+    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    for (my $ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
-        my $poscnt = $ppcnt + $ppbias;
         if (    defined($sprm->param($prefix . '_name') )
              && ( $sprm->param($prefix . '_name') ne '' ) ) {
-            $reg_param{'出演者氏名' . $poscnt}
+            $reg_param{'出演者氏名' . $ppcnt}
                 = $sprm->param($prefix . '_name');
-            $reg_param{'出演者氏名ふりがな' . $poscnt}
+            $reg_param{'出演者氏名フリガナ' . $ppcnt}
                 = $sprm->param($prefix . '_name_f');
-            $reg_param{'出演者肩書' . $poscnt}
+            $reg_param{'出演者肩書' . $ppcnt}
                 = $sprm->param($prefix . '_title');
-            $reg_param{'出演交渉' . $poscnt}
+            $reg_param{'出演交渉' . $ppcnt}
                 = $ppn_con_cnv{$sprm->param($prefix . '_con')};
-            $reg_param{'ゲスト申請' . $poscnt}
+            $reg_param{'ゲスト申請' . $ppcnt}
                 = $ppn_grq_cnv{$sprm->param($prefix . '_grq')};
         }
     }

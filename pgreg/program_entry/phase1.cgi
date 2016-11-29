@@ -35,6 +35,8 @@ if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
     } else {
         # 申し込み受付時チェックはクライアント側で実施するので、
         # 常にチェック成功 -> 入力値をセッションに保存し、phase2にredirect
+        $cgi->param('dbgflgs', $session->param('dbgflgs'));
+        $session->clear();
         $session->save_param($cgi);
         my $wkid = defined($cgi->cookie('ID')) ? $cgi->cookie('ID') : '';
         my $urlparam = ( $wkid eq  $session->id ) ? '' : '?ID=' . $sid;
