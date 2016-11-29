@@ -2,19 +2,39 @@
 今大会では以下の設備が使用可能です。<br/>
 企画に使用したい機材をチェックして下さい。(マイクに関してはだいたいの本数も記入願います<BR/>
 <div class="commtext">
-    ただし、数や予算に限りがありますので、無料提供出来ない場合があることをご了承下さい。<br/>
+  ただし、数や予算に限りがありますので、無料提供出来ない場合があることをご了承下さい。<br/>
 </div>
-<div><input type="checkbox" ng-model="pgrg.wbd" name="wbd"/><span>ホワイトボード</span></div>
-<div><input type="checkbox" ng-model="pgrg.mic" name="mic"/><span>壇上用マイク(固定)</span>
+<div>
+  <input type="checkbox" ng-model="pgrg.wbd" name="wbd" ng-true-value="'on'" ng-false-value="false"/>
+  <span>ホワイトボード</span>
+</div>
+<div>
+  <input type="checkbox" ng-model="pgrg.mic" name="mic" ng-true-value="'on'"/>
+  <span>壇上用マイク(固定)</span>
   <span ng-if="pgrg.mic">
-    本数<input type="number" ng-model="pgrg.miccnt" name="miccnt" size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
+    本数
+    <input type="number" string-to-number ng-model="pgrg.miccnt" name="miccnt" min="1"
+      size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
   </span>
 </div>
-<div><input type="checkbox" ng-model="pgrg.mic2" name="mic2"/><span>客席用マイク(可動)</span>
+<div>
+  <input type="checkbox" ng-model="pgrg.mic2" name="mic2" ng-true-value="'on'"/>
+  <span>客席用マイク(可動)</span>
   <span ng-if="pgrg.mic2">
-    本数<input type="number" ng-model="pgrg.mic2cnt" name="mic2cnt" size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
+    本数
+    <input type="number" string-to-number ng-model="pgrg.mic2cnt" name="mic2cnt" min="1"
+      size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
   </span>
 </div>
-<div><input type="checkbox" ng-model="pgrg.mon" name="mon"/><span>プロジェクタまたは大型モニタ</span></div>
-<div><input type="checkbox" ng-model="pgrg.dvd" name="dvd"/><span>BD/DVDプレイヤー</span></div>
-<div><input type="checkbox" ng-model="pgrg.syo" name="syo"/><span>書画カメラ</span></div>
+<div>
+  <input type="checkbox" ng-model="pgrg.mon" name="mon" ng-true-value="'on'"/>
+    <span>プロジェクタまたは大型モニタ</span>
+</div>
+<div>
+  <input type="checkbox" ng-model="pgrg.dvd" name="dvd" ng-true-value="'on'"/>
+    <span>BD/DVDプレイヤー</span>
+</div>
+<div>
+  <input type="checkbox" ng-model="pgrg.syo" name="syo" ng-true-value="'on'"/>
+  <span>書画カメラ</span>
+</div>

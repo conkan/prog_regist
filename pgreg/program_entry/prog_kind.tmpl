@@ -1,16 +1,29 @@
 <div ng-class="{invalid: reqchk.unsetKind}">
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A1"/>講演
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A2"/>パネルディスカッション
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A3"/>講座
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A4"/>上映
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A5"/>座談会
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A6"/>お茶会
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-A7"/>ゲーム
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-B1"/>コンサート
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-C1"/>展示
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-D1"/>印刷物発行
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-E1"/>投票<br/>
-<input type="radio" ng-model="pgrg.pgKind" name="pg_kind" value="K-X1"/>その他
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    ng-required="true"
+    value="K-A1"/>講演
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-A2"/>パネルディスカッション
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-A3"/>講座
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-A4"/>上映
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-A5"/>座談会
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-A6"/>お茶会
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-A7"/>ゲーム
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-B1"/>コンサート
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-C1"/>展示
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-D1"/>印刷物発行
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-E1"/>投票<br/>
+  <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
+    value="K-X1"/>その他
   <span ng-if="pgrg.pgKind=='K-X1'">
     <input type="text" ng-model="pgrg.pgKind2" name="pg_kind2"
      size="30" style="ime-mode: active;" ng-required="true"/>
