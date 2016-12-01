@@ -5,207 +5,28 @@ use warnings;
 use Encode qw/ encode decode /;
 use Net::SMTP;
 
-#### 起動前に設定しておく項目 ---->
-{
-package main;
-use Sys::Hostname;
-our %CONDEF_CONST = (
-#### デバッグ,メンテナンスフラグ
-    ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
-    ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
-    # 'ONLYUICHK'  => 1,
-    # 'MAINTENANCE' => 1,
-
-#### 大会独自項目 定数定義
-    ## CONNAME :    大会愛称      ex. CCCC
-    ## CONPERIOD:   有効期間      ex. 2015-2016
-    ## FULLNAME:    大会正式名称  ex. 第NN回日本SF大会 CCCC
-    ## MIMENAME:    '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
-    ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
-    ## ENTADDR:     メールヘッダ差出人アドレス
-    ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
-    ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
-    'CONNAME'    => '',
-    'CONPERIOD'  => '',
-    'FULLNAME'   => '',
-    'MIMENAME'   => '',
-    'MIMEPGSG'   => '',
-    'ENTADDR'    => '',
-    'ENVFROM'    => '',
-    'PGSTAFF'    => '',
-    ## CONKANURL:   conkan_programトップURL
-    ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
-    'CONKANURL'  => '',
-    'CONKANPASS' => '',
-    ## SMTPSERVER:  メールサーバFQDN
-    'SMTPSERVER' => '',
-    ## MAXGCNT:     最大出演者数 (既定値 8)
-    'MAXGCNT'    => 8,
-
-#### 評価用特殊参加番号
-    ## SPREGNUM1:   直接申込jump用参加番号
-    ## SPREGNUM2:   直接申込jump&FinalMail確認用参加番号
-    ## SPREGNUM3:   FirstMail確認用参加番号
-    'SPREGNUM1'  => '2017DIRECTPGREGIST082627',
-    'SPREGNUM2'  => '2017DIRECTMAILCHEC082627',
-    'SPREGNUM3'  => '2017MAILBODYCHECK082627', 
-
-#### 詳細動作指定デバッグ用オプション 初期指定しているが、変更可能
-    # 参加番号に、 <参加番号> <SPPRIFIX> [ <オプション> ... ]で指定
-    ## SPPRIFIX:    特殊動作用プリフィックス
-    ## NOURLMAIL:   オプション:申し込みURL通知メールを送らず、直接phase1
-    ## NOMAIL2U:    オプション:申込者, メール発信者に申込受付メールを送らない
-    ## NOMAIL2K:    オプション:企画管理MLに申込受付メールを送らない
-    ## NOALLMAIL:   オプション:全てのメールを送信しない
-    ## SKIPVALID:   オプション:パラメータバリデーションせず、直接phase2
-    ## SKIPREGIST:  オプション:実際の登録はしない
-    ## SHOWUMAIL:   オプション:申し込みURL通知メール内容を表示
-    ## SHOWMAIL2:   オプション:phase3で登録通知メール内容を表示
-    ## SHOWJSON:    オプション:phase3で登録用JSON表示
-    'SPPRIFIX'   => '--SP', 
-    'NOURLMAIL'  => 'NOURLMAIL',
-    'NOMAIL2U'   => 'NOMAIL2USER',
-    'NOMAIL2K'   => 'NOMAIL2ML',
-    'NOALLMAIL'  => 'NOALLMAIL',
-    'SKIPVALID'  => 'SKIPVALID',
-    'SKIPREGIST' => 'SKIPREGIST',
-    'SHOWUMAIL'  => 'SHOWURLMAIL',
-    'SHOWMAIL2'  => 'SHOWREGMAIL',
-    'SHOWJSON'   => 'SHOWREGJSON',
-);
-}
-#### <---- ここまで
-
-#### 大会独自項目 企画登録情報 テーブル定義
-# CGI値変換テーブル
-my %pg_kind_cnv = (         # 企画種別table
-    'K-A1'  => '講演',
-    'K-A2'  => 'パネルディスカッション',
-    'K-A3'  => '講座',
-    'K-A4'  => '上映',
-    'K-A5'  => '座談会',
-    'K-A6'  => 'お茶会',
-    'K-A7'  => 'ゲーム',
-    'K-B1'  => 'コンサート',
-    'K-C1'  => '展示',
-    'K-D1'  => '印刷物発行',
-    'K-E1'  => '投票',
-    'K-X1'  => 'その他',
-);
-my %pg_place_cnv = (        # 希望場所table
-    'P-N'   => '特になし',
-    'P-C1'  => '和室',
-    'P-H1'  => 'ホール',
-    'P-X1'  => 'その他',
-);
-my %pg_layout_cnv = (       # レイアウトtable
-    '0' => '座布団のみ(和室)',
-    '1' => '寺子屋(和室に低い机)',
-    '9' => 'その他',
-);
-my %pg_time_cnv = (         # 希望日時table
-    'T-N'       => '特になし',
-    'T-1any'    => '09日(土)のどこでも',
-    'T-1pm'     => '09日(土)午後',
-    'T-1ngt'    => '09日(土)夜',
-    'T-1mid'    => '09日(土)深夜',
-    'T-2any'    => '10日(日)おたコス5野外ステージ',
-    'T-wday'    => '両日',
-    'T-X1'      => 'その他',
-);
-my %pg_koma_cnv = (         # 希望コマ数table
-    'TK-1'  => '１コマ(90分+準備30分)',
-    'TK-2'  => '２コマ(210分+準備30分)',
-    'TK-A'  => '終日',
-    'TK-X1' => 'その他',
-);
-my %pg_ninzu_cnv = (        # 予想参加者table
-    'TN-0'  => '不明',
-    'TN-1'  => '20人まで',
-    'TN-2'  => '50人まで',
-    'TN-3'  => '100人まで',
-    'TN-4'  => '200人まで',
-    'TN-5'  => '200人超',
-);
-my %pg_kafuka_cnv = (     # 可不可table
-    'CX-0'  => '可',
-    'CX-1'  => '不可',
-);
-my %pg_naiyou_k_cnv = (     # 内容事前公開table
-    'CX-0'  => '事前公開可',
-    'CX-1'  => '事前公開不可',
-);
-my %pg_kiroku_kb_cnv = (    # リアルタイム公開table
-    'CX-0'  => 'UST等動画を含む全て許可',
-    'CX-1'  => 'twitter等テキストと静止画公開可',
-    'CX-2'  => 'テキストのみ公開可',
-    'CX-3'  => '公開不可',
-    'CX-9'  => 'その他',
-);
-my %pg_kiroku_ka_cnv = (    # 事後公開table
-    'CX-0'  => 'UST等動画を含む全て許可',
-    'CX-1'  => 'blog等テキストと静止画公開可',
-    'CX-2'  => 'テキストのみ公開可',
-    'CX-3'  => '公開不可',
-    'CX-9'  => 'その他',
-);
-my %motikomi_cnv = (   # 持ち込む/持ち込まないtable
-    '0' => '持ち込む',
-    '1' => '持ち込まない',
-);
-my %av_v_cnv = (            # 持ち込み映像機器映像接続形式table
-    'hdmi'      => 'HDMI',
-    'svideo'    => 'S-Video',
-    'rca'       => 'RCAコンポジット(黄)',
-    'other'     => 'その他',
-);
-my %av_a_cnv = (            # 持ち込み映像機器音声接続形式table
-    'none'  => '不要',
-    'tsr'   => 'ステレオミニ(3.5mmTSR)',
-    'rca'   => 'RCAコンポジット(赤白)',
-    'other' => 'その他',
-);
-my %pc_v_cnv = (            # 持ち込みPC映像接続形式table
-    'none'  => '接続しない',
-    'hdmi'  => 'HDMI',
-    'vga'   => 'D-Sub15(VGA)',
-    'other' => 'その他',
-);
-my %pc_a_cnv = (            # 持ち込みPC音声接続形式table
-    'none'      => '不要',
-    'svideo'    => 'ステレオミニ(3.5mmTSR)',
-    'rca'       => 'RCAコンポジット(赤白)',
-    'other'     => 'その他',
-);
-my %lan_cnv = (             # ネット接続形式table
-    'none'  => '接続しない',
-    'lan'   => '有線(RJ-45)',
-    'wifi'  => '無線',
-    'other' => 'その他',
-);
-my %pg_enquete_cnv = (      # 企画経験table
-    '0' => '初めて',
-    '1' => '昨年に続いて2回目',
-    '2' => '継続して3〜5回目',
-    '3' => 'ひさしぶり',
-    '4' => '6回目以上',
-);
-my %ppn_youdo_cnv = (   # 自身出演table
-    '0' => 'する',
-    '1' => 'しない',
-);
-my %ppn_con_cnv = (     # 出演交渉table
-    'PP-A'  => '交渉を大会に依頼',
-    'PP-B1' => '出演了承済',
-    'PP-B2' => '交渉中',
-    'PP-B3' => '未交渉',
-);
-my %ppn_grq_cnv = (     # ゲスト申請table
-    'PP-A'  => 'する',
-    'PP-B'  => 'しない',
-);
-
-#### <---- ここまで
+use pgregdef;
+our %CONDEF_CONST;
+our %pg_kind_cnv;           # 企画種別table
+our %pg_place_cnv;          # 希望場所table
+our %pg_layout_cnv;         # レイアウトtable
+our %pg_time_cnv;           # 希望日時table
+our %pg_koma_cnv;           # 希望コマ数table
+our %pg_ninzu_cnv;          # 予想参加者table
+our %pg_kafuka_cnv;         # 可不可table
+our %pg_naiyou_k_cnv;       # 内容事前公開table
+our %pg_kiroku_kb_cnv;      # リアルタイム公開table
+our %pg_kiroku_ka_cnv;      # 事後公開table
+our %motikomi_cnv;          # 持ち込む/持ち込まないtable
+our %av_v_cnv;              # 持ち込み映像機器映像接続形式table
+our %av_a_cnv;              # 持ち込み映像機器音声接続形式table
+our %pc_v_cnv;              # 持ち込みPC映像接続形式table
+our %pc_a_cnv;              # 持ち込みPC音声接続形式table
+our %lan_cnv;               # ネット接続形式table
+our %pg_enquete_cnv;        # 企画経験table
+our %ppn_youdo_cnv;         # 自身出演table
+our %ppn_con_cnv;           # 出演交渉table
+our %ppn_grq_cnv;           # ゲスト申請table
 
 ### HTMLテンプレート置き換え定義
 # 単純置き換え パラメータ名配列
