@@ -6,28 +6,17 @@ use Encode qw/ encode decode /;
 use Net::SMTP;
 
 use pgregdef;
-our %CONDEF_CONST;
 
-our %pg_kind_cnv;           # 企画種別table
-our %pg_place_cnv;          # 希望場所table
-our %pg_layout_cnv;         # レイアウトtable
-our %pg_time_cnv;           # 希望日時table
-our %pg_koma_cnv;           # 希望コマ数table
-our %pg_ninzu_cnv;          # 予想参加者table
-our %pg_kafuka_cnv;         # 可不可table
-our %pg_naiyou_k_cnv;       # 内容事前公開table
-our %pg_kiroku_kb_cnv;      # リアルタイム公開table
-our %pg_kiroku_ka_cnv;      # 事後公開table
-our %motikomi_cnv;          # 持ち込む/持ち込まないtable
-our %av_v_cnv;              # 持ち込み映像機器映像接続形式table
-our %av_a_cnv;              # 持ち込み映像機器音声接続形式table
-our %pc_v_cnv;              # 持ち込みPC映像接続形式table
-our %pc_a_cnv;              # 持ち込みPC音声接続形式table
-our %lan_cnv;               # ネット接続形式table
-our %pg_enquete_cnv;        # 企画経験table
-our %ppn_youdo_cnv;         # 自身出演table
-our %ppn_con_cnv;           # 出演交渉table
-our %ppn_grq_cnv;           # ゲスト申請table
+require Exporter;
+use base qw/Exporter/;
+
+our @EXPORT = qw(
+    %CONDEF_CONST
+);
+
+our %EXPORT_TAGS = (
+    default      => [ @EXPORT ],
+);
 
 ### HTMLテンプレート置き換え定義
 # 単純置き換え パラメータ名配列
@@ -181,13 +170,13 @@ sub pg_stdHtmlTmpl_set {
 
     $page->param(ID         => $sid)
         if ( $page->query(name => 'ID'));
-    $page->param(CONNAME    => $main::CONDEF_CONST{'CONNAME'})
+    $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
         if ( $page->query(name => 'CONNAME'));
-    $page->param(FULLNAME   => $main::CONDEF_CONST{'FULLNAME'})
+    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
         if ( $page->query(name => 'FULLNAME'));
-    $page->param(CONPERIOD  => $main::CONDEF_CONST{'CONPERIOD'})
+    $page->param(CONPERIOD  => $CONDEF_CONST{'CONPERIOD'})
         if ( $page->query(name => 'CONPERIOD'));
-    $page->param(MAXGCNT  => $main::CONDEF_CONST{'MAXGCNT'})
+    $page->param(MAXGCNT  => $CONDEF_CONST{'MAXGCNT'})
         if ( $page->query(name => 'MAXGCNT'));
 }
 
@@ -198,17 +187,17 @@ sub pg_stdMailTmpl_set {
         $toaddr,    # MailHeader:To
         $name,      # MailBody:申込者名
     ) = @_;
-    $page->param(MIMENAME   => $main::CONDEF_CONST{'MIMENAME'})
+    $page->param(MIMENAME   => $CONDEF_CONST{'MIMENAME'})
         if ( $page->query(name => 'MIMENAME') );
-    $page->param(FROMADDR   => $main::CONDEF_CONST{'ENTADDR'})
+    $page->param(FROMADDR   => $CONDEF_CONST{'ENTADDR'})
         if ( $page->query(name => 'FROMADDR') );
     $page->param(TOADDR     => $toaddr)
         if ( $page->query(name => 'TOADDR') );
     $page->param(NAME       => $name)
         if ( $page->query(name => 'NAME') );
-    $page->param(FULLNAME   => $main::CONDEF_CONST{'FULLNAME'})
+    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
         if ( $page->query(name => 'FULLNAME') );
-    $page->param(CONNAME    => $main::CONDEF_CONST{'CONNAME'})
+    $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
         if ( $page->query(name => 'CONNAME') );
 }
 
@@ -282,7 +271,7 @@ sub pg_HtmlTmpl_set {
     # 出演者情報(LOOP)
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;
-    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
         my $ppname = $sprm->param($prefix . '_name');
@@ -349,7 +338,7 @@ sub pg_prmModelTmpl_set {
     # 出演者情報(LOOP)
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;
-    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my %row_data;
         my $ppno = $ppcnt - 1;
@@ -415,7 +404,7 @@ sub pg_createRegParam {
         $reg_param{'申込者肩書'}                = $sprm->param('py_title');
     }
     # 出演者情報:(Loop)
-    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for (my $ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
         if (    defined($sprm->param($prefix . '_name') )
@@ -443,7 +432,7 @@ sub doMailSend {
         $body,      # メール本文
     ) = @_;
 
-    my $smtp = Net::SMTP->new($main::CONDEF_CONST{'SMTPSERVER'});
+    my $smtp = Net::SMTP->new($CONDEF_CONST{'SMTPSERVER'});
     $smtp->mail($envfrom);
     foreach my $envto ( @$pAenvto ) {
         $smtp->to($envto);

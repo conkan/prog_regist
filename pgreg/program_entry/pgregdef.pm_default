@@ -3,10 +3,23 @@ package pgregdef;
 use strict;
 use warnings;
 
+require Exporter;
+use base qw/Exporter/;
+
+our @EXPORT = qw(
+    %pg_kind_cnv %pg_place_cnv %pg_layout_cnv %pg_time_cnv %pg_koma_cnv
+    %pg_ninzu_cnv %pg_kafuka_cnv %pg_naiyou_k_cnv
+    %pg_kiroku_kb_cnv %pg_kiroku_ka_cnv %motikomi_cnv
+    %av_v_cnv %av_a_cnv %pc_v_cnv %pc_a_cnv %lan_cnv 
+    %pg_enquete_cnv %ppn_youdo_cnv %ppn_con_cnv %ppn_grq_cnv
+    %CONDEF_CONST
+);
+
+our %EXPORT_TAGS = (
+    default      => [ @EXPORT ],
+);
+
 #### prog_regist共通項目 --->
-{
-package main;
-use Sys::Hostname;
 our %CONDEF_CONST = (
 #### デバッグ,メンテナンスフラグ
     ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
@@ -71,12 +84,9 @@ our %CONDEF_CONST = (
     'SHOWMAIL2'  => 'SHOWREGMAIL',
     'SHOWJSON'   => 'SHOWREGJSON',
 );
-}
 #### <--- prog_regist共通項目
 
 #### pgreglib 内部項目 --->
-{
-package pgreglib;
 #### 大会独自項目 企画登録情報 テーブル定義
 # CGI値変換テーブル
 our %pg_kind_cnv = (         # 企画種別table
@@ -205,7 +215,6 @@ our %ppn_grq_cnv = (     # ゲスト申請table
     'PP-A'  => 'する',
     'PP-B'  => 'しない',
 );
-}
 #### <--- pgreglib 内部項目
 
 1;
