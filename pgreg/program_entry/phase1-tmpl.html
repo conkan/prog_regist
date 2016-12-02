@@ -40,7 +40,7 @@
         </tr>
         <tr>
             <th align="right">
-                <font color="blue">※</font><TMPL_VAR NAME="CONNAME">番号：
+                <font color="blue">※</font><TMPL_VAR NAME="CONNAME">参加登録番号：
             </th>
             <td>
                 <input type="text" name="reg_num" ng-model="pgrg.regNum"
@@ -365,59 +365,7 @@
             <th align="left" >出演交渉</th>
             <th align="left" >ゲスト申請</th>
           </tr>
-<!-- 出演者情報入力欄 -->
-<TMPL_LOOP NAME="GUEST_LOOP">
-  <tr ng-if="<TMPL_VAR NAME=pp_no><=pgrg.ppGuestNum"> <!-- > -->
-    <td align="right"><TMPL_VAR NAME=pp_number></td>
-    <td valign="middle">
-      <input type="text" ng-model="<TMPL_VAR NAME=mod_name>"
-        name="<TMPL_VAR NAME=id_pre>_name" id="<TMPL_VAR NAME=id_pre>_name"
-        placeholder="例:カーティス・ニュートン"
-        size="30" style="ime-mode: active;"/><br/>
-      <input type="text" ng-model="<TMPL_VAR NAME=mod_pre>.namef"
-        name="<TMPL_VAR NAME=id_pre>_name_f" id="<TMPL_VAR NAME=id_pre>_name_f"
-        placeholder="例:カーティス・ニュートン"
-        ng-required="<TMPL_VAR NAME=mod_name>"
-        size="30" style="ime-mode: active;"/>
-    </td>
-    <td valign="middle">
-      <textarea ng-model="<TMPL_VAR NAME=mod_pre>.title"
-        name="<TMPL_VAR NAME=id_pre>_title" id="<TMPL_VAR NAME=id_pre>_title"
-        placeholder="例:キャプテン・フューチャー"
-        ng-required="<TMPL_VAR NAME=mod_name>"
-        cols="20" rows="2" style="ime-mode: active;"></textarea>
-    </td>
-    <td id="<TMPL_VAR NAME=id_con>">
-      <div ng-class="{invalid: <TMPL_VAR NAME=mod_name> && reqchk.unsetppGcon[<TMPL_VAR NAME=pp_no>]}">
-        <input type="radio" ng-model="<TMPL_VAR NAME=mod_con>"
-          ng-required="<TMPL_VAR NAME=mod_name>"
-          ng-change="radioAryChg( <TMPL_VAR NAME=mod_con>, 'unsetppGcon', <TMPL_VAR NAME=pp_no> )"
-          name="<TMPL_VAR NAME=id_con>" value="PP-A"/>交渉を大会に依頼<br/>
-        <input type="radio" ng-model="<TMPL_VAR NAME=mod_con>"
-          ng-change="radioAryChg( <TMPL_VAR NAME=mod_con>, 'unsetppGcon', <TMPL_VAR NAME=pp_no> )"
-          name="<TMPL_VAR NAME=id_con>" value="PP-B1"/>出演了承済<br/>
-        <input type="radio" ng-model="<TMPL_VAR NAME=mod_con>"
-          ng-change="radioAryChg( <TMPL_VAR NAME=mod_con>, 'unsetppGcon', <TMPL_VAR NAME=pp_no> )"
-          name="<TMPL_VAR NAME=id_con>" value="PP-B2"/>交渉中<br/>
-        <input type="radio" ng-model="<TMPL_VAR NAME=mod_con>"
-          ng-change="radioAryChg( <TMPL_VAR NAME=mod_con>, 'unsetppGcon', <TMPL_VAR NAME=pp_no> )"
-          name="<TMPL_VAR NAME=id_con>" value="PP-B3"/>未交渉<br/>
-      </div>
-    </td>
-    <td id="<TMPL_VAR NAME=id_grq>">
-      <div ng-class="{invalid: <TMPL_VAR NAME=mod_name> && reqchk.unsetppGgrq[<TMPL_VAR NAME=pp_no>]}">
-        <input type="radio" ng-model="<TMPL_VAR NAME=mod_grq>"
-          ng-required="<TMPL_VAR NAME=mod_name>"
-          ng-change="radioAryChg( <TMPL_VAR NAME=mod_grq>, 'unsetppGgrq', <TMPL_VAR NAME=pp_no> )"
-          name="<TMPL_VAR NAME=id_grq>" value="PP-A"/>する<br/>
-        <input type="radio" ng-model="<TMPL_VAR NAME=mod_grq>"
-          ng-change="radioAryChg( <TMPL_VAR NAME=mod_grq>, 'unsetppGgrq', <TMPL_VAR NAME=pp_no> )"
-          name="<TMPL_VAR NAME=id_grq>" value="PP-B"/>しない
-      </div>
-    </td>
-  </tr>
-</TMPL_LOOP>
-<!-- 出演者情報入力欄 -->
+          <TMPL_INCLUDE NAME="prog_guest.tmpl">
         </tbody>
       </table>
     </dl>

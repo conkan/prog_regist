@@ -7,6 +7,7 @@ use Net::SMTP;
 
 use pgregdef;
 our %CONDEF_CONST;
+
 our %pg_kind_cnv;           # 企画種別table
 our %pg_place_cnv;          # 希望場所table
 our %pg_layout_cnv;         # レイアウトtable
