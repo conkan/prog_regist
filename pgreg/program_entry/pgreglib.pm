@@ -356,6 +356,42 @@ sub pg_prmModelTmpl_set {
             $page->param($pname   => $obj->param($pname));
         }
     }
+    # radiobox選択肢生成
+    $page->param(KIND_LOOP => \@pg_kind_ary)
+        if ( $page->query(name => 'KIND_LOOP') );
+    $page->param(PLACE_LOOP => \@pg_place_ary)
+        if ( $page->query(name => 'PLACE_LOOP') );
+    $page->param(LAYOUT_LOOP => \@pg_layout_ary)
+        if ( $page->query(name => 'LAYOUT_LOOP') );
+    $page->param(TIME_LOOP => \@pg_time_ary)
+        if ( $page->query(name => 'TIME_LOOP') );
+    $page->param(KOMA_LOOP => \@pg_koma_ary)
+        if ( $page->query(name => 'KOMA_LOOP') );
+    $page->param(NINZU_LOOP => \@pg_ninzu_ary)
+        if ( $page->query(name => 'NINZU_LOOP') );
+    $page->param(KAFUKA_LOOP => \@pg_kafuka_ary)
+        if ( $page->query(name => 'KAFUKA_LOOP') );
+    $page->param(NAIYOUK_LOOP => \@pg_naiyou_k_ary)
+        if ( $page->query(name => 'NAIYOUK_LOOP') );
+    $page->param(KIROKU_LOOP => \@pg_kiroku_ary)
+        if ( $page->query(name => 'KIROKU_LOOP') );
+    $page->param(MOTIKOMI_LOOP => \@motikomi_ary)
+        if ( $page->query(name => 'MOTIKOMI_LOOP') );
+    $page->param(AV_V_LOOP => \@av_v_ary)
+        if ( $page->query(name => 'AV_V_LOOP') );
+    $page->param(AV_A_LOOP => \@av_a_ary)
+        if ( $page->query(name => 'AV_A_LOOP') );
+    $page->param(PC_V_LOOP => \@pc_v_ary)
+        if ( $page->query(name => 'PC_V_LOOP') );
+    $page->param(PC_A_LOOP => \@pc_a_ary)
+        if ( $page->query(name => 'PC_A_LOOP') );
+    $page->param(LAN_LOOP => \@lan_ary)
+        if ( $page->query(name => 'LAN_LOOP') );
+    $page->param(ENQUETE_LOOP => \@pg_enquete_ary)
+        if ( $page->query(name => 'ENQUETE_LOOP') );
+    $page->param(YOUDO_LOOP => \@ppn_youdo_ary)
+        if ( $page->query(name => 'YOUDO_LOOP') );
+
     # 出演者情報(LOOP)
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;

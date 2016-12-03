@@ -1,13 +1,9 @@
 <div ng-class="{invalid: reqchk.unsetPlace}">
-  <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
-    ng-required="true"
-    value="P-N"/>特になし
-  <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
-    value="P-C1"/>和室
-  <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
-    value="P-H1"/>ホール<br/>
-  <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
-    value="other"/>その他
+  <TMPL_LOOP NAME=PLACE_LOOP>
+    <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+  </TMPL_LOOP>
   <span ng-if="pgrg.pgPlace=='other'">
     <input type="text" ng-model="pgrg.pgPlace2" name="pg_place2"
       size="30" style="ime-mode: active;" ng-required="true"/>
@@ -16,13 +12,11 @@
 <br/>
 希望レイアウト
 <div ng-class="{invalid: reqchk.unsetLayout}">
-  <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
-    ng-required="true"
-    value="L-0"/>座布団のみ(和室)
-  <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
-    value="L-1"/>寺子屋(和室に低い机)<br/>
-  <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
-    value="other"/>その他
+  <TMPL_LOOP NAME=LAYOUT_LOOP>
+    <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+  </TMPL_LOOP>
   <span ng-if="pgrg.pgLayout=='other'">
     <input type="text" ng-model="pgrg.pgLayout2" name="pg_layout2"
       size="30" style="ime-mode: active;" ng-required="true"/>

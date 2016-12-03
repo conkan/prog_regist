@@ -174,11 +174,11 @@
             </th>
             <td>
               <div ng-class="{invalid: reqchk.unsetPgu18}">
-                <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
-                 ng-required="true"
-                 value="CX-0"/>可
-                <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
-                 value="CX-1"/>不可<br/>
+                <TMPL_LOOP NAME=KAFUKA_LOOP>
+                  <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
+                   ng-required="true"
+                   value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+                </TMPL_LOOP>
               </div>
             </td>
         </tr>
@@ -189,11 +189,11 @@
             </th>
             <td>
               <div ng-class="{invalid: reqchk.unsetPggen}">
-                <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
-                 ng-required="true"
-                 value="CX-0"/>可
-                <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
-                 value="CX-1"/>不可<br/>
+                <TMPL_LOOP NAME=KAFUKA_LOOP>
+                  <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
+                   ng-required="true"
+                   value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+                </TMPL_LOOP>
               </div>
               <div class="commtext">
                 大会参加者以外にも公開して良いかどうかを選択してください。
@@ -207,11 +207,12 @@
             </th>
             <td>
               <div ng-class="{invalid: reqchk.unsetNaiyouK}">
-                <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
-                 ng-required="true"
-                 value="CX-0"/>事前公開可
-                <input type="radio" name="pg_naiyou_k" ng-model="pgrg.pgNaiyouK"
-                 value="CX-1"/>事前公開不可<br/>
+                <TMPL_LOOP NAME=NAIYOUK_LOOP>
+                  <input type="radio" name="pg_naiyou_k"
+                   ng-model="pgrg.pgNaiyouK"
+                   ng-required="true"
+                   value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+                </TMPL_LOOP>
               </div>
               <textarea name="pg_naiyou" ng-model="pgrg.pgNaiyou"
                cols="60" rows="5" ng-required="true"
@@ -276,17 +277,11 @@
             </th>
             <td>
               <div ng-class="{invalid: reqchk.unsetEnquete}">
-                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
-                 ng-required="true"
-                 value="PE-0"/>初めて
-                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 value="PE-1"/>昨年に続いて2回目
-                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 value="PE-2"/>継続して3～5回目
-                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 value="PE-3"/>ひさしぶり
-                <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
-                 value="PE-4"/>6回目以上
+                <TMPL_LOOP NAME=ENQUETE_LOOP>
+                  <input type="radio" name="pg_enquete"
+                    ng-model="pgrg.pgEnquete" ng-required="true"
+                    value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+                </TMPL_LOOP>
               </div>
             </td>
         </tr>
@@ -317,11 +312,11 @@
             </th>
             <td colspan="2">
               <div ng-class="{invalid: reqchk.unsetYouDo}">
-                <input type="radio" name="youdo" ng-model="pgrg.youdo"
-                 ng-required="true"
-                 value="YD-0"/>する
-                <input type="radio" name="youdo" ng-model="pgrg.youdo"
-                 value="YD-1"/>しない
+                <TMPL_LOOP NAME=YOUDO_LOOP>
+                  <input type="radio" name="youdo" ng-model="pgrg.youdo"
+                    ng-required="true"
+                    value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+                </TMPL_LOOP>
               </div>
             </td>
         </tr>

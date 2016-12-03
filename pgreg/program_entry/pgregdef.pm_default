@@ -158,7 +158,7 @@ our @pg_kiroku_ary = (          # 公開可否選択肢定義
     { VAL => 'CX-9', DISP => 'その他', },
 );
 our @motikomi_ary = (           # 持ち込む/持ち込まない選択肢定義
-    { VAL => 'MT-0', DISP => '持ち込む', },
+    { VAL => 'MT-0', DISP => '持ち込む', },     # 持ち込むのVALはMT-0固定
     { VAL => 'MT-1', DISP => '持ち込まない', },
 );
 our @av_v_ary = (               # 持ち込み映像機器映像接続形式選択肢定義
@@ -199,7 +199,7 @@ our @pg_enquete_ary = (      # 企画経験選択肢定義
     { VAL => 'PE-4', DISP => '6回目以上', },
 );
 our @ppn_youdo_ary = (   # 自身出演選択肢定義
-    { VAL => 'YD-0', DISP => 'する', },
+    { VAL => 'YD-0', DISP => 'する', },         # するのVALはYD-0固定
     { VAL => 'YD-1', DISP => 'しない', },
 );
 our @ppn_con_ary = (     # 出演交渉選択肢定義

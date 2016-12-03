@@ -1,13 +1,9 @@
 <div ng-class="{invalid: reqchk.unsetKoma}">
-  <input type="radio" ng-model="pgrg.pgKoma" name="pg_koma"
-    ng-required="true"
-    value="TK-1"/>１コマ(90分+準備30分)
-  <input type="radio" ng-model="pgrg.pgKoma" name="pg_koma"
-    value="TK-2"/>２コマ(210分+準備30分)
-  <input type="radio" ng-model="pgrg.pgKoma" name="pg_koma"
-    value="TK-A"/>終日<br/>
-  <input type="radio" ng-model="pgrg.pgKoma" name="pg_koma"
-    value="other"/>その他
+  <TMPL_LOOP NAME=KOMA_LOOP>
+    <input type="radio" ng-model="pgrg.pgKoma" name="pg_koma"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+  </TMPL_LOOP>
   <span ng-if="pgrg.pgKoma=='other'">
     <input type="text" ng-model="pgrg.pgKoma2" name="pg_koma2"
       size="30" style="ime-mode: active;" ng-required="true"/>

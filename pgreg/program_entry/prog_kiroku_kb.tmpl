@@ -1,15 +1,9 @@
 <div ng-class="{invalid: reqchk.unsetKirokuKb}">
-  <input type="radio" ng-model="pgrg.pgKirokuKb" name="pg_kiroku_kb"
-    ng-required="true"
-    value="CX-0"/>UST等動画を含む全て許可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKb" name="pg_kiroku_kb"
-    value="CX-1"/>twitter等テキストと静止画公開可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKb" name="pg_kiroku_kb"
-    value="CX-2"/>テキストのみ公開可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKb" name="pg_kiroku_kb"
-    value="CX-3"/>公開不可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKb" name="pg_kiroku_kb"
-    value="CX-9"/>その他<br/>
+  <TMPL_LOOP NAME=KIROKU_LOOP>
+    <input type="radio" ng-model="pgrg.pgKirokuKb" name="pg_kiroku_kb"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP><BR/>
+  </TMPL_LOOP>
   <div class="indent commtext">
     ※公開を許可される場合には参加者の方に公開される旨ご周知ください。<br/>
     著作権・肖像権等の問題が発生した場合には、企画主催者が責任を持ってご対応ください。ご対応が困難な場合には公開を許可しないでください。
