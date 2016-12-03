@@ -7,11 +7,10 @@ require Exporter;
 use base qw/Exporter/;
 
 our @EXPORT = qw(
-    %pg_kind_cnv %pg_place_cnv %pg_layout_cnv %pg_time_cnv %pg_koma_cnv
-    %pg_ninzu_cnv %pg_kafuka_cnv %pg_naiyou_k_cnv
-    %pg_kiroku_kb_cnv %pg_kiroku_ka_cnv %motikomi_cnv
-    %av_v_cnv %av_a_cnv %pc_v_cnv %pc_a_cnv %lan_cnv 
-    %pg_enquete_cnv %ppn_youdo_cnv %ppn_con_cnv %ppn_grq_cnv
+    @pg_kind_ary @pg_place_ary @pg_layout_ary @pg_time_ary @pg_koma_ary
+    @pg_ninzu_ary @pg_kafuka_ary @pg_naiyou_k_ary @pg_kiroku_ary
+    @motikomi_ary @av_v_ary @av_a_ary @pc_v_ary @pc_a_ary @lan_ary 
+    @pg_enquete_ary @ppn_youdo_ary @ppn_con_ary @ppn_grq_ary
     %CONDEF_CONST
 );
 
@@ -44,10 +43,10 @@ our %CONDEF_CONST = (
     'ENTADDR'    => '',
     'ENVFROM'    => '',
     'PGSTAFF'    => '',
-    ## REGNUMTIT:   参加番号名称
-    ## DEFLAYOUT:   デフォルトの会議室レイアウト
-    'REGNUMTIT'  => '参加登録番号'
-    'DEFLAYOUT'  => 'スクール'
+    ## REGNUMTIT:   参加番号名称 (既定値 参加登録番号)
+    ## DEFLAYOUT:   デフォルトの会議室レイアウト (既定値 スクール)
+    'REGNUMTIT'  => '参加登録番号',
+    'DEFLAYOUT'  => 'スクール',
     ## CONKANURL:   conkan_programトップURL
     ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
     'CONKANURL'  => '',
@@ -92,132 +91,126 @@ our %CONDEF_CONST = (
 
 #### pgreglib 内部項目 --->
 #### 大会独自項目 企画登録情報 テーブル定義
-# CGI値変換テーブル
-our %pg_kind_cnv = (         # 企画種別table
-    'K-A1'  => '講演',
-    'K-A2'  => 'パネルディスカッション',
-    'K-A3'  => '講座',
-    'K-A4'  => '上映',
-    'K-A5'  => '座談会',
-    'K-A6'  => 'お茶会',
-    'K-A7'  => 'ゲーム',
-    'K-B1'  => 'コンサート',
-    'K-C1'  => '展示',
-    'K-D1'  => '印刷物発行',
-    'K-E1'  => '投票',
-    'K-X1'  => 'その他',
+# CGI値変換テーブル配列 (設定ページ表示順)
+our @pg_kind_ary = (            # 企画種別選択肢定義
+    { VAL => 'K-A1',  DISP  => '講演', },
+    { VAL => 'K-A2',  DISP  => 'パネルディスカッション', },
+    { VAL => 'K-A3',  DISP  => '講座', },
+    { VAL => 'K-A4',  DISP  => '上映', },
+    { VAL => 'K-A5',  DISP  => '座談会', },
+    { VAL => 'K-A6',  DISP  => 'お茶会', },
+    { VAL => 'K-A7',  DISP  => 'ゲーム', },
+    { VAL => 'K-B1',  DISP  => 'コンサート', },
+    { VAL => 'K-C1',  DISP  => '展示', },
+    { VAL => 'K-D1',  DISP  => '印刷物発行', },
+    { VAL => 'K-E1',  DISP  => '投票', },
+    { VAL => 'other', DISP  => 'その他', },     # その他のVALはother固定
 );
-our %pg_place_cnv = (        # 希望場所table
-    'P-N'   => '特になし',
-    'P-C1'  => '和室',
-    'P-H1'  => 'ホール',
-    'P-X1'  => 'その他',
+our @pg_place_ary = (           # 希望場所選択肢定義
+    { VAL => 'P-N',   DISP => '特になし', },
+    { VAL => 'P-C1',  DISP => '和室', },
+    { VAL => 'P-H1',  DISP => 'ホール', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+
 );
-our %pg_layout_cnv = (       # レイアウトtable
-    '0' => '座布団のみ(和室)',
-    '1' => '寺子屋(和室に低い机)',
-    '9' => 'その他',
+our @pg_layout_ary = (          # レイアウト選択肢定義
+    { VAL => 'L-0',   DISP => '座布団のみ(和室)', },
+    { VAL => 'L-1',   DISP => '寺子屋(和室に低い机)', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
-our %pg_time_cnv = (         # 希望日時table
-    'T-N'       => '特になし',
-    'T-1any'    => '09日(土)のどこでも',
-    'T-1pm'     => '09日(土)午後',
-    'T-1ngt'    => '09日(土)夜',
-    'T-1mid'    => '09日(土)深夜',
-    'T-2any'    => '10日(日)おたコス5野外ステージ',
-    'T-wday'    => '両日',
-    'T-X1'      => 'その他',
+our @pg_time_ary = (            # 希望日時選択肢定義
+    { VAL => 'T-N',    DISP => '特になし', },
+    { VAL => 'T-1any', DISP => '09日(土)のどこでも', },
+    { VAL => 'T-1pm',  DISP => '09日(土)午後', },
+    { VAL => 'T-1ngt', DISP => '09日(土)夜', },
+    { VAL => 'T-1mid', DISP => '09日(土)深夜', },
+    { VAL => 'T-2any', DISP => '10日(日)おたコス5野外ステージ', },
+    { VAL => 'T-wday', DISP => '両日', },
+    { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
 );
-our %pg_koma_cnv = (         # 希望コマ数table
-    'TK-1'  => '１コマ(90分+準備30分)',
-    'TK-2'  => '２コマ(210分+準備30分)',
-    'TK-A'  => '終日',
-    'TK-X1' => 'その他',
+our @pg_koma_ary = (            # 希望コマ数選択肢定義
+    { VAL => 'TK-1',  DISP => '１コマ(90分+準備30分)', },
+    { VAL => 'TK-2',  DISP => '２コマ(210分+準備30分)', },
+    { VAL => 'TK-A',  DISP => '終日', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
-our %pg_ninzu_cnv = (        # 予想参加者table
-    'TN-0'  => '不明',
-    'TN-1'  => '20人まで',
-    'TN-2'  => '50人まで',
-    'TN-3'  => '100人まで',
-    'TN-4'  => '200人まで',
-    'TN-5'  => '200人超',
+our @pg_ninzu_ary = (           # 予想参加者選択肢定義
+    { VAL => 'TN-0', DISP => '不明', },
+    { VAL => 'TN-1', DISP => '20人まで', },
+    { VAL => 'TN-2', DISP => '50人まで', },
+    { VAL => 'TN-3', DISP => '100人まで', },
+    { VAL => 'TN-4', DISP => '200人まで', },
+    { VAL => 'TN-5', DISP => '200人超', },
 );
-our %pg_kafuka_cnv = (     # 可不可table
-    'CX-0'  => '可',
-    'CX-1'  => '不可',
+our @pg_kafuka_ary = (          # 可不可選択肢定義
+    { VAL => 'CX-0', DISP => '可', },
+    { VAL => 'CX-1', DISP => '不可', },
 );
-our %pg_naiyou_k_cnv = (     # 内容事前公開table
-    'CX-0'  => '事前公開可',
-    'CX-1'  => '事前公開不可',
+our @pg_naiyou_k_ary = (        # 内容事前公開選択肢定義
+    { VAL => 'CX-0', DISP => '事前公開可', },
+    { VAL => 'CX-1', DISP => '事前公開不可', },
 );
-our %pg_kiroku_kb_cnv = (    # リアルタイム公開table
-    'CX-0'  => 'UST等動画を含む全て許可',
-    'CX-1'  => 'twitter等テキストと静止画公開可',
-    'CX-2'  => 'テキストのみ公開可',
-    'CX-3'  => '公開不可',
-    'CX-9'  => 'その他',
+our @pg_kiroku_ary = (          # 公開可否選択肢定義
+    { VAL => 'CX-0', DISP => 'UST等動画を含む全て許可', },
+    { VAL => 'CX-1', DISP => 'twitter等テキストと静止画公開可', },
+    { VAL => 'CX-2', DISP => 'テキストのみ公開可', },
+    { VAL => 'CX-3', DISP => '公開不可', },
+    { VAL => 'CX-9', DISP => 'その他', },
 );
-our %pg_kiroku_ka_cnv = (    # 事後公開table
-    'CX-0'  => 'UST等動画を含む全て許可',
-    'CX-1'  => 'blog等テキストと静止画公開可',
-    'CX-2'  => 'テキストのみ公開可',
-    'CX-3'  => '公開不可',
-    'CX-9'  => 'その他',
+our @motikomi_ary = (           # 持ち込む/持ち込まない選択肢定義
+    { VAL => 'MT-0', DISP => '持ち込む', },
+    { VAL => 'MT-1', DISP => '持ち込まない', },
 );
-our %motikomi_cnv = (   # 持ち込む/持ち込まないtable
-    '0' => '持ち込む',
-    '1' => '持ち込まない',
+our @av_v_ary = (               # 持ち込み映像機器映像接続形式選択肢定義
+    { VAL => 'hdmi',   DISP => 'HDMI', },
+    { VAL => 'svideo', DISP => 'S-Video', },
+    { VAL => 'rca',    DISP => 'RCAコンポジット(黄)', },
+    { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
 );
-our %av_v_cnv = (            # 持ち込み映像機器映像接続形式table
-    'hdmi'      => 'HDMI',
-    'svideo'    => 'S-Video',
-    'rca'       => 'RCAコンポジット(黄)',
-    'other'     => 'その他',
+our @av_a_ary = (            # 持ち込み映像機器音声接続形式選択肢定義
+    { VAL => 'none',  DISP => '不要', },
+    { VAL => 'tsr',   DISP => 'ステレオミニ(3.5mmTSR)', },
+    { VAL => 'rca',   DISP => 'RCAコンポジット(赤白)', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
-our %av_a_cnv = (            # 持ち込み映像機器音声接続形式table
-    'none'  => '不要',
-    'tsr'   => 'ステレオミニ(3.5mmTSR)',
-    'rca'   => 'RCAコンポジット(赤白)',
-    'other' => 'その他',
+our @pc_v_ary = (            # 持ち込みPC映像接続形式選択肢定義
+    { VAL => 'none',  DISP => '接続しない', },
+    { VAL => 'hdmi',  DISP => 'HDMI', },
+    { VAL => 'vga',   DISP => 'D-Sub15(VGA)', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
-our %pc_v_cnv = (            # 持ち込みPC映像接続形式table
-    'none'  => '接続しない',
-    'hdmi'  => 'HDMI',
-    'vga'   => 'D-Sub15(VGA)',
-    'other' => 'その他',
+our @pc_a_ary = (            # 持ち込みPC音声接続形式選択肢定義
+    { VAL => 'none',   DISP => '不要', },
+    { VAL => 'svideo', DISP => 'ステレオミニ(3.5mmTSR)', },
+    { VAL => 'rca',    DISP => 'RCAコンポジット(赤白)', },
+    { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
 );
-our %pc_a_cnv = (            # 持ち込みPC音声接続形式table
-    'none'      => '不要',
-    'svideo'    => 'ステレオミニ(3.5mmTSR)',
-    'rca'       => 'RCAコンポジット(赤白)',
-    'other'     => 'その他',
+our @lan_ary = (             # ネット接続形式選択肢定義
+    { VAL => 'none',  DISP => '接続しない', },  # 接続しないのVALはnone固定
+    { VAL => 'lan',   DISP => '有線(RJ-45)', },
+    { VAL => 'wifi',  DISP => '無線', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
-our %lan_cnv = (             # ネット接続形式table
-    'none'  => '接続しない',
-    'lan'   => '有線(RJ-45)',
-    'wifi'  => '無線',
-    'other' => 'その他',
+our @pg_enquete_ary = (      # 企画経験選択肢定義
+    { VAL => 'PE-0', DISP => '初めて', },
+    { VAL => 'PE-1', DISP => '昨年に続いて2回目', },
+    { VAL => 'PE-2', DISP => '継続して3〜5回目', },
+    { VAL => 'PE-3', DISP => 'ひさしぶり', },
+    { VAL => 'PE-4', DISP => '6回目以上', },
 );
-our %pg_enquete_cnv = (      # 企画経験table
-    '0' => '初めて',
-    '1' => '昨年に続いて2回目',
-    '2' => '継続して3〜5回目',
-    '3' => 'ひさしぶり',
-    '4' => '6回目以上',
+our @ppn_youdo_ary = (   # 自身出演選択肢定義
+    { VAL => 'YD-0', DISP => 'する', },
+    { VAL => 'YD-1', DISP => 'しない', },
 );
-our %ppn_youdo_cnv = (   # 自身出演table
-    '0' => 'する',
-    '1' => 'しない',
+our @ppn_con_ary = (     # 出演交渉選択肢定義
+    { VAL => 'PP-A',  DISP => '交渉を大会に依頼', },
+    { VAL => 'PP-B1', DISP => '出演了承済', },
+    { VAL => 'PP-B2', DISP => '交渉中', },
+    { VAL => 'PP-B3', DISP => '未交渉', },
 );
-our %ppn_con_cnv = (     # 出演交渉table
-    'PP-A'  => '交渉を大会に依頼',
-    'PP-B1' => '出演了承済',
-    'PP-B2' => '交渉中',
-    'PP-B3' => '未交渉',
-);
-our %ppn_grq_cnv = (     # ゲスト申請table
-    'PP-A'  => 'する',
-    'PP-B'  => 'しない',
+our @ppn_grq_ary = (     # ゲスト申請選択肢定義
+    { VAL => 'PP-A',  DISP => 'する', },
+    { VAL => 'PP-B',  DISP => 'しない', },
 );
 #### <--- pgreglib 内部項目
 

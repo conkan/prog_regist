@@ -19,6 +19,27 @@ our %EXPORT_TAGS = (
 );
 
 ### HTMLテンプレート置き換え定義
+# radiobox CGI値変換テーブル作成
+my %pg_kind_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_kind_ary;
+my %pg_place_cnv    = map { $_->{VAL} => $_->{DISP} } @pg_place_ary;
+my %pg_layout_cnv   = map { $_->{VAL} => $_->{DISP} } @pg_layout_ary;
+my %pg_time_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_time_ary;
+my %pg_koma_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_koma_ary;
+my %pg_ninzu_cnv    = map { $_->{VAL} => $_->{DISP} } @pg_ninzu_ary;
+my %pg_kafuka_cnv   = map { $_->{VAL} => $_->{DISP} } @pg_kafuka_ary;
+my %pg_naiyou_k_cnv = map { $_->{VAL} => $_->{DISP} } @pg_naiyou_k_ary;
+my %pg_kiroku_cnv   = map { $_->{VAL} => $_->{DISP} } @pg_kiroku_ary;
+my %motikomi_cnv    = map { $_->{VAL} => $_->{DISP} } @motikomi_ary;
+my %av_v_cnv        = map { $_->{VAL} => $_->{DISP} } @av_v_ary;
+my %av_a_cnv        = map { $_->{VAL} => $_->{DISP} } @av_a_ary;
+my %pc_v_cnv        = map { $_->{VAL} => $_->{DISP} } @pc_v_ary;
+my %pc_a_cnv        = map { $_->{VAL} => $_->{DISP} } @pc_a_ary;
+my %lan_cnv         = map { $_->{VAL} => $_->{DISP} } @lan_ary;
+my %pg_enquete_cnv  = map { $_->{VAL} => $_->{DISP} } @pg_enquete_ary;
+my %ppn_youdo_cnv   = map { $_->{VAL} => $_->{DISP} } @ppn_youdo_ary;
+my %ppn_con_cnv     = map { $_->{VAL} => $_->{DISP} } @ppn_con_ary;
+my %ppn_grq_cnv     = map { $_->{VAL} => $_->{DISP} } @ppn_grq_ary;
+
 # 単純置き換え パラメータ名配列
 my @org_pname = (
     'p1_name', 'email', 'reg_num', 'tel', 'fax', 'cellphone', 'phonetime',
@@ -41,8 +62,8 @@ my %tbl_pname = (
     'pg_pgu18'      => [ \%pg_kafuka_cnv,       undef, ],
     'pg_pggen'      => [ \%pg_kafuka_cnv,       undef, ],
     'pg_naiyou_k'   => [ \%pg_naiyou_k_cnv,     undef, ],
-    'pg_kiroku_kb'  => [ \%pg_kiroku_kb_cnv,    undef, ],
-    'pg_kiroku_ka'  => [ \%pg_kiroku_ka_cnv,    undef, ],
+    'pg_kiroku_kb'  => [ \%pg_kiroku_cnv,       undef, ],
+    'pg_kiroku_ka'  => [ \%pg_kiroku_cnv,       undef, ],
     'pg_enquete'    => [ \%pg_enquete_cnv,      undef, ],
 );
 # 使用する/しない パラメータテーブル
@@ -59,23 +80,26 @@ my %useunuse_pname = (
 
 # 持ち込む/持ち込まない パラメータテーブル
 #   key: パラメータ名
-#   value: パラメータテーブル
-#       key:パラメータ名
-#       value[0]:変換テーブル
-#       value[1]:その他内容パラメータ名
-#       value[2]:注釈
+#   value: パラメータテーブル配列 av機器とpcで表示を揃えるため配列化
+#       配列の中身は連想配列(1要素)
+#           pname : パラメータ名
+#           value : 追加情報配列
+#               value[0]:変換テーブル
+#               value[1]:その他内容パラメータ名
+#               value[2]:注釈
 my %motikomi_pname = (
-    'fc_vid'    => {
-        # 持ち込み映像機器映像接続形式
-        'av-v'  => [ \%av_v_cnv,    'av-v_velse',   '映像接続', ],
-        # 持ち込み映像機器音声接続形式
-        'av-a'  => [ \%av_a_cnv,    'av-a_velse',   '音声接続', ],
-    },
-    'fc_pc'     => {
-        # 持ち込みPC映像接続形式
-        'pc-v'  => [ \%pc_v_cnv,    'pc-v_velse',   '映像接続', ],
-        'pc-a'  => [ \%pc_a_cnv,    'pc-a_velse',   '音声接続', ],
-    },
+    'fc_vid'    => [
+        { pname => 'av-v',
+          value  => [ \%av_v_cnv,    'av-v_velse',   '映像接続', ], },
+        { pname => 'av-a',
+          value  => [ \%av_a_cnv,    'av-a_velse',   '音声接続', ], },
+    ],
+    'fc_pc'     => [
+        { pname => 'pc-v',
+          value  => [ \%pc_v_cnv,    'pc-v_velse',   '映像接続', ], },
+        { pname => 'pc-a',
+          value  => [ \%pc_a_cnv,    'pc-a_velse',   '音声接続', ], },
+    ],
 );
 
 # ネット接続テーブル変換 パラメータテーブル
@@ -120,8 +144,8 @@ my %h_pname4mail = (
     'pg_pggen'      => ['一般公開可否',   \%pg_kafuka_cnv],
     'pg_naiyou_k'   => ['内容事前公開', \%pg_naiyou_k_cnv],
     'pg_naiyou'     => ['企画内容', undef],
-    'pg_kiroku_kb'  => ['リアルタイム公開', \%pg_kiroku_kb_cnv],
-    'pg_kiroku_ka'  => ['事後公開', \%pg_kiroku_ka_cnv],
+    'pg_kiroku_kb'  => ['リアルタイム公開', \%pg_kiroku_cnv],
+    'pg_kiroku_ka'  => ['事後公開', \%pg_kiroku_cnv],
     # 使用機材
     'wbd'           => ['ホワイトボード', 0],
     'mic'           => ['壇上マイク', 0],
@@ -234,7 +258,9 @@ sub pg_HtmlTmpl_set {
     while ( ($pname, $pAprm) = each %motikomi_pname ) {
         my $value = $motikomi_cnv{$sprm->param($pname)};
         if ( $value eq '持ち込む' ) {
-            while ( my ($pn2, $pAp2) = each %$pAprm ) {
+            foreach my $ri ( @$pAprm ) {
+                my $pn2 = $ri->{pname};
+                my $pAp2 = $ri->{value};
                 $value .= $add1
                         . $pAp2->[2] . ':'
                         . cnv_radio_val($sprm, $pn2, $pAp2)

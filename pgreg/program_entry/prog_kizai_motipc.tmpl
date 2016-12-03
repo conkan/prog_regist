@@ -7,12 +7,12 @@
 <div ng-class="{invalid: reqchk.unsetFcPc}">
   <input type="radio" ng-model="pgrg.fcPc" name="fc_pc"
     ng-required="true"
-    value="0"/>持ち込む
+    value="MT-0"/>持ち込む
   <input type="radio" ng-model="pgrg.fcPc" name="fc_pc"
-    value="1"/>持ち込まない
+    value="MT-1"/>持ち込まない
 </div>
 <P/>
-<div ng-if="pgrg.fcPc==0">
+<div ng-if="pgrg.fcPc=='MT-0'">
   <div class="risttext">以下持ち込む場合のみ</div>
     <div class="indent">
       <div id="pc-v" class="spacing">

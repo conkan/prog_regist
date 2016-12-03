@@ -7,8 +7,8 @@
   <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
     value="P-H1"/>ホール<br/>
   <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
-    value="P-X1"/>その他
-  <span ng-if="pgrg.pgPlace=='P-X1'">
+    value="other"/>その他
+  <span ng-if="pgrg.pgPlace=='other'">
     <input type="text" ng-model="pgrg.pgPlace2" name="pg_place2"
       size="30" style="ime-mode: active;" ng-required="true"/>
   </span>
@@ -18,12 +18,12 @@
 <div ng-class="{invalid: reqchk.unsetLayout}">
   <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
     ng-required="true"
-    value="0"/>座布団のみ(和室)
+    value="L-0"/>座布団のみ(和室)
   <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
-    value="1"/>寺子屋(和室に低い机)<br/>
+    value="L-1"/>寺子屋(和室に低い机)<br/>
   <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
-    value="9"/>その他
-  <span ng-if="pgrg.pgLayout==9">
+    value="other"/>その他
+  <span ng-if="pgrg.pgLayout=='other'">
     <input type="text" ng-model="pgrg.pgLayout2" name="pg_layout2"
       size="30" style="ime-mode: active;" ng-required="true"/>
   </span>

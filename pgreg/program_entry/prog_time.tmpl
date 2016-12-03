@@ -15,8 +15,8 @@
   <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
     value="T-wday"/>両日
   <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-X1"/>その他
-  <span ng-if="pgrg.pgTime=='T-X1'">
+    value="other"/>その他
+  <span ng-if="pgrg.pgTime=='other'">
     <input type="text" ng-model="pgrg.pgTime2" name="pg_time2" size="30"
       style="ime-mode: active;" ng-required="true"/>
   </span><br/>

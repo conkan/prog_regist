@@ -8,13 +8,13 @@
   <div ng-class="{invalid: reqchk.unsetFcVid}">
     <input type="radio" ng-model="pgrg.fcVid" name="fc_vid"
       ng-required="true"
-      value="0"/>持ち込む
+      value="MT-0"/>持ち込む
     <input type="radio" ng-model="pgrg.fcVid" name="fc_vid"
-      value="1"/>持ち込まない
+      value="MT-1"/>持ち込まない
   </div>
 </div>
 <P/>
-<div ng-if="pgrg.fcVid==0">
+<div ng-if="pgrg.fcVid=='MT-0'">
   <div class="risttext">以下持ち込む場合のみ</div>
   <div class="indent">
     <div id="av-v" class="spacing">

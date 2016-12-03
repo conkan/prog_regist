@@ -278,15 +278,15 @@
               <div ng-class="{invalid: reqchk.unsetEnquete}">
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
                  ng-required="true"
-                 value="0"/>初めて
+                 value="PE-0"/>初めて
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 value="1"/>昨年に続いて2回目
+                 value="PE-1"/>昨年に続いて2回目
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 value="2"/>継続して3～5回目
+                 value="PE-2"/>継続して3～5回目
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete" 
-                 value="3"/>ひさしぶり
+                 value="PE-3"/>ひさしぶり
                 <input type="radio" name="pg_enquete" ng-model="pgrg.pgEnquete"
-                 value="4"/>6回目以上
+                 value="PE-4"/>6回目以上
               </div>
             </td>
         </tr>
@@ -319,18 +319,18 @@
               <div ng-class="{invalid: reqchk.unsetYouDo}">
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
                  ng-required="true"
-                 value="0"/>する
+                 value="YD-0"/>する
                 <input type="radio" name="youdo" ng-model="pgrg.youdo"
-                 value="1"/>しない
+                 value="YD-1"/>しない
               </div>
             </td>
         </tr>
-        <tr ng-if="pgrg.youdo=='0'">
+        <tr ng-if="pgrg.youdo=='YD-0'">
             <td align="right" >出演する場合</td>
             <th align="left" >出演者氏名/フリガナ</th>
             <th align="left" >肩書</th>
         </tr>
-        <tr ng-if="pgrg.youdo=='0'">
+        <tr ng-if="pgrg.youdo=='YD-0'">
             <td align="right"></td>
             <td valign="middle">
                 <input type="text" name="py_name" ng-model="pgrg.pyName"
@@ -490,7 +490,7 @@
           if ( n ) {
             scope.reqchk.unsetYouDo = false;
           }
-          if ( ( n == '0' ) && ( scope.pgrg.pyName == '' ) ){
+          if ( ( n == 'YD-0' ) && ( scope.pgrg.pyName == '' ) ){
             scope.pgrg.pyName = scope.pgrg.p1Name;
           }
         });
@@ -627,8 +627,8 @@
           $scope.radioAryChg( $scope.<TMPL_VAR NAME=mod_con>, 'unsetppGcon', <TMPL_VAR NAME=pp_no> );
           $scope.radioAryChg( $scope.<TMPL_VAR NAME=mod_grq>, 'unsetppGgrq', <TMPL_VAR NAME=pp_no> );
 </TMPL_LOOP>
-          if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = '1'; }
-          if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = '1'; }
+          if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = 'MT-1'; }
+          if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = 'MT-1'; }
           if ( $scope.pgrg.ppGuestNum == '' ) { $scope.pgrg.ppGuestNum = 0; };
         })();
       }
