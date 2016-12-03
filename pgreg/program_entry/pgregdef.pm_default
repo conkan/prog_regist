@@ -23,7 +23,7 @@ our %CONDEF_CONST = (
 #### デバッグ,メンテナンスフラグ
     ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
     ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
-    # 'ONLYUICHK'  => 1,
+    'ONLYUICHK'  => 1,
     # 'MAINTENANCE' => 1,
 
 #### 大会独自項目 定数定義
@@ -108,23 +108,28 @@ our @pg_kind_ary = (            # 企画種別選択肢定義
 );
 our @pg_place_ary = (           # 希望場所選択肢定義
     { VAL => 'P-N',   DISP => '特になし', },
-    { VAL => 'P-C1',  DISP => '和室', },
-    { VAL => 'P-H1',  DISP => 'ホール', },
+    { VAL => 'P-C1',  DISP => '会議室', },
+    { VAL => 'P-H1',  DISP => '会議ホール(風)', },
+    { VAL => 'P-H2',  DISP => '映像ホール', },
+    { VAL => 'P-PB',  DISP => '一般公開エリア', },
     { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 
 );
 our @pg_layout_ary = (          # レイアウト選択肢定義
-    { VAL => 'L-0',   DISP => '座布団のみ(和室)', },
-    { VAL => 'L-1',   DISP => '寺子屋(和室に低い机)', },
+    { VAL => 'L-0',   DISP => 'スクール', },
+    { VAL => 'L-1',   DISP => 'シアター', },
+    { VAL => 'L-2',   DISP => '□の字', },
+    { VAL => 'L-3',   DISP => '島組', },
     { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
 our @pg_time_ary = (            # 希望日時選択肢定義
     { VAL => 'T-N',    DISP => '特になし', },
-    { VAL => 'T-1any', DISP => '09日(土)のどこでも', },
-    { VAL => 'T-1pm',  DISP => '09日(土)午後', },
-    { VAL => 'T-1ngt', DISP => '09日(土)夜', },
-    { VAL => 'T-1mid', DISP => '09日(土)深夜', },
-    { VAL => 'T-2any', DISP => '10日(日)おたコス5野外ステージ', },
+    { VAL => 'T-1any', DISP => '26日(土)のどこでも', },
+    { VAL => 'T-1pm',  DISP => '26日(土)午後', },
+    { VAL => 'T-1ngt', DISP => '26日(土)夜(パーティ・コンパック裏)', },
+    { VAL => 'T-2any', DISP => '27日(日)のどこでも', },
+    { VAL => 'T-2am',  DISP => '27日(日)午前', },
+    { VAL => 'T-2pm',  DISP => '27日(日)午後', },
     { VAL => 'T-wday', DISP => '両日', },
     { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
 );
@@ -151,7 +156,7 @@ our @pg_naiyou_k_ary = (        # 内容事前公開選択肢定義
     { VAL => 'CX-1', DISP => '事前公開不可', },
 );
 our @pg_kiroku_ary = (          # 公開可否選択肢定義
-    { VAL => 'CX-0', DISP => 'UST等動画を含む全て許可', },
+    { VAL => 'CX-0', DISP => 'Youtube・Usteram・ニコ生等動画を含む全て許可', },
     { VAL => 'CX-1', DISP => 'twitter等テキストと静止画公開可', },
     { VAL => 'CX-2', DISP => 'テキストのみ公開可', },
     { VAL => 'CX-3', DISP => '公開不可', },
