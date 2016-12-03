@@ -5,28 +5,24 @@
   特にMacの場合、HDMIあるいはD-Sub15への変換ケーブルは各自用意し、どちらへの変換であるかを記載して下さい。
 </div>
 <div ng-class="{invalid: reqchk.unsetFcPc}">
-  <input type="radio" ng-model="pgrg.fcPc" name="fc_pc"
-    ng-required="true"
-    value="0"/>持ち込む
-  <input type="radio" ng-model="pgrg.fcPc" name="fc_pc"
-    value="1"/>持ち込まない
+  <TMPL_LOOP NAME=MOTIKOMI_LOOP>
+    <input type="radio" ng-model="pgrg.fcPc" name="fc_pc"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+  </TMPL_LOOP>
 </div>
 <P/>
-<div ng-if="pgrg.fcPc==0">
+<div ng-if="pgrg.fcPc=='MT-0'">
   <div class="risttext">以下持ち込む場合のみ</div>
     <div class="indent">
       <div id="pc-v" class="spacing">
         <b>映像接続形式</b><br/>
         <div ng-class="{invalid: reqchk.unsetPcV}">
-          <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-            ng-required="true"
-            value="none"/>接続しない
-          <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-            value="hdmi"/>HDMI
-          <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-            value="vga"/>D-Sub15(VGA)<br/>
-          <input type="radio" ng-model="pgrg.pcV" name="pc-v"
-            value="other"/>その他
+          <TMPL_LOOP NAME=PC_V_LOOP>
+            <input type="radio" ng-model="pgrg.pcV" name="pc-v"
+              ng-required="true"
+              value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+          </TMPL_LOOP>
           <span ng-if="pgrg.pcV=='other'">
             <input type="text" ng-model="pgrg.pcVelse" name="pc-v_velse"
               size="30" style="ime-mode: active;" ng-required="true"/>
@@ -38,15 +34,11 @@
         <div ng-class="{invalid: reqchk.unsetPcA}">
           <span class="commtext">
             HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
-          <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-            ng-required="true"
-            value="none"/>不要
-          <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-            value="svideo"/>ステレオミニ(3.5mmTSR)
-          <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-            value="rca"/>RCAコンポジット(赤白)<br/>
-          <input type="radio" ng-model="pgrg.pcA" name="pc-a"
-            value="other"/>その他
+          <TMPL_LOOP NAME=PC_A_LOOP>
+            <input type="radio" ng-model="pgrg.pcA" name="pc-a"
+              ng-required="true"
+              value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+          </TMPL_LOOP>
           <span ng-if="pgrg.pcA=='other'">
             <input type="text" ng-model="pgrg.pcAelse" name="pc-a_velse"
               size="30" style="ime-mode: active;" ng-required="true"/>
@@ -56,15 +48,11 @@
       <div id="lan" class="spacing">
         <b>インタネット接続形式</b><br/>
         <div ng-class="{invalid: reqchk.unsetLan}">
-          <input type="radio" ng-model="pgrg.lan" name="lan"
-            ng-required="true"
-            value="none"/>接続しない
-          <input type="radio" ng-model="pgrg.lan" name="lan"
-            value="lan"/>有線(RJ-45)
-          <input type="radio" ng-model="pgrg.lan" name="lan"
-            value="wifi"/>無線<br/>
-          <input type="radio" ng-model="pgrg.lan" name="lan"
-            value="other"/>その他
+          <TMPL_LOOP NAME=LAN_LOOP>
+            <input type="radio" ng-model="pgrg.lan" name="lan"
+              ng-required="true"
+              value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+          </TMPL_LOOP>
           <span ng-if="pgrg.lan=='other'">
             <input type="text" ng-model="pgrg.lanelse" name="pc-l_velse"
               size="30" style="ime-mode: active;" ng-required="true"/>

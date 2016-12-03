@@ -1,0 +1,223 @@
+#!/usr/bin/perl
+package pgregdef;
+use strict;
+use warnings;
+
+require Exporter;
+use base qw/Exporter/;
+
+our @EXPORT = qw(
+    @pg_kind_ary @pg_place_ary @pg_layout_ary @pg_time_ary @pg_koma_ary
+    @pg_ninzu_ary @pg_kafuka_ary @pg_naiyou_k_ary @pg_kiroku_ary
+    @motikomi_ary @av_v_ary @av_a_ary @pc_v_ary @pc_a_ary @lan_ary 
+    @pg_enquete_ary @ppn_youdo_ary @ppn_con_ary @ppn_grq_ary
+    %CONDEF_CONST
+);
+
+our %EXPORT_TAGS = (
+    default      => [ @EXPORT ],
+);
+
+#### prog_regist共通項目 --->
+our %CONDEF_CONST = (
+#### デバッグ,メンテナンスフラグ
+    ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
+    ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
+    'ONLYUICHK'  => 1,
+    # 'MAINTENANCE' => 1,
+
+#### 大会独自項目 定数定義
+    ## CONNAME :    大会愛称      ex. CCCC
+    ## CONPERIOD:   有効期間      ex. 2015-2016
+    ## FULLNAME:    大会正式名称  ex. 第NN回日本SF大会 CCCC
+    ## MIMENAME:    '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
+    ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
+    ## ENTADDR:     メールヘッダ差出人アドレス
+    ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
+    ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
+    'CONNAME'    => '',
+    'CONPERIOD'  => '',
+    'FULLNAME'   => '',
+    'MIMENAME'   => '',
+    'MIMEPGSG'   => '',
+    'ENTADDR'    => '',
+    'ENVFROM'    => '',
+    'PGSTAFF'    => '',
+    ## REGNUMTIT:   参加番号名称 (既定値 参加登録番号)
+    ## DEFLAYOUT:   デフォルトの会議室レイアウト (既定値 スクール)
+    'REGNUMTIT'  => '参加登録番号',
+    'DEFLAYOUT'  => 'スクール',
+    ## CONKANURL:   conkan_programトップURL
+    ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
+    'CONKANURL'  => '',
+    'CONKANPASS' => '',
+    ## SMTPSERVER:  メールサーバFQDN
+    'SMTPSERVER' => '',
+    ## MAXGCNT:     最大出演者数 (既定値 8)
+    'MAXGCNT'    => 8,
+
+#### 評価用特殊参加番号 初期指定しているが、変更可能
+    ## SPREGNUM1:   直接申込jump用参加番号
+    ## SPREGNUM2:   直接申込jump&FinalMail確認用参加番号
+    ## SPREGNUM3:   FirstMail確認用参加番号
+    'SPREGNUM1'  => '2017DIRECTPGREGIST082627',
+    'SPREGNUM2'  => '2017DIRECTMAILCHEC082627',
+    'SPREGNUM3'  => '2017MAILBODYCHECK082627', 
+
+#### 詳細動作指定デバッグ用オプション 初期指定しているが、変更可能
+    # 参加番号に、 <参加番号> <SPPRIFIX> [ <オプション> ... ]で指定
+    ## SPPRIFIX:    特殊動作用プリフィックス
+    ## NOURLMAIL:   オプション:申し込みURL通知メールを送らず、直接phase1
+    ## NOMAIL2U:    オプション:申込者, メール発信者に申込受付メールを送らない
+    ## NOMAIL2K:    オプション:企画管理MLに申込受付メールを送らない
+    ## NOALLMAIL:   オプション:全てのメールを送信しない
+    ## SKIPVALID:   オプション:パラメータバリデーションせず、直接phase2
+    ## SKIPREGIST:  オプション:実際の登録はしない
+    ## SHOWUMAIL:   オプション:申し込みURL通知メール内容を表示
+    ## SHOWMAIL2:   オプション:phase3で登録通知メール内容を表示
+    ## SHOWJSON:    オプション:phase3で登録用JSON表示
+    'SPPRIFIX'   => '--SP', 
+    'NOURLMAIL'  => 'NOURLMAIL',
+    'NOMAIL2U'   => 'NOMAIL2USER',
+    'NOMAIL2K'   => 'NOMAIL2ML',
+    'NOALLMAIL'  => 'NOALLMAIL',
+    'SKIPVALID'  => 'SKIPVALID',
+    'SKIPREGIST' => 'SKIPREGIST',
+    'SHOWUMAIL'  => 'SHOWURLMAIL',
+    'SHOWMAIL2'  => 'SHOWREGMAIL',
+    'SHOWJSON'   => 'SHOWREGJSON',
+);
+#### <--- prog_regist共通項目
+
+#### pgreglib 内部項目 --->
+#### 大会独自項目 企画登録情報 テーブル定義
+# CGI値変換テーブル配列 (設定ページ表示順)
+our @pg_kind_ary = (            # 企画種別選択肢定義
+    { VAL => 'K-A1',  DISP  => '講演', },
+    { VAL => 'K-A2',  DISP  => 'パネルディスカッション', },
+    { VAL => 'K-A3',  DISP  => '講座', },
+    { VAL => 'K-A4',  DISP  => '上映', },
+    { VAL => 'K-A5',  DISP  => '座談会', },
+    { VAL => 'K-A6',  DISP  => 'お茶会', },
+    { VAL => 'K-A7',  DISP  => 'ゲーム', },
+    { VAL => 'K-B1',  DISP  => 'コンサート', },
+    { VAL => 'K-C1',  DISP  => '展示', },
+    { VAL => 'K-D1',  DISP  => '印刷物発行', },
+    { VAL => 'K-E1',  DISP  => '投票', },
+    { VAL => 'other', DISP  => 'その他', },     # その他のVALはother固定
+);
+our @pg_place_ary = (           # 希望場所選択肢定義
+    { VAL => 'P-N',   DISP => '特になし', },
+    { VAL => 'P-C1',  DISP => '会議室', },
+    { VAL => 'P-H1',  DISP => '会議ホール(風)', },
+    { VAL => 'P-H2',  DISP => '映像ホール', },
+    { VAL => 'P-PB',  DISP => '一般公開エリア', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+
+);
+our @pg_layout_ary = (          # レイアウト選択肢定義
+    { VAL => 'L-0',   DISP => 'スクール', },
+    { VAL => 'L-1',   DISP => 'シアター', },
+    { VAL => 'L-2',   DISP => '□の字', },
+    { VAL => 'L-3',   DISP => '島組', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+);
+our @pg_time_ary = (            # 希望日時選択肢定義
+    { VAL => 'T-N',    DISP => '特になし', },
+    { VAL => 'T-1any', DISP => '26日(土)のどこでも', },
+    { VAL => 'T-1pm',  DISP => '26日(土)午後', },
+    { VAL => 'T-1ngt', DISP => '26日(土)夜(パーティ・コンパック裏)', },
+    { VAL => 'T-2any', DISP => '27日(日)のどこでも', },
+    { VAL => 'T-2am',  DISP => '27日(日)午前', },
+    { VAL => 'T-2pm',  DISP => '27日(日)午後', },
+    { VAL => 'T-wday', DISP => '両日', },
+    { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
+);
+our @pg_koma_ary = (            # 希望コマ数選択肢定義
+    { VAL => 'TK-1',  DISP => '１コマ(90分+準備30分)', },
+    { VAL => 'TK-2',  DISP => '２コマ(210分+準備30分)', },
+    { VAL => 'TK-A',  DISP => '終日', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+);
+our @pg_ninzu_ary = (           # 予想参加者選択肢定義
+    { VAL => 'TN-0', DISP => '不明', },
+    { VAL => 'TN-1', DISP => '20人まで', },
+    { VAL => 'TN-2', DISP => '50人まで', },
+    { VAL => 'TN-3', DISP => '100人まで', },
+    { VAL => 'TN-4', DISP => '200人まで', },
+    { VAL => 'TN-5', DISP => '200人超', },
+);
+our @pg_kafuka_ary = (          # 可不可選択肢定義
+    { VAL => 'CX-0', DISP => '可', },
+    { VAL => 'CX-1', DISP => '不可', },
+);
+our @pg_naiyou_k_ary = (        # 内容事前公開選択肢定義
+    { VAL => 'CX-0', DISP => '事前公開可', },
+    { VAL => 'CX-1', DISP => '事前公開不可', },
+);
+our @pg_kiroku_ary = (          # 公開可否選択肢定義
+    { VAL => 'CX-0', DISP => 'Youtube・Usteram・ニコ生等動画を含む全て許可', },
+    { VAL => 'CX-1', DISP => 'twitter等テキストと静止画公開可', },
+    { VAL => 'CX-2', DISP => 'テキストのみ公開可', },
+    { VAL => 'CX-3', DISP => '公開不可', },
+    { VAL => 'CX-9', DISP => 'その他', },
+);
+our @motikomi_ary = (           # 持ち込む/持ち込まない選択肢定義
+    { VAL => 'MT-0', DISP => '持ち込む', },     # 持ち込むのVALはMT-0固定
+    { VAL => 'MT-1', DISP => '持ち込まない', },
+);
+our @av_v_ary = (               # 持ち込み映像機器映像接続形式選択肢定義
+    { VAL => 'hdmi',   DISP => 'HDMI', },
+    { VAL => 'svideo', DISP => 'S-Video', },
+    { VAL => 'rca',    DISP => 'RCAコンポジット(黄)', },
+    { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
+);
+our @av_a_ary = (            # 持ち込み映像機器音声接続形式選択肢定義
+    { VAL => 'none',  DISP => '不要', },
+    { VAL => 'tsr',   DISP => 'ステレオミニ(3.5mmTSR)', },
+    { VAL => 'rca',   DISP => 'RCAコンポジット(赤白)', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+);
+our @pc_v_ary = (            # 持ち込みPC映像接続形式選択肢定義
+    { VAL => 'none',  DISP => '接続しない', },
+    { VAL => 'hdmi',  DISP => 'HDMI', },
+    { VAL => 'vga',   DISP => 'D-Sub15(VGA)', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+);
+our @pc_a_ary = (            # 持ち込みPC音声接続形式選択肢定義
+    { VAL => 'none',   DISP => '不要', },
+    { VAL => 'svideo', DISP => 'ステレオミニ(3.5mmTSR)', },
+    { VAL => 'rca',    DISP => 'RCAコンポジット(赤白)', },
+    { VAL => 'other',  DISP => 'その他', },     # その他のVALはother固定
+);
+our @lan_ary = (             # ネット接続形式選択肢定義
+    { VAL => 'none',  DISP => '接続しない', },  # 接続しないのVALはnone固定
+    { VAL => 'lan',   DISP => '有線(RJ-45)', },
+    { VAL => 'wifi',  DISP => '無線', },
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
+);
+our @pg_enquete_ary = (      # 企画経験選択肢定義
+    { VAL => 'PE-0', DISP => '初めて', },
+    { VAL => 'PE-1', DISP => '昨年に続いて2回目', },
+    { VAL => 'PE-2', DISP => '継続して3〜5回目', },
+    { VAL => 'PE-3', DISP => 'ひさしぶり', },
+    { VAL => 'PE-4', DISP => '6回目以上', },
+);
+our @ppn_youdo_ary = (   # 自身出演選択肢定義
+    { VAL => 'YD-0', DISP => 'する', },         # するのVALはYD-0固定
+    { VAL => 'YD-1', DISP => 'しない', },
+);
+our @ppn_con_ary = (     # 出演交渉選択肢定義
+    { VAL => 'PP-A',  DISP => '交渉を大会に依頼', },
+    { VAL => 'PP-B1', DISP => '出演了承済', },
+    { VAL => 'PP-B2', DISP => '交渉中', },
+    { VAL => 'PP-B3', DISP => '未交渉', },
+);
+our @ppn_grq_ary = (     # ゲスト申請選択肢定義
+    { VAL => 'PP-A',  DISP => 'する', },
+    { VAL => 'PP-B',  DISP => 'しない', },
+);
+#### <--- pgreglib 内部項目
+
+1;
+#--EOF--

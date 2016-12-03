@@ -5,209 +5,41 @@ use warnings;
 use Encode qw/ encode decode /;
 use Net::SMTP;
 
-#### 起動前に設定しておく項目 ---->
-{
-package main;
-use Sys::Hostname;
-our %CONDEF_CONST = (
-#### デバッグ,メンテナンスフラグ
-    ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
-    ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
-    # 'ONLYUICHK'  => 1,
-    # 'MAINTENANCE' => 1,
+use pgregdef;
 
-#### 大会独自項目 定数定義
-    ## CONNAME :    大会愛称      ex. CCCC
-    ## CONPERIOD:   有効期間      ex. 2015-2016
-    ## FULLNAME:    大会正式名称  ex. 第NN回日本SF大会 CCCC
-    ## MIMENAME:    '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
-    ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
-    ## ENTADDR:     メールヘッダ差出人アドレス
-    ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
-    ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
-    'CONNAME'    => '',
-    'CONPERIOD'  => '',
-    'FULLNAME'   => '',
-    'MIMENAME'   => '',
-    'MIMEPGSG'   => '',
-    'ENTADDR'    => '',
-    'ENVFROM'    => '',
-    'PGSTAFF'    => '',
-    ## CONKANURL:   conkan_programトップURL
-    ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
-    'CONKANURL'  => '',
-    'CONKANPASS' => '',
-    ## SMTPSERVER:  メールサーバFQDN
-    'SMTPSERVER' => '',
-    ## MAXGCNT:     最大出演者数 (既定値 8)
-    'MAXGCNT'    => 8,
+require Exporter;
+use base qw/Exporter/;
 
-#### 評価用特殊参加番号
-    ## SPREGNUM1:   直接申込jump用参加番号
-    ## SPREGNUM2:   直接申込jump&FinalMail確認用参加番号
-    ## SPREGNUM3:   FirstMail確認用参加番号
-    'SPREGNUM1'  => '2017DIRECTPGREGIST082627',
-    'SPREGNUM2'  => '2017DIRECTMAILCHEC082627',
-    'SPREGNUM3'  => '2017MAILBODYCHECK082627', 
-
-#### 詳細動作指定デバッグ用オプション 初期指定しているが、変更可能
-    # 参加番号に、 <参加番号> <SPPRIFIX> [ <オプション> ... ]で指定
-    ## SPPRIFIX:    特殊動作用プリフィックス
-    ## NOURLMAIL:   オプション:申し込みURL通知メールを送らず、直接phase1
-    ## NOMAIL2U:    オプション:申込者, メール発信者に申込受付メールを送らない
-    ## NOMAIL2K:    オプション:企画管理MLに申込受付メールを送らない
-    ## NOALLMAIL:   オプション:全てのメールを送信しない
-    ## SKIPVALID:   オプション:パラメータバリデーションせず、直接phase2
-    ## SKIPREGIST:  オプション:実際の登録はしない
-    ## SHOWUMAIL:   オプション:申し込みURL通知メール内容を表示
-    ## SHOWMAIL2:   オプション:phase3で登録通知メール内容を表示
-    ## SHOWJSON:    オプション:phase3で登録用JSON表示
-    'SPPRIFIX'   => '--SP', 
-    'NOURLMAIL'  => 'NOURLMAIL',
-    'NOMAIL2U'   => 'NOMAIL2USER',
-    'NOMAIL2K'   => 'NOMAIL2ML',
-    'NOALLMAIL'  => 'NOALLMAIL',
-    'SKIPVALID'  => 'SKIPVALID',
-    'SKIPREGIST' => 'SKIPREGIST',
-    'SHOWUMAIL'  => 'SHOWURLMAIL',
-    'SHOWMAIL2'  => 'SHOWREGMAIL',
-    'SHOWJSON'   => 'SHOWREGJSON',
-);
-}
-#### <---- ここまで
-
-#### 大会独自項目 企画登録情報 テーブル定義
-# CGI値変換テーブル
-my %pg_kind_cnv = (         # 企画種別table
-    'K-A1'  => '講演',
-    'K-A2'  => 'パネルディスカッション',
-    'K-A3'  => '講座',
-    'K-A4'  => '上映',
-    'K-A5'  => '座談会',
-    'K-A6'  => 'お茶会',
-    'K-A7'  => 'ゲーム',
-    'K-B1'  => 'コンサート',
-    'K-C1'  => '展示',
-    'K-D1'  => '印刷物発行',
-    'K-E1'  => '投票',
-    'K-X1'  => 'その他',
-);
-my %pg_place_cnv = (        # 希望場所table
-    'P-N'   => '特になし',
-    'P-C1'  => '和室',
-    'P-H1'  => 'ホール',
-    'P-X1'  => 'その他',
-);
-my %pg_layout_cnv = (       # レイアウトtable
-    '0' => '座布団のみ(和室)',
-    '1' => '寺子屋(和室に低い机)',
-    '9' => 'その他',
-);
-my %pg_time_cnv = (         # 希望日時table
-    'T-N'       => '特になし',
-    'T-1any'    => '09日(土)のどこでも',
-    'T-1pm'     => '09日(土)午後',
-    'T-1ngt'    => '09日(土)夜',
-    'T-1mid'    => '09日(土)深夜',
-    'T-2any'    => '10日(日)おたコス5野外ステージ',
-    'T-wday'    => '両日',
-    'T-X1'      => 'その他',
-);
-my %pg_koma_cnv = (         # 希望コマ数table
-    'TK-1'  => '１コマ(90分+準備30分)',
-    'TK-2'  => '２コマ(210分+準備30分)',
-    'TK-A'  => '終日',
-    'TK-X1' => 'その他',
-);
-my %pg_ninzu_cnv = (        # 予想参加者table
-    'TN-0'  => '不明',
-    'TN-1'  => '20人まで',
-    'TN-2'  => '50人まで',
-    'TN-3'  => '100人まで',
-    'TN-4'  => '200人まで',
-    'TN-5'  => '200人超',
-);
-my %pg_kafuka_cnv = (     # 可不可table
-    'CX-0'  => '可',
-    'CX-1'  => '不可',
-);
-my %pg_naiyou_k_cnv = (     # 内容事前公開table
-    'CX-0'  => '事前公開可',
-    'CX-1'  => '事前公開不可',
-);
-my %pg_kiroku_kb_cnv = (    # リアルタイム公開table
-    'CX-0'  => 'UST等動画を含む全て許可',
-    'CX-1'  => 'twitter等テキストと静止画公開可',
-    'CX-2'  => 'テキストのみ公開可',
-    'CX-3'  => '公開不可',
-    'CX-9'  => 'その他',
-);
-my %pg_kiroku_ka_cnv = (    # 事後公開table
-    'CX-0'  => 'UST等動画を含む全て許可',
-    'CX-1'  => 'blog等テキストと静止画公開可',
-    'CX-2'  => 'テキストのみ公開可',
-    'CX-3'  => '公開不可',
-    'CX-9'  => 'その他',
-);
-my %motikomi_cnv = (   # 持ち込む/持ち込まないtable
-    '0' => '持ち込む',
-    '1' => '持ち込まない',
-);
-my %av_v_cnv = (            # 持ち込み映像機器映像接続形式table
-    'hdmi'      => 'HDMI',
-    'svideo'    => 'S-Video',
-    'rca'       => 'RCAコンポジット(黄)',
-    'other'     => 'その他',
-);
-my %av_a_cnv = (            # 持ち込み映像機器音声接続形式table
-    'none'  => '不要',
-    'tsr'   => 'ステレオミニ(3.5mmTSR)',
-    'rca'   => 'RCAコンポジット(赤白)',
-    'other' => 'その他',
-);
-my %pc_v_cnv = (            # 持ち込みPC映像接続形式table
-    'none'  => '接続しない',
-    'hdmi'  => 'HDMI',
-    'vga'   => 'D-Sub15(VGA)',
-    'other' => 'その他',
-);
-my %pc_a_cnv = (            # 持ち込みPC音声接続形式table
-    'none'      => '不要',
-    'svideo'    => 'ステレオミニ(3.5mmTSR)',
-    'rca'       => 'RCAコンポジット(赤白)',
-    'other'     => 'その他',
-);
-my %lan_cnv = (             # ネット接続形式table
-    'none'  => '接続しない',
-    'lan'   => '有線(RJ-45)',
-    'wifi'  => '無線',
-    'other' => 'その他',
-);
-my %pg_enquete_cnv = (      # 企画経験table
-    '0' => '初めて',
-    '1' => '昨年に続いて2回目',
-    '2' => '継続して3〜5回目',
-    '3' => 'ひさしぶり',
-    '4' => '6回目以上',
-);
-my %ppn_youdo_cnv = (   # 自身出演table
-    '0' => 'する',
-    '1' => 'しない',
-);
-my %ppn_con_cnv = (     # 出演交渉table
-    'PP-A'  => '交渉を大会に依頼',
-    'PP-B1' => '出演了承済',
-    'PP-B2' => '交渉中',
-    'PP-B3' => '未交渉',
-);
-my %ppn_grq_cnv = (     # ゲスト申請table
-    'PP-A'  => 'する',
-    'PP-B'  => 'しない',
+our @EXPORT = qw(
+    %CONDEF_CONST
 );
 
-#### <---- ここまで
+our %EXPORT_TAGS = (
+    default      => [ @EXPORT ],
+);
 
 ### HTMLテンプレート置き換え定義
+# radiobox CGI値変換テーブル作成
+my %pg_kind_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_kind_ary;
+my %pg_place_cnv    = map { $_->{VAL} => $_->{DISP} } @pg_place_ary;
+my %pg_layout_cnv   = map { $_->{VAL} => $_->{DISP} } @pg_layout_ary;
+my %pg_time_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_time_ary;
+my %pg_koma_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_koma_ary;
+my %pg_ninzu_cnv    = map { $_->{VAL} => $_->{DISP} } @pg_ninzu_ary;
+my %pg_kafuka_cnv   = map { $_->{VAL} => $_->{DISP} } @pg_kafuka_ary;
+my %pg_naiyou_k_cnv = map { $_->{VAL} => $_->{DISP} } @pg_naiyou_k_ary;
+my %pg_kiroku_cnv   = map { $_->{VAL} => $_->{DISP} } @pg_kiroku_ary;
+my %motikomi_cnv    = map { $_->{VAL} => $_->{DISP} } @motikomi_ary;
+my %av_v_cnv        = map { $_->{VAL} => $_->{DISP} } @av_v_ary;
+my %av_a_cnv        = map { $_->{VAL} => $_->{DISP} } @av_a_ary;
+my %pc_v_cnv        = map { $_->{VAL} => $_->{DISP} } @pc_v_ary;
+my %pc_a_cnv        = map { $_->{VAL} => $_->{DISP} } @pc_a_ary;
+my %lan_cnv         = map { $_->{VAL} => $_->{DISP} } @lan_ary;
+my %pg_enquete_cnv  = map { $_->{VAL} => $_->{DISP} } @pg_enquete_ary;
+my %ppn_youdo_cnv   = map { $_->{VAL} => $_->{DISP} } @ppn_youdo_ary;
+my %ppn_con_cnv     = map { $_->{VAL} => $_->{DISP} } @ppn_con_ary;
+my %ppn_grq_cnv     = map { $_->{VAL} => $_->{DISP} } @ppn_grq_ary;
+
 # 単純置き換え パラメータ名配列
 my @org_pname = (
     'p1_name', 'email', 'reg_num', 'tel', 'fax', 'cellphone', 'phonetime',
@@ -230,8 +62,8 @@ my %tbl_pname = (
     'pg_pgu18'      => [ \%pg_kafuka_cnv,       undef, ],
     'pg_pggen'      => [ \%pg_kafuka_cnv,       undef, ],
     'pg_naiyou_k'   => [ \%pg_naiyou_k_cnv,     undef, ],
-    'pg_kiroku_kb'  => [ \%pg_kiroku_kb_cnv,    undef, ],
-    'pg_kiroku_ka'  => [ \%pg_kiroku_ka_cnv,    undef, ],
+    'pg_kiroku_kb'  => [ \%pg_kiroku_cnv,       undef, ],
+    'pg_kiroku_ka'  => [ \%pg_kiroku_cnv,       undef, ],
     'pg_enquete'    => [ \%pg_enquete_cnv,      undef, ],
 );
 # 使用する/しない パラメータテーブル
@@ -248,23 +80,26 @@ my %useunuse_pname = (
 
 # 持ち込む/持ち込まない パラメータテーブル
 #   key: パラメータ名
-#   value: パラメータテーブル
-#       key:パラメータ名
-#       value[0]:変換テーブル
-#       value[1]:その他内容パラメータ名
-#       value[2]:注釈
+#   value: パラメータテーブル配列 av機器とpcで表示を揃えるため配列化
+#       配列の中身は連想配列(1要素)
+#           pname : パラメータ名
+#           value : 追加情報配列
+#               value[0]:変換テーブル
+#               value[1]:その他内容パラメータ名
+#               value[2]:注釈
 my %motikomi_pname = (
-    'fc_vid'    => {
-        # 持ち込み映像機器映像接続形式
-        'av-v'  => [ \%av_v_cnv,    'av-v_velse',   '映像接続', ],
-        # 持ち込み映像機器音声接続形式
-        'av-a'  => [ \%av_a_cnv,    'av-a_velse',   '音声接続', ],
-    },
-    'fc_pc'     => {
-        # 持ち込みPC映像接続形式
-        'pc-v'  => [ \%pc_v_cnv,    'pc-v_velse',   '映像接続', ],
-        'pc-a'  => [ \%pc_a_cnv,    'pc-a_velse',   '音声接続', ],
-    },
+    'fc_vid'    => [
+        { pname => 'av-v',
+          value  => [ \%av_v_cnv,    'av-v_velse',   '映像接続', ], },
+        { pname => 'av-a',
+          value  => [ \%av_a_cnv,    'av-a_velse',   '音声接続', ], },
+    ],
+    'fc_pc'     => [
+        { pname => 'pc-v',
+          value  => [ \%pc_v_cnv,    'pc-v_velse',   '映像接続', ], },
+        { pname => 'pc-a',
+          value  => [ \%pc_a_cnv,    'pc-a_velse',   '音声接続', ], },
+    ],
 );
 
 # ネット接続テーブル変換 パラメータテーブル
@@ -309,8 +144,8 @@ my %h_pname4mail = (
     'pg_pggen'      => ['一般公開可否',   \%pg_kafuka_cnv],
     'pg_naiyou_k'   => ['内容事前公開', \%pg_naiyou_k_cnv],
     'pg_naiyou'     => ['企画内容', undef],
-    'pg_kiroku_kb'  => ['リアルタイム公開', \%pg_kiroku_kb_cnv],
-    'pg_kiroku_ka'  => ['事後公開', \%pg_kiroku_ka_cnv],
+    'pg_kiroku_kb'  => ['リアルタイム公開', \%pg_kiroku_cnv],
+    'pg_kiroku_ka'  => ['事後公開', \%pg_kiroku_cnv],
     # 使用機材
     'wbd'           => ['ホワイトボード', 0],
     'mic'           => ['壇上マイク', 0],
@@ -350,6 +185,18 @@ my %h_pname4mail = (
     'fc_comment'    => ['備考', undef],
 );
 
+# 共通関数 CONDEF_CONST テンプレート変数設定
+sub pg_stdConstTmpl_set {
+    my (
+        $page,  # HTML::Templateオブジェクト
+    ) = @_;
+
+    foreach my $name ( keys(%CONDEF_CONST) ) {
+        $page->param($name => $CONDEF_CONST{$name}) 
+            if ( $page->query(name => $name));
+    }
+}
+
 # 共通関数 HTMLテンプレート共通変数設定
 sub pg_stdHtmlTmpl_set {
     my (
@@ -357,16 +204,8 @@ sub pg_stdHtmlTmpl_set {
         $sid,   # セッションID
     ) = @_;
 
-    $page->param(ID         => $sid)
-        if ( $page->query(name => 'ID'));
-    $page->param(CONNAME    => $main::CONDEF_CONST{'CONNAME'})
-        if ( $page->query(name => 'CONNAME'));
-    $page->param(FULLNAME   => $main::CONDEF_CONST{'FULLNAME'})
-        if ( $page->query(name => 'FULLNAME'));
-    $page->param(CONPERIOD  => $main::CONDEF_CONST{'CONPERIOD'})
-        if ( $page->query(name => 'CONPERIOD'));
-    $page->param(MAXGCNT  => $main::CONDEF_CONST{'MAXGCNT'})
-        if ( $page->query(name => 'MAXGCNT'));
+    pg_stdConstTmpl_set($page);
+    $page->param(ID => $sid) if ( $page->query(name => 'ID'));
 }
 
 # 共通関数 MailBodyテンプレート共通変数設定
@@ -376,18 +215,9 @@ sub pg_stdMailTmpl_set {
         $toaddr,    # MailHeader:To
         $name,      # MailBody:申込者名
     ) = @_;
-    $page->param(MIMENAME   => $main::CONDEF_CONST{'MIMENAME'})
-        if ( $page->query(name => 'MIMENAME') );
-    $page->param(FROMADDR   => $main::CONDEF_CONST{'ENTADDR'})
-        if ( $page->query(name => 'FROMADDR') );
-    $page->param(TOADDR     => $toaddr)
-        if ( $page->query(name => 'TOADDR') );
-    $page->param(NAME       => $name)
-        if ( $page->query(name => 'NAME') );
-    $page->param(FULLNAME   => $main::CONDEF_CONST{'FULLNAME'})
-        if ( $page->query(name => 'FULLNAME') );
-    $page->param(CONNAME    => $main::CONDEF_CONST{'CONNAME'})
-        if ( $page->query(name => 'CONNAME') );
+    pg_stdConstTmpl_set($page);
+    $page->param(TOADDR => $toaddr) if ( $page->query(name => 'TOADDR') );
+    $page->param(NAME   => $name) if ( $page->query(name => 'NAME') );
 }
 
 # 共通関数 設定値確認テンプレート変数設定
@@ -428,7 +258,9 @@ sub pg_HtmlTmpl_set {
     while ( ($pname, $pAprm) = each %motikomi_pname ) {
         my $value = $motikomi_cnv{$sprm->param($pname)};
         if ( $value eq '持ち込む' ) {
-            while ( my ($pn2, $pAp2) = each %$pAprm ) {
+            foreach my $ri ( @$pAprm ) {
+                my $pn2 = $ri->{pname};
+                my $pAp2 = $ri->{value};
                 $value .= $add1
                         . $pAp2->[2] . ':'
                         . cnv_radio_val($sprm, $pn2, $pAp2)
@@ -460,7 +292,7 @@ sub pg_HtmlTmpl_set {
     # 出演者情報(LOOP)
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;
-    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
         my $ppname = $sprm->param($prefix . '_name');
@@ -524,10 +356,46 @@ sub pg_prmModelTmpl_set {
             $page->param($pname   => $obj->param($pname));
         }
     }
+    # radiobox選択肢生成
+    $page->param(KIND_LOOP => \@pg_kind_ary)
+        if ( $page->query(name => 'KIND_LOOP') );
+    $page->param(PLACE_LOOP => \@pg_place_ary)
+        if ( $page->query(name => 'PLACE_LOOP') );
+    $page->param(LAYOUT_LOOP => \@pg_layout_ary)
+        if ( $page->query(name => 'LAYOUT_LOOP') );
+    $page->param(TIME_LOOP => \@pg_time_ary)
+        if ( $page->query(name => 'TIME_LOOP') );
+    $page->param(KOMA_LOOP => \@pg_koma_ary)
+        if ( $page->query(name => 'KOMA_LOOP') );
+    $page->param(NINZU_LOOP => \@pg_ninzu_ary)
+        if ( $page->query(name => 'NINZU_LOOP') );
+    $page->param(KAFUKA_LOOP => \@pg_kafuka_ary)
+        if ( $page->query(name => 'KAFUKA_LOOP') );
+    $page->param(NAIYOUK_LOOP => \@pg_naiyou_k_ary)
+        if ( $page->query(name => 'NAIYOUK_LOOP') );
+    $page->param(KIROKU_LOOP => \@pg_kiroku_ary)
+        if ( $page->query(name => 'KIROKU_LOOP') );
+    $page->param(MOTIKOMI_LOOP => \@motikomi_ary)
+        if ( $page->query(name => 'MOTIKOMI_LOOP') );
+    $page->param(AV_V_LOOP => \@av_v_ary)
+        if ( $page->query(name => 'AV_V_LOOP') );
+    $page->param(AV_A_LOOP => \@av_a_ary)
+        if ( $page->query(name => 'AV_A_LOOP') );
+    $page->param(PC_V_LOOP => \@pc_v_ary)
+        if ( $page->query(name => 'PC_V_LOOP') );
+    $page->param(PC_A_LOOP => \@pc_a_ary)
+        if ( $page->query(name => 'PC_A_LOOP') );
+    $page->param(LAN_LOOP => \@lan_ary)
+        if ( $page->query(name => 'LAN_LOOP') );
+    $page->param(ENQUETE_LOOP => \@pg_enquete_ary)
+        if ( $page->query(name => 'ENQUETE_LOOP') );
+    $page->param(YOUDO_LOOP => \@ppn_youdo_ary)
+        if ( $page->query(name => 'YOUDO_LOOP') );
+
     # 出演者情報(LOOP)
     my @loop_data = ();  # TMPL変数名=>値ハッシュ参照 の配列
     my $ppcnt;
-    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my %row_data;
         my $ppno = $ppcnt - 1;
@@ -546,6 +414,24 @@ sub pg_prmModelTmpl_set {
         $row_data{'pp_title'}   = $obj->param($prefix . '_title');
         $row_data{'pp_con'}     = $obj->param($prefix . '_con');
         $row_data{'pp_grq'}     = $obj->param($prefix . '_grq');
+        $row_data{'CON_LOOP'}   = [
+            map { { %$_,
+                    'mod_name'  => $row_data{'mod_name'},
+                    'pp_no'     => $row_data{'pp_no'},
+                    'mod_con'   => $row_data{'mod_con'},
+                    'id_con'    => $row_data{'id_con'},
+                  }
+                } @ppn_con_ary
+            ];
+        $row_data{'GRQ_LOOP'}   = [
+            map { { %$_,
+                    'mod_name'  => $row_data{'mod_name'},
+                    'pp_no'     => $row_data{'pp_no'},
+                    'mod_grq'   => $row_data{'mod_grq'},
+                    'id_grq'    => $row_data{'id_grq'},
+                  }
+                } @ppn_grq_ary
+            ];
         push(@loop_data, \%row_data);
     }
     $page->param(GUEST_LOOP => \@loop_data)
@@ -593,7 +479,7 @@ sub pg_createRegParam {
         $reg_param{'申込者肩書'}                = $sprm->param('py_title');
     }
     # 出演者情報:(Loop)
-    my $ppmax = $main::CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for (my $ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
         if (    defined($sprm->param($prefix . '_name') )
@@ -621,7 +507,7 @@ sub doMailSend {
         $body,      # メール本文
     ) = @_;
 
-    my $smtp = Net::SMTP->new($main::CONDEF_CONST{'SMTPSERVER'});
+    my $smtp = Net::SMTP->new($CONDEF_CONST{'SMTPSERVER'});
     $smtp->mail($envfrom);
     foreach my $envto ( @$pAenvto ) {
         $smtp->to($envto);

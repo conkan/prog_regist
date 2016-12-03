@@ -1,13 +1,7 @@
 <div ng-class="{invalid: reqchk.unsetKirokuKa}">
-  <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
-    ng-required="true"
-    value="CX-0"/>UST等動画を含む全て許可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
-    value="CX-1"/>blog等テキストと静止画公開可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
-    value="CX-2"/>テキストのみ公開可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
-    value="CX-3"/>公開不可<br/>
-  <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
-    value="CX-9" />その他<br/>
+  <TMPL_LOOP NAME=KIROKU_LOOP>
+    <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP><BR/>
+  </TMPL_LOOP>
 </div>

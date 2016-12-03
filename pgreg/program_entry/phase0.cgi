@@ -9,7 +9,6 @@ use CGI::Carp qw(fatalsToBrowser);
 use HTML::Template;
 use File::Basename;
 use pgreglib;
-our %CONDEF_CONST;
 
 # CGIパラメータ取得
 my $cgi = CGI->new;

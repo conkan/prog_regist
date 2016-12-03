@@ -2,147 +2,147 @@
 <dl class="register"><table>
     <tr>
         <th align="right" class="tclm">お名前</td>
-        <td align="left"><TMPL_VAR NAME="p1_name"></td>
+        <td align="left"><TMPL_VAR NAME=p1_name></td>
     </tr>
     <tr>
         <th align="right">メールアドレス</td>
-        <td align="left"><TMPL_VAR NAME="email"></td>
+        <td align="left"><TMPL_VAR NAME=email></td>
     </tr>
     <tr>
-        <th align="right"><TMPL_VAR NAME="CONNAME">番号</td>
-        <td align="left"><TMPL_VAR NAME="reg_num"></td>
+        <th align="right"><TMPL_VAR NAME=CONNAME><TMPL_VAR NAME=REGNUMTIT></td>
+        <td align="left"><TMPL_VAR NAME=reg_num></td>
     </tr>
     <tr>
         <th align="right">お電話番号</td>
-        <td align="left"><TMPL_VAR NAME="tel"></td>
+        <td align="left"><TMPL_VAR NAME=tel></td>
     </tr>
     <tr>
         <th align="right">携帯電話番号</td>
-        <td align="left"><TMPL_VAR NAME="cellphone"></td>
+        <td align="left"><TMPL_VAR NAME=cellphone></td>
     </tr>
     <tr>
         <th align="right">電話時刻</td>
-        <td align="left"><TMPL_VAR NAME="phonetime"></td>
+        <td align="left"><TMPL_VAR NAME=phonetime></td>
     </tr>
     <tr>
         <th align="right">FAX番号</td>
-        <td align="left"><TMPL_VAR NAME="fax"></td>
+        <td align="left"><TMPL_VAR NAME=fax></td>
     </tr>
 </table></dl>
 
 <h3>企画情報</h3>
 <dl class="register"><table>
-<TMPL_IF NAME="phase3">
+<TMPL_IF NAME=phase3>
     <tr>
         <th align="right" class="tclm">企画番号</td>
-        <td align="left"><TMPL_VAR NAME="prog_no"></td></tr>
+        <td align="left"><TMPL_VAR NAME=prog_no></td></tr>
 </TMPL_IF>
     <tr>
         <th align="right" class="tclm">企画名称</td>
-        <td align="left"><TMPL_VAR NAME="pg_name"></td></tr>
+        <td align="left"><TMPL_VAR NAME=pg_name></td></tr>
     <tr>
         <th align="right">フリガナ</td>
-        <td align="left"><TMPL_VAR NAME="pg_name_f"></td>
+        <td align="left"><TMPL_VAR NAME=pg_name_f></td>
     </tr>
     <tr>
         <th align="right">企画種別</td>
-        <td align="left"><TMPL_VAR NAME="pg_kind"></td>
+        <td align="left"><TMPL_VAR NAME=pg_kind></td>
     </tr>
     <tr>
         <th align="right">希望場所</td>
-        <td align="left"><TMPL_VAR NAME="pg_place"></td>
+        <td align="left"><TMPL_VAR NAME=pg_place></td>
     </tr>
     <tr>
         <th align="right">会場レイアウト</td>
-        <td align="left"><TMPL_VAR NAME="pg_layout"></td>
+        <td align="left"><TMPL_VAR NAME=pg_layout></td>
     </tr>
     <tr>
         <th align="right">希望日時</td>
-        <td align="left"><TMPL_VAR NAME="pg_time"></td>
+        <td align="left"><TMPL_VAR NAME=pg_time></td>
     </tr>
     <tr>
         <th align="right">希望コマ数</td>
-        <td align="left"><TMPL_VAR NAME="pg_koma"></td>
+        <td align="left"><TMPL_VAR NAME=pg_koma></td>
     </tr>
     <tr>
         <th align="right">予想参加者</td>
-        <td align="left"><TMPL_VAR NAME="pg_ninzu"></td>
+        <td align="left"><TMPL_VAR NAME=pg_ninzu></td>
     </tr>
     <tr>
         <th align="right">未成年者参加可否</td>
-        <td align="left"><TMPL_VAR NAME="pg_pgu18"></td>
+        <td align="left"><TMPL_VAR NAME=pg_pgu18></td>
     </tr>
     <tr>
         <th align="right">一般公開可否</td>
-        <td align="left"><TMPL_VAR NAME="pg_pggen"></td>
+        <td align="left"><TMPL_VAR NAME=pg_pggen></td>
     </tr>
     <tr>
         <th align="right">内容公開可否</td>
-        <td align="left"><TMPL_VAR NAME="pg_naiyou_k"></td>
+        <td align="left"><TMPL_VAR NAME=pg_naiyou_k></td>
     </tr>
     <tr>
         <th align="right">内容</td>
-        <td align="left"><TMPL_VAR NAME="pg_naiyou"></td>
+        <td align="left"><TMPL_VAR NAME=pg_naiyou></td>
     </tr>
     <tr>
         <th align="right">リアルタイム公開</td>
-        <td align="left"><TMPL_VAR NAME="pg_kiroku_kb"></td>
+        <td align="left"><TMPL_VAR NAME=pg_kiroku_kb></td>
     </tr>
     <tr>
         <th align="right">事後公開</td>
-        <td align="left"><TMPL_VAR NAME="pg_kiroku_ka"></td>
+        <td align="left"><TMPL_VAR NAME=pg_kiroku_ka></td>
     </tr>
     <tr>
         <th align="right">ホワイトボード</td>
-        <td align="left"><TMPL_VAR NAME="wbd"></td>
+        <td align="left"><TMPL_VAR NAME=wbd></td>
     </tr>
     <tr>
         <th align="right">壇上用マイク(固定)(本数)</td>
-        <td align="left"><TMPL_VAR NAME="mic"></td>
+        <td align="left"><TMPL_VAR NAME=mic></td>
     </tr>
     <tr>
         <th align="right">客席用マイク(可動)(本数)</td>
-        <td align="left"><TMPL_VAR NAME="mic2"></td>
+        <td align="left"><TMPL_VAR NAME=mic2></td>
     </tr>
     <tr>
         <th align="right">プロジェクタまたは大型モニタ</td>
-        <td align="left"><TMPL_VAR NAME="mon"></td>
+        <td align="left"><TMPL_VAR NAME=mon></td>
     </tr>
     <tr>
         <th align="right">BD/DVDプレイヤー</td>
-        <td align="left"><TMPL_VAR NAME="dvd"></td>
+        <td align="left"><TMPL_VAR NAME=dvd></td>
     </tr>
     <tr>
         <th align="right">書画カメラ</td>
-        <td align="left"><TMPL_VAR NAME="syo"></td>
+        <td align="left"><TMPL_VAR NAME=syo></td>
     </tr>
     <tr>
         <th align="right">その他要望機材</td>
-        <td align="left"><TMPL_VAR NAME="fc_other_naiyou"></td>
+        <td align="left"><TMPL_VAR NAME=fc_other_naiyou></td>
     </tr>
     <tr>
         <th align="right">持ち込み映像機器</td>
-        <td align="left"><TMPL_VAR NAME="fc_vid"></td>
+        <td align="left"><TMPL_VAR NAME=fc_vid></td>
     </tr>
     <tr>
         <th align="right">持ち込みPC</td>
-        <td align="left"><TMPL_VAR NAME="fc_pc"></td>
+        <td align="left"><TMPL_VAR NAME=fc_pc></td>
     </tr>
     <tr>
         <th align="right">インターネット接続</td>
-        <td align="left"><TMPL_VAR NAME="lan"></td>
+        <td align="left"><TMPL_VAR NAME=lan></td>
     </tr>
     <tr>
         <th align="right">その他持ち込み予定機材</td>
-        <td align="left"><TMPL_VAR NAME="fc_mochikomi"></td>
+        <td align="left"><TMPL_VAR NAME=fc_mochikomi></td>
     </tr>
     <tr>
         <th align="right">企画を立てるのは</td>
-        <td align="left"><TMPL_VAR NAME="pg_enquete"></td>
+        <td align="left"><TMPL_VAR NAME=pg_enquete></td>
     </tr>
     <tr>
         <th align="right">重なると困る企画</td>
-        <td align="left"><TMPL_VAR NAME="pg_badprog"></td>
+        <td align="left"><TMPL_VAR NAME=pg_badprog></td>
     </tr>
 </table></dl>
 
@@ -150,10 +150,10 @@
 <dl class="register"><table>
     <tr>
         <th align="right">企画申込者は出演</td>
-        <td align="left"><TMPL_VAR NAME="youdo"></td>
-        <td valign="middle"><TMPL_VAR NAME="py_name">
-            (<TMPL_VAR NAME="py_name_f">)</td>
-        <td><TMPL_VAR NAME="py_title"></td>
+        <td align="left"><TMPL_VAR NAME=youdo></td>
+        <td valign="middle"><TMPL_VAR NAME=py_name>
+            (<TMPL_VAR NAME=py_name_f>)</td>
+        <td><TMPL_VAR NAME=py_title></td>
     </tr>
 </table>
 <table>
@@ -164,14 +164,14 @@
         <th align="left" >出演交渉</td>
         <th align="left" >ゲスト申請</td>
     </tr>
-    <TMPL_LOOP NAME="GUEST_LOOP">
+    <TMPL_LOOP NAME=GUEST_LOOP>
         <tr>
-            <th align="right"><TMPL_VAR NAME="pp_number"></td>
-            <td valign="middle"><TMPL_VAR NAME="pp_name">
-                (<TMPL_VAR NAME="pp_name_f">)</td>
-            <td><TMPL_VAR NAME="pp_title"></td>
-            <td><TMPL_VAR NAME="pp_con"></td>
-            <td><TMPL_VAR NAME="pp_grq"></td>
+            <th align="right"><TMPL_VAR NAME=pp_number></td>
+            <td valign="middle"><TMPL_VAR NAME=pp_name>
+                (<TMPL_VAR NAME=pp_name_f>)</td>
+            <td><TMPL_VAR NAME=pp_title></td>
+            <td><TMPL_VAR NAME=pp_con></td>
+            <td><TMPL_VAR NAME=pp_grq></td>
         </tr>
     </TMPL_LOOP>
 </table></dl>
@@ -180,7 +180,7 @@
 <dl class="register"><table>
     <tr>
         <th align="right" class="tclm">備考</td>
-        <td align="left"><TMPL_VAR NAME="fc_comment"></td>
+        <td align="left"><TMPL_VAR NAME=fc_comment></td>
     </tr>
 </table></dl>
 

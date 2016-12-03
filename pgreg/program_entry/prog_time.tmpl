@@ -1,22 +1,10 @@
 <div ng-class="{invalid: reqchk.unsetTime}">
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    ng-required="true"
-    value="T-N"/>特になし<br/>
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-1any"/>09日(土)のどこでも
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-1pm"/>09日(土)午後
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-1ngt"/>09日(土)夜
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-1mid"/>09日(土)深夜<br/>
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-2any"/>10日(日)おたコス5野外ステージ<br/>
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-wday"/>両日
-  <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
-    value="T-X1"/>その他
-  <span ng-if="pgrg.pgTime=='T-X1'">
+  <TMPL_LOOP NAME=TIME_LOOP>
+    <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
+      ng-required="true"
+      value="<TMPL_VAR NAME=VAL>"/><TMPL_VAR NAME=DISP>
+  </TMPL_LOOP>
+  <span ng-if="pgrg.pgTime=='other'">
     <input type="text" ng-model="pgrg.pgTime2" name="pg_time2" size="30"
       style="ime-mode: active;" ng-required="true"/>
   </span><br/>

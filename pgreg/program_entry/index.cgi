@@ -1,13 +1,12 @@
 #!/usr/bin/perl
 # 企画申し込み入り口
-#
+
 use strict;
 use warnings;
 use CGI;
 use HTML::Template;
 use File::Basename;
 use pgreglib;
-our %CONDEF_CONST;
 
 #htmlの生成/返却
 my $cgi = CGI->new;

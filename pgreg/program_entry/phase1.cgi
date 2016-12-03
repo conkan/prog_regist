@@ -7,7 +7,6 @@ use CGI::Carp qw(fatalsToBrowser);
 use HTML::Template;
 use HTML::FillInForm;
 use pgreglib;
-our %CONDEF_CONST;
 
 my $cgi=CGI->new;
 

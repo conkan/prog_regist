@@ -4,7 +4,7 @@ SFCON
 index.html
 testitem.cgi
 sample.html
-pgreglib.pm
+pgregdef.pm
 param_def.csv
 *~
 *.sw?

@@ -6,7 +6,6 @@ use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser); 
 use HTML::Template;
 use pgreglib;
-our %CONDEF_CONST;
 
 my $cgi = CGI->new;
 

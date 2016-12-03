@@ -14,7 +14,6 @@ use LWP::UserAgent;
 use IO::Socket::SSL qw/SSL_VERIFY_NONE/;
 use HTTP::Request::Common;
 use Try::Tiny;
-our %CONDEF_CONST;
 
 my $cgi=CGI->new;
 

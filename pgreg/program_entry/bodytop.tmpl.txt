@@ -1,2 +1,2 @@
-<h2><TMPL_VAR NAME="CONNAME">企画申し込み</h2>
+<h2><TMPL_VAR NAME=CONNAME>企画申し込み</h2>
 
