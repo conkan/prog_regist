@@ -161,6 +161,18 @@ my %h_pname4mail = (
     'fc_comment'    => ['備考', undef],
 );
 
+# 共通関数 CONDEF_CONST テンプレート変数設定
+sub pg_stdConstTmpl_set {
+    my (
+        $page,  # HTML::Templateオブジェクト
+    ) = @_;
+
+    foreach my $name ( keys(%CONDEF_CONST) ) {
+        $page->param($name => $CONDEF_CONST{$name}) 
+            if ( $page->query(name => $name));
+    }
+}
+
 # 共通関数 HTMLテンプレート共通変数設定
 sub pg_stdHtmlTmpl_set {
     my (
@@ -168,20 +180,8 @@ sub pg_stdHtmlTmpl_set {
         $sid,   # セッションID
     ) = @_;
 
-    $page->param(ID         => $sid)
-        if ( $page->query(name => 'ID'));
-    $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
-        if ( $page->query(name => 'CONNAME'));
-    $page->param(CONPERIOD  => $CONDEF_CONST{'CONPERIOD'})
-        if ( $page->query(name => 'CONPERIOD'));
-    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
-        if ( $page->query(name => 'FULLNAME'));
-    $page->param(REGNUMTIT  => $CONDEF_CONST{'REGNUMTIT'})
-        if ( $page->query(name => 'REGNUMTIT'));
-    $page->param(DEFLAYOUT  => $CONDEF_CONST{'DEFLAYOUT'})
-        if ( $page->query(name => 'DEFLAYOUT'));
-    $page->param(MAXGCNT  => $CONDEF_CONST{'MAXGCNT'})
-        if ( $page->query(name => 'MAXGCNT'));
+    pg_stdConstTmpl_set($page);
+    $page->param(ID => $sid) if ( $page->query(name => 'ID'));
 }
 
 # 共通関数 MailBodyテンプレート共通変数設定
@@ -191,22 +191,9 @@ sub pg_stdMailTmpl_set {
         $toaddr,    # MailHeader:To
         $name,      # MailBody:申込者名
     ) = @_;
-    $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
-        if ( $page->query(name => 'CONNAME') );
-    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
-        if ( $page->query(name => 'FULLNAME') );
-    $page->param(MIMENAME   => $CONDEF_CONST{'MIMENAME'})
-        if ( $page->query(name => 'MIMENAME') );
-    $page->param(MIMEPGSG   => $CONDEF_CONST{'MIMEPGSG'})
-        if ( $page->query(name => 'MIMEPGSG') );
-    $page->param(REGNUMTIT  => $CONDEF_CONST{'REGNUMTIT'})
-        if ( $page->query(name => 'REGNUMTIT'));
-    $page->param(FROMADDR   => $CONDEF_CONST{'ENTADDR'})
-        if ( $page->query(name => 'FROMADDR') );
-    $page->param(TOADDR     => $toaddr)
-        if ( $page->query(name => 'TOADDR') );
-    $page->param(NAME       => $name)
-        if ( $page->query(name => 'NAME') );
+    pg_stdConstTmpl_set($page);
+    $page->param(TOADDR => $toaddr) if ( $page->query(name => 'TOADDR') );
+    $page->param(NAME   => $name) if ( $page->query(name => 'NAME') );
 }
 
 # 共通関数 設定値確認テンプレート変数設定
