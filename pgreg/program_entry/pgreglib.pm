@@ -414,6 +414,24 @@ sub pg_prmModelTmpl_set {
         $row_data{'pp_title'}   = $obj->param($prefix . '_title');
         $row_data{'pp_con'}     = $obj->param($prefix . '_con');
         $row_data{'pp_grq'}     = $obj->param($prefix . '_grq');
+        $row_data{'CON_LOOP'}   = [
+            map { { %$_,
+                    'mod_name'  => $row_data{'mod_name'},
+                    'pp_no'     => $row_data{'pp_no'},
+                    'mod_con'   => $row_data{'mod_con'},
+                    'id_con'    => $row_data{'id_con'},
+                  }
+                } @ppn_con_ary
+            ];
+        $row_data{'GRQ_LOOP'}   = [
+            map { { %$_,
+                    'mod_name'  => $row_data{'mod_name'},
+                    'pp_no'     => $row_data{'pp_no'},
+                    'mod_grq'   => $row_data{'mod_grq'},
+                    'id_grq'    => $row_data{'id_grq'},
+                  }
+                } @ppn_grq_ary
+            ];
         push(@loop_data, \%row_data);
     }
     $page->param(GUEST_LOOP => \@loop_data)

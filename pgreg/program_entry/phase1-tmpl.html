@@ -625,6 +625,12 @@
           if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = 'MT-1'; }
           if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = 'MT-1'; }
           if ( $scope.pgrg.ppGuestNum == '' ) { $scope.pgrg.ppGuestNum = 0; };
+          // 再編集時、名前が設定されている出演者まで表示
+          for ( ; $scope.pgrg.ppGuestNum > 0; $scope.pgrg.ppGuestNum-- ) {
+            if ( $scope.pgrg.ppGuest[$scope.pgrg.ppGuestNum].name != '' ) {
+              break;
+            }
+          }
         })();
       }
     ]
