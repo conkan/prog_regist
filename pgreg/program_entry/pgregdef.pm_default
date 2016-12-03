@@ -44,6 +44,10 @@ our %CONDEF_CONST = (
     'ENTADDR'    => '',
     'ENVFROM'    => '',
     'PGSTAFF'    => '',
+    ## REGNUMTIT:   参加番号名称
+    ## DEFLAYOUT:   デフォルトの会議室レイアウト
+    'REGNUMTIT'  => '参加登録番号'
+    'DEFLAYOUT'  => 'スクール'
     ## CONKANURL:   conkan_programトップURL
     ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
     'CONKANURL'  => '',

@@ -1,4 +1,4 @@
 <div class="footer">
-    <footer>&copy;<TMPL_VAR NAME="CONPERIOD"> <TMPL_VAR NAME="FULLNAME"></footer>
+    <footer>&copy;<TMPL_VAR NAME=CONPERIOD> <TMPL_VAR NAME=FULLNAME></footer>
 </div>
 

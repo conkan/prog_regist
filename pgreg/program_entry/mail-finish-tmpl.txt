@@ -19,5 +19,5 @@ Subject: =?ISO-2022-JP?B?GyRCNGsyaD89OX40ME47RExDThsoQg==?=
 どうもありがとうございました。
 
 ----
-<TMPL_INCLUDE NAME="prog_info_mail.tmpl">
+<TMPL_INCLUDE NAME=prog_info_mail.tmpl>
 ----

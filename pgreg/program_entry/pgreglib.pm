@@ -172,10 +172,14 @@ sub pg_stdHtmlTmpl_set {
         if ( $page->query(name => 'ID'));
     $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
         if ( $page->query(name => 'CONNAME'));
-    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
-        if ( $page->query(name => 'FULLNAME'));
     $page->param(CONPERIOD  => $CONDEF_CONST{'CONPERIOD'})
         if ( $page->query(name => 'CONPERIOD'));
+    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
+        if ( $page->query(name => 'FULLNAME'));
+    $page->param(REGNUMTIT  => $CONDEF_CONST{'REGNUMTIT'})
+        if ( $page->query(name => 'REGNUMTIT'));
+    $page->param(DEFLAYOUT  => $CONDEF_CONST{'DEFLAYOUT'})
+        if ( $page->query(name => 'DEFLAYOUT'));
     $page->param(MAXGCNT  => $CONDEF_CONST{'MAXGCNT'})
         if ( $page->query(name => 'MAXGCNT'));
 }
@@ -187,18 +191,22 @@ sub pg_stdMailTmpl_set {
         $toaddr,    # MailHeader:To
         $name,      # MailBody:申込者名
     ) = @_;
+    $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
+        if ( $page->query(name => 'CONNAME') );
+    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
+        if ( $page->query(name => 'FULLNAME') );
     $page->param(MIMENAME   => $CONDEF_CONST{'MIMENAME'})
         if ( $page->query(name => 'MIMENAME') );
+    $page->param(MIMEPGSG   => $CONDEF_CONST{'MIMEPGSG'})
+        if ( $page->query(name => 'MIMEPGSG') );
+    $page->param(REGNUMTIT  => $CONDEF_CONST{'REGNUMTIT'})
+        if ( $page->query(name => 'REGNUMTIT'));
     $page->param(FROMADDR   => $CONDEF_CONST{'ENTADDR'})
         if ( $page->query(name => 'FROMADDR') );
     $page->param(TOADDR     => $toaddr)
         if ( $page->query(name => 'TOADDR') );
     $page->param(NAME       => $name)
         if ( $page->query(name => 'NAME') );
-    $page->param(FULLNAME   => $CONDEF_CONST{'FULLNAME'})
-        if ( $page->query(name => 'FULLNAME') );
-    $page->param(CONNAME    => $CONDEF_CONST{'CONNAME'})
-        if ( $page->query(name => 'CONNAME') );
 }
 
 # 共通関数 設定値確認テンプレート変数設定

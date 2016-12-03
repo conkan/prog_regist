@@ -1,6 +1,6 @@
 <!-- 出演者情報入力欄 -->
-<TMPL_LOOP NAME="GUEST_LOOP">
-  <tr ng-if="<TMPL_VAR NAME=pp_no><=pgrg.ppGuestNum"> <!-- > -->
+<TMPL_LOOP NAME=GUEST_LOOP>
+  <tr ng-if="<TMPL_VAR NAME=pp_no><=pgrg.ppGuestNum">
     <td align="right"><TMPL_VAR NAME=pp_number></td>
     <td valign="middle">
       <input type="text" ng-model="<TMPL_VAR NAME=mod_name>"

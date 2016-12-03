@@ -1,17 +1,17 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
-    <TMPL_INCLUDE NAME="metahead.tmpl.txt">
+    <TMPL_INCLUDE NAME=metahead.tmpl.txt>
 </head>
 <body><div class="wrap">
 
-<TMPL_INCLUDE NAME="header.tmpl.txt">
+<TMPL_INCLUDE NAME=header.tmpl.txt>
 
 <div class="content"><article>
 
-<TMPL_INCLUDE NAME="bodytop.tmpl.txt">
+<TMPL_INCLUDE NAME=bodytop.tmpl.txt>
 <IMG SRC="images/Guide-p0.png" ALT="入力ガイド" WIDTH="520" HEIGHT="44"/>
-<form NAME="form-01" ID="form-01" method="post" action="phase0.cgi">
-    <TMPL_VAR NAME="CONNAME">企画お申し込みサイトへようこそ<br />
+<form name="form-01" ID="form-01" method="post" action="phase0.cgi">
+    <TMPL_VAR NAME=CONNAME>企画お申し込みサイトへようこそ<br />
     メールアドレスの確認のため入力されたアドレスに電子メールを送信いたします。<br />
     以下のフォームにご記入のうえお申し込みください。
     ご連絡先のメールアドレスと、お名前、参加番号を入力してください。<br>
@@ -29,7 +29,7 @@
             <td><input type="text" name="name" size="30" value="" ></td>
         </tr>
         <tr>
-            <td align="right"><TMPL_VAR NAME="CONNAME">参加登録番号：</td>
+            <td align="right"><TMPL_VAR NAME=CONNAME><TMPL_VAR NAME=REGNUMTIT>：</td>
             <td>
                 <input type="text" name="reg_num" size="30" value="" ><br/>
                 ※ゲストの方は、「ゲスト」と入力してください<br/>
@@ -45,7 +45,7 @@
 </FORM>
 </article></div>
 
-<TMPL_INCLUDE NAME="footer.tmpl.txt">
+<TMPL_INCLUDE NAME=footer.tmpl.txt>
 
 <script type="text/javascript">
 function FormCheck() {
