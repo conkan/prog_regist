@@ -2,12 +2,13 @@
 
 ## 概要
 
-大会ごとに必ず変更がある部分(大会名称とかメアドとか)は、すべて **pgreglib.pm** の中で定義し、吸収しています。  
+大会ごとに必ず変更がある部分(大会名称とかメアドとか)は、すべて **pgregdef.pm** の中で定義し、吸収しています。  
 (企画を登録するconkanのWebIF-URLやそのパラメータも)
 
 入力項目など変更がありそうな部分は、**XXXX.tmpl** に記述していますが、  
-その中では **pgreglib.pm** で定義した値を使っていますので、ほぼ変更はいらないはずです。  
-※入力項目を修正する場合は、conkanの設定変更と同期をとる必要があります
+radioboxの選択肢などには **pgregdef.pm** で定義した値を使っていますので、
+ほぼ変更はいらないはずです。  
+※入力項目を修正(増減)する場合は、conkanの設定変更と同期をとる必要があります
 
 画像ファイル  
 > **images/favicon.ico**  
@@ -24,118 +25,107 @@
 
 ## Perl依存モジュール
 
-下記のモジュールに依存します。
-- [Perl5.14 CORE]
-    - CGI
-    - CGI::Carp
-    - Encode
-    - File::Basename
-    - Net::SMTP
-    - Sys::Hostname
-- [さくら標準]
-    - CGI::Session
-    - HTML::Template
-    - HTTP::Request::Common
-    - LWP::UserAgent
-    - MIME::Base64
-    - Try::Tiny
-- [独自インストール]
-    - Data::Dumper
-    - HTML::FillInForm
-    - JSON
+Perlのモジュールは、Dockerfile の Perlライブラリインストール部分を参照してください。
 
-## インストール
+## デプロイ
 
-### ファイル準備
+企画申し込みページを起動する方法は2つあります。
+
+いずれの場合も、まずサーバ上の任意の場所(以下<BASE>)に
+git リポジトリをcloneしてください。
+
++----
+|prompt> cd <BASE>
+|prompt> git clone https://github.com/conkan/prog_regist.git
++----
+
+### Dockerコンテナとして起動
+
+Docker Hubに conkan/apache4pgreg コンテナが登録されるまでは、
+独自にコンテナイメージを作成する必要があります。
+コンテナイメージの作成には、build.shを起動します。
++----
+|prompt> cd <BASE>/prog_regist
+|prompt> ./build.sh
++----
+
+コンテナの起動には、run.shを起動します。
++----
+|prompt> cd <BASE>/prog_regist
+|prompt> ./run.sh product
++----
+引数にproductを指定すると、prog_regist本体(CGI)としてコンテナ内部のもの(build.sh時のもの)を使用します。
+引数を指定しない場合、prog_regist本体(CGI)としてgit cloneしたもの(<BASE>/prog_regist/pgreg/program_entry)を使用します。
+
+この方法で起動した場合、
+- prog_regist用httpdは、下記の状態になります
+  -- 待受プロトコル        ; http
+  -- 待受port              : 9001
+  -- prog_registトップパス : /program_entry
+  -- ログ出力ディレクトリ  : ホスト側の /var/log/http4pgreg
+
+  ホスト側のリバースプロキシ(nginxなど)で、SSL解釈とプロキシパスを設定してください。
+  [nginxの場合の設定例 nginx.conf]
+   +----
+   |server {
+   |    listen       443 ssl default_server;
+   |    ssl          on;
+        : (server_nameやsslの設定は省略)
+   |    # For program_regist
+   |    location /program_entry {
+   |            proxy_pass http://localhost:9001/program_entry;
+   |    }
+        : (他location やeror_pageの設定は省略)
+   |}
+   +----
+
+コンテナ起動後、後述の「大会独自ファイル設定」を実施してください。
+
+### 既存httpdに直接CGIを配置
+
+サーバで動作しているhttpd(apacheなど)のCGIとして動作させる場合には、
+prog_regist本体(<BASE>/prog_regist/pgreg/program_entry)を、
+ドキュメントルート下の適切な部分にcopy(あるいはシンボリックリンク)して、
+下記の設定をしてください。
+- CGI起動可能とする
+- cgi-scriptのHandlerとして cgi を設定する
+- DirectoryIndex として index.cgiを使用
+
+なお、当然ながらSSL解釈の設定なども必要です。
+
+  [apache2の場合の設定例 httpd.conf]
+  prog_regist本体のパスを<PGREG>とする
+   +----
+   |<Directory "<PGREG>">
+   |    AllowOverride All
+   |    Options MultiViews SymLinksIfOwnerMatch ExecCGI
+   |    <Limit GET POST OPTIONS>
+   |        Order allow,deny
+   |        Allow from all
+   |    </Limit>
+   |    <LimitExcept GET POST OPTIONS>
+   |        Order deny,allow
+   |        Deny from all
+   |    </LimitExcept>
+   |    AddHandler cgi-script cgi pl
+   |    DirectoryIndex index.html index.cgi
+   |</Directory>
+   +----
+
+加えて、後述の「大会独自ファイル設定」を実施後、httpdを再起動してください。
+
+### 大会独自ファイル設定
 
 画像ファイル  
 > **images/favicon.ico**  
 > **images/header_logo.png**
 を対応大会の物に上書きしてください。
 
-**pgreglib.pm** をcopyして生成して下さい
-> cp pgreglib.pm_default pgreglib.pm  
+**pgregdef.pm** をcopyして生成して下さい
+> cp pgregdef.pm_default pgregdef.pm  
 >> これは、環境依存部分(セキュア情報を含む)を、GitHubに置かないための仕組みです。
 
-### パラメータ設定
-
-**pgreglib.pm** の、以下の定数を環境に合わせて設定して下さい。  
-
-ここは基本的にコメントアウトしたままでOKです。
-> #### デバッグ,メンテナンスフラグ
->     ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
->     ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
-
-大会ごとに異なる部分なので設定してください。
-> #### 大会独自項目 定数定義
->     ## CONNAME :    大会愛称      ex. CCCC
->     ## CONPERIOD:   有効期間      ex. 2015-2016
->     ## FULLNAME:    大会正式名称  ex. 第NN回日本SF大会 CCCC
->     ## ENTADDR:     メールヘッダ差出人アドレス
->     ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
->     ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
->     ## MIMENAME:    '第XX回日本SF大会 XXXX実行委員会' をMIME化した値
->     ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
->     ## CONKANURL:   conkan_programトップURL
->     ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
->     ## SMTPSERVER:  メールサーバFQDN
-
-そのままでもかまいませんが、大会ごとに変えたほうが良いでしょう
-> #### 評価用特殊参加番号
->     ## SPREGNUM1:   直接申込jump用参加番号
->     ## SPREGNUM2:   直接申込jump&FinalMail確認用参加番号
->     ## SPREGNUM3:   FirstMail確認用参加番号
-
-### 評価用特殊参加番号
-
-最初のページの *参加番号* に  
-SPREGNUM1, SPREGNUM2, SPREGNUM3 に設定した値を入力すると、  
-下記のような特殊な動作をします。(本番系でも同様)
-
-- SPREGNUM1
-> 申し込みフォームURL通知メールを送らず、申し込み画面にジャンプする
-
-- SPREGNUM2
-> 申し込みフォームURL通知メールを送らず、申し込み画面にジャンプする  
-> 申し込み完了後、送信する通知メール(申込者宛、企画管理者宛)を送らず、画面に表示する
-
-- SPREGNUM3
-> 申し込みフォームURL通知メールの内容を、画面に表示する
-
-さらに、*参加番号*に
-> '<参加番号> <特殊動作指定プリフィックス> [ *オプション* ... ]'
-
-の形でオプションを指定することで、細かな動作制御もできます。(本番系も同様)
-
-オプションには以下のものが指定できます。
-
-- NOURLMAIL
-> 申し込みURL通知メールを送らず、直接企画申込画面に遷移
-
-- NOMAIL2USER
-> 申込者、企画管理者に申込受付メールを送らない
-
-- NOMAIL2ML
-> 企画管理MLに申込受付メールを送らない
-
-- NOALLMAIL
-> 全てのメールを送信しない
-
-- SKIPVALID
-> パラメータのバリデーションをせず、直接内容確認画面に遷移
-
-- SKIPREGIST
-> 実際の登録はしない
-
-- SHOWURLMAIL
-> 申し込みURL通知メール内容を画面に表示
-
-- SHOWREGMAIL
-> 申し込み完了後、送信する通知メール(申込者宛、企画管理者宛)を画面に表示する
-
-- SHOWREGJSON
-> conkan登録用JSON値を画面に表示する
-
-このオプション指定文字列も、pgreglib.pmを修正することで変更することができますが、指定した特殊動作用プリフィックスを入力しないかぎり動作しませんので、あえて変える必要はないでしょう。
+**pgregdef.pm** の内容を環境に合わせて設定して下さい。  
+個々の項目に関しては、**pgregdef.pm** のコメントを参照してください。
 
 EOF

@@ -3,9 +3,13 @@ NAME='apache4pgreg'
 PSET='-p 9001:80'
 RUNOPT='-d --restart=always'
 LOGMNT='-v /var/log/http4pgreg:/var/log/http'
-DEVMNT=''
-# 開発時はgit checkout先をmountする
-DEVMNT='-v '$(pwd)'/pgreg/program_entry:/usr/local/apache2/htdocs/program_entry'
+# 本番系は、run.sh product で起動
+if [ "$1" = "product" ] ; then
+    DEVMNT=''
+else
+    # 開発時はgit checkout先をmountする
+    DEVMNT='-v '$(pwd)'/pgreg/program_entry:/usr/local/apache2/htdocs/program_entry'
+fi
 
 STAT=`docker inspect $NAME | grep Status | awk -F'"' '{print $4}'`
 if [ !${STAT} ]; then

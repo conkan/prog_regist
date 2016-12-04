@@ -23,7 +23,7 @@ our %CONDEF_CONST = (
 #### デバッグ,メンテナンスフラグ
     ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
     ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
-    'ONLYUICHK'  => 1,
+    # 'ONLYUICHK'  => 1,
     # 'MAINTENANCE' => 1,
 
 #### 大会独自項目 定数定義
