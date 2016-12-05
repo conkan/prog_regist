@@ -15,6 +15,7 @@ my $cgi = CGI->new;
 my $name     = $cgi->param("name"); 
 my $mailaddr = $cgi->param("mail");
 my $reg_num  = $cgi->param("reg_num"); 
+my $referer  = $cgi->referer();
 
 # 登録番号からデバッグフラグを設定
 my %debflg;
@@ -73,6 +74,9 @@ if ( $CONDEF_CONST{'ONLYUICHK'} ) {
     $debflg{'NOMAIL2K'}  = 'true';
     $debflg{'SKIPREGIST'} = 'true';
 }
+if ( $CONDEF_CONST{'NOREGIST'} ) {
+    $debflg{'SKIPREGIST'} = 'true';
+}
 
 # セッション生成
 my $session;
@@ -87,7 +91,7 @@ $session->param('dbgflgs',  \%debflg);  # デバッグフラグ
 
 # 申し込みURL生成
 # referer()を元に生成するので、プロトコルの変更は不要
-my ($filename, $pathname) = fileparse($cgi->referer());
+my ($filename, $pathname) = fileparse($referer);
 my $next_uri = $pathname . 'phase1.cgi?ID=' . $session->id;
 
 # テスト用(申し込みURL送信省略)
@@ -101,7 +105,7 @@ my $mail_out = HTML::Template->new(filename => 'mail-first-tmpl.txt');
 pgreglib::pg_stdMailTmpl_set( $mail_out, $mailaddr, $name );
 $mail_out->param(URI => $next_uri);
 my $mbody = $mail_out->output;
-pgreglib::doMailSend( $CONDEF_CONST{'ENVFROM'}, [ $mailaddr, ], $mbody );
+doMailSend( $CONDEF_CONST{'ENVFROM'}, [ $mailaddr, ], $mbody );
 
 #htmlの生成/返却
 my $page = HTML::Template->new(filename => 'phase0-tmpl.html');

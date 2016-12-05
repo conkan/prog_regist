@@ -2,22 +2,32 @@
 package pgreglib;
 use strict;
 use warnings;
-use Encode qw/ encode decode /;
-use Net::SMTP;
 
 use pgregdef;
+use regmail;
 
 require Exporter;
 use base qw/Exporter/;
 
 our @EXPORT = qw(
     %CONDEF_CONST
+    doMailSend
 );
 
 our %EXPORT_TAGS = (
     default      => [ @EXPORT ],
 );
 
+### CONDEF_CONST初期値設定&矛盾チェック (動作上不具合になるもの)
+$CONDEF_CONST{'MAXGCNT'}            ||= 8; 
+$CONDEF_CONST{'SMTP'}->{'SERVER'}   ||= '127.0.0.1'; 
+$CONDEF_CONST{'SMTP'}->{'PORT'}     ||= 25; 
+die 'SMTP TLS must use SMTP AUTH'
+    if ( $CONDEF_CONST{'SMTP'}->{'TLS'} && !$CONDEF_CONST{'SMTP'}->{'AUTH'} );
+die 'SMTP AUTH must set SMTP AUTH_USER and AUTH_PASS'
+    if ( $CONDEF_CONST{'SMTP'}->{'AUTH'} &&
+         !( $CONDEF_CONST{'SMTP'}->{'AUTH_USER'} && 
+            $CONDEF_CONST{'SMTP'}->{'AUTH_PASS'}    ) );
 ### HTMLテンプレート置き換え定義
 # radiobox CGI値変換テーブル作成
 my %pg_kind_cnv     = map { $_->{VAL} => $_->{DISP} } @pg_kind_ary;
@@ -497,25 +507,6 @@ sub pg_createRegParam {
         }
     }
     return(\%reg_param);
-}
-
-# 共通関数 mail送信
-sub doMailSend {
-    my (
-        $envfrom,   # EnvelopeFrom
-        $pAenvto,   # EnvelopeTo配列参照
-        $body,      # メール本文
-    ) = @_;
-
-    my $smtp = Net::SMTP->new($CONDEF_CONST{'SMTPSERVER'});
-    $smtp->mail($envfrom);
-    foreach my $envto ( @$pAenvto ) {
-        $smtp->to($envto);
-    }
-    $smtp->data();
-    $smtp->datasend( encode('7bit-jis', decode('utf8', $body)) );
-    $smtp->dataend();
-    $smtp->quit;
 }
 
 # 共通関数 テスト用 HTMLにメール内容を埋め込む

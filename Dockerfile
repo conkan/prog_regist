@@ -12,9 +12,7 @@ RUN apt-get -qq -y install vim sudo unzip wget less build-essential libssl-dev c
 #----------------------------------------------------------
 # Perlライブラリインストール
 #----------------------------------------------------------
-RUN cpanm -in CGI CGI::Carp Encode File::Basename Net::SMTP Sys::Hostname
-RUN cpanm -in CGI::Session HTML::Template HTTP::Request::Common LWP::UserAgent MIME::Base64 Try::Tiny
-RUN cpanm -in Data::Dumper HTML::FillInForm JSON LWP::Protocol::https
+RUN cpanm -in CGI CGI::Carp Encode File::Basename Net::SMTP Net::SMTP::TLS Sys::Hostname CGI::Session HTML::Template HTTP::Request::Common LWP::UserAgent MIME::Base64 Try::Tiny Data::Dumper HTML::FillInForm JSON LWP::Protocol::https
 RUN rm -rf .cpanm/*
 
 #----------------------------------------------------------
@@ -37,8 +35,10 @@ COPY ./pgreg/httpd.conf /usr/local/apache2/conf/httpd.conf
 
 #----------------------------------------------------------
 # program_entry実体格納(開発時はマウント)
+# 大会独自設定ファイルはイメージから削除しておく
 #----------------------------------------------------------
 COPY ./pgreg/program_entry /usr/local/apache2/htdocs/program_entry
+RUN rm -f /usr/local/apache2/htdocs/program_entry/pgregdef.pm
 
 #----------------------------------------------------------
 # 起動
