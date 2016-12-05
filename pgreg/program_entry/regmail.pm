@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use Encode qw/ encode decode /;
 use Net::SMTP;
-use Net::SMTP::TLS;
+use Net::SMTPS;
+use IO::Socket::SSL;
 
 use pgregdef;
 
@@ -29,12 +30,15 @@ sub doMailSend {
 
     my $smtp;
     if ( $CONDEF_CONST{'SMTP'}->{'TLS'} ) {
-        $smtp = Net::SMTP::TLS->new(
+        $smtp = Net::SMTPS->new(
             $CONDEF_CONST{'SMTP'}->{'SERVER'},
             Port        => $CONDEF_CONST{'SMTP'}->{'PORT'},
-            User        => $CONDEF_CONST{'SMTP'}->{'AUTH_USER'},
-            Password    => $CONDEF_CONST{'SMTP'}->{'AUTH_PASS'}
+            doSSL       => 'starttls',
+            SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
         );
+        $smtp->auth( $CONDEF_CONST{'SMTP'}->{'AUTH_USER'},
+                     $CONDEF_CONST{'SMTP'}->{'AUTH_PASS'},
+                     'LOGIN');
     } else {
         $smtp = Net::SMTP->new(
             $CONDEF_CONST{'SMTP'}->{'SERVER'},

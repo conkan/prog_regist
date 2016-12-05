@@ -12,7 +12,7 @@ RUN apt-get -qq -y install vim sudo unzip wget less build-essential libssl-dev c
 #----------------------------------------------------------
 # Perlライブラリインストール
 #----------------------------------------------------------
-RUN cpanm -in CGI CGI::Carp Encode File::Basename Net::SMTP Net::SMTP::TLS Sys::Hostname CGI::Session HTML::Template HTTP::Request::Common LWP::UserAgent MIME::Base64 Try::Tiny Data::Dumper HTML::FillInForm JSON LWP::Protocol::https
+RUN cpanm -in CGI CGI::Carp Encode File::Basename Net::SMTP Net::SMTPS Sys::Hostname CGI::Session HTML::Template HTTP::Request::Common LWP::UserAgent MIME::Base64 Try::Tiny Data::Dumper HTML::FillInForm JSON LWP::Protocol::https
 RUN rm -rf .cpanm/*
 
 #----------------------------------------------------------
