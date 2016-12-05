@@ -36,6 +36,8 @@ our %CONDEF_CONST = (
     ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
     ## ENTADDR:     メールヘッダ差出人アドレス
     ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
+    ### 注: AWS SESを使用する場合、ENTADDR, ENVFROM はいずれもSESに登録した
+    ###     アドレスでなければならない
     ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
     'CONNAME'    => '',
     'CONPERIOD'  => '',
@@ -57,12 +59,14 @@ our %CONDEF_CONST = (
     'MAXGCNT'    => 8,
     ## メールサーバ設定
     'SMTP'       => {
+        #### DEBUG:     SMTPデバッグ出力(>標準出力) 既定値 undef
         #### PORT:      メールサーバ待受ポート      既定値 25
         #### TLS:       TLS対応するか (Bool)        既定値 undef(=false)
         #### AUTH:      SMTP Auth対応するか (Bool)  既定値 undef(=false)
         #### SERVER:    メールサーバFQDN            既定値 127.0.0.1
         #### AUTH_USER: SMTP Authユーザ名
         #### AUTH_PASS: SMTP Authパスワード
+        'DEBUG'     => undef,
         'PORT'      => 25,
         'TLS'       => undef,
         'AUTH'      => undef,

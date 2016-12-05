@@ -1,4 +1,4 @@
-From: <TMPL_VAR NAME=MIMENAME> <<TMPL_VAR NAME=FROMADDR>>
+From: <TMPL_VAR NAME=MIMENAME> <<TMPL_VAR NAME=ENTADDR>>
 To:   <TMPL_VAR NAME=TOADDR>
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="ISO-2022-JP"

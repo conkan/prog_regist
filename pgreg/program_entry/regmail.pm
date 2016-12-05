@@ -30,25 +30,25 @@ sub doMailSend {
 
     my $smtp;
     if ( $CONDEF_CONST{'SMTP'}->{'TLS'} ) {
+        ## TLSの時AUTH必須だが、pgreglib 読み込み時にチェック済
         $smtp = Net::SMTPS->new(
             $CONDEF_CONST{'SMTP'}->{'SERVER'},
             Port        => $CONDEF_CONST{'SMTP'}->{'PORT'},
             doSSL       => 'starttls',
             SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
         );
-        $smtp->auth( $CONDEF_CONST{'SMTP'}->{'AUTH_USER'},
-                     $CONDEF_CONST{'SMTP'}->{'AUTH_PASS'},
-                     'LOGIN');
     } else {
         $smtp = Net::SMTP->new(
             $CONDEF_CONST{'SMTP'}->{'SERVER'},
             Port        => $CONDEF_CONST{'SMTP'}->{'PORT'}
         );
-        if ( $CONDEF_CONST{'SMTP'}->{'AUTH'} ) { 
-			$smtp->auth( $CONDEF_CONST{'SMTP'}->{'AUTH_USER'},
-                         $CONDEF_CONST{'SMTP'}->{'AUTH_PASS'} );
-		}
-	}
+    }
+    $smtp->debug($CONDEF_CONST{'SMTP'}->{'DEBUG'});
+    if ( $CONDEF_CONST{'SMTP'}->{'AUTH'} ) { 
+        $smtp->auth( $CONDEF_CONST{'SMTP'}->{'AUTH_USER'},
+                     $CONDEF_CONST{'SMTP'}->{'AUTH_PASS'},
+                     'LOGIN');
+    }
 
     $smtp->mail($envfrom);
     foreach my $envto ( @$pAenvto ) {
