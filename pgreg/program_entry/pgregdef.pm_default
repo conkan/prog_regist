@@ -22,8 +22,10 @@ our %EXPORT_TAGS = (
 our %CONDEF_CONST = (
 #### デバッグ,メンテナンスフラグ
     ## ONLYUICHK: UIチェックモード時、コメントアウト (メール送信、登録をしない)
+    ## NOREGIST:  非登録モード時、コメントアウト (登録をしない)
     ## MAINTENANCE:メンテナンスモード時、コメントアウト (メンテナンス中画面表示)
-    # 'ONLYUICHK'  => 1,
+    # 'ONLYUICHK'   => 1,
+    # 'NOREGIST'    => 1,
     # 'MAINTENANCE' => 1,
 
 #### 大会独自項目 定数定義
@@ -34,6 +36,8 @@ our %CONDEF_CONST = (
     ## MIMEPGSG:    'XXXX企画受付' をMIME化した値
     ## ENTADDR:     メールヘッダ差出人アドレス
     ## ENVFROM:     ENVELOPE FROM アドレス (エラーリプライ)
+    ### 注: AWS SESを使用する場合、ENTADDR, ENVFROM はいずれもSESに登録した
+    ###     アドレスでなければならない
     ## PGSTAFF:     企画管理者アドレス (ML) (申込内容同報)
     'CONNAME'    => '',
     'CONPERIOD'  => '',
@@ -51,10 +55,25 @@ our %CONDEF_CONST = (
     ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
     'CONKANURL'  => '',
     'CONKANPASS' => '',
-    ## SMTPSERVER:  メールサーバFQDN
-    'SMTPSERVER' => '',
     ## MAXGCNT:     最大出演者数 (既定値 8)
     'MAXGCNT'    => 8,
+    ## メールサーバ設定
+    'SMTP'       => {
+        #### DEBUG:     SMTPデバッグ出力(>標準出力) 既定値 undef
+        #### PORT:      メールサーバ待受ポート      既定値 25
+        #### TLS:       TLS対応するか (Bool)        既定値 undef(=false)
+        #### AUTH:      SMTP Auth対応するか (Bool)  既定値 undef(=false)
+        #### SERVER:    メールサーバFQDN            既定値 127.0.0.1
+        #### AUTH_USER: SMTP Authユーザ名
+        #### AUTH_PASS: SMTP Authパスワード
+        'DEBUG'     => undef,
+        'PORT'      => 25,
+        'TLS'       => undef,
+        'AUTH'      => undef,
+        'SERVER'    => '127.0.0.1',
+        'AUTH_USER' => '',
+        'AUTH_PASS' => '',
+    },
 
 #### 評価用特殊参加番号 初期指定しているが、変更可能
     ## SPREGNUM1:   直接申込jump用参加番号
