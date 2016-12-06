@@ -127,10 +127,9 @@ our @pg_kind_ary = (            # 企画種別選択肢定義
 );
 our @pg_place_ary = (           # 希望場所選択肢定義
     { VAL => 'P-N',   DISP => '特になし', },
-    { VAL => 'P-C1',  DISP => '会議室', },
-    { VAL => 'P-H1',  DISP => '会議ホール(風)', },
+    { VAL => 'P-C1',  DISP => '会議室(一般非公開エリアのみ)', },
+    { VAL => 'P-H1',  DISP => 'ホール', },
     { VAL => 'P-H2',  DISP => '映像ホール', },
-    { VAL => 'P-PB',  DISP => '一般公開エリア', },
     { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 
 );
