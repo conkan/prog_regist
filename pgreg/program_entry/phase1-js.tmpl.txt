@@ -1,0 +1,251 @@
+<script type="text/javascript">
+  // ProgRegモジュールの生成
+  var ProgRegModule = angular.module('progRegist', [ ] );
+
+  ProgRegModule.directive('stringToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function(value) {
+          return parseFloat(value);
+        });
+      }
+    };
+  });
+
+  // 企画登録コントローラ
+  ProgRegModule.controller( 'progRegistController',
+    [ '$scope', '$compile',
+      function( $scope, $compile ) {
+        // ng-Changeハンドラ
+        $scope.checktelcel = function() {
+            if ( ( !$scope.pgrg.tel || $scope.pgrg.tel.length == 0 ) &&
+                 ( !$scope.pgrg.celphone || $scope.pgrg.celphone.length == 0 )
+               ) {
+                $scope.reqchk.chktelcel = true;
+            } else {
+                $scope.reqchk.chktelcel = false;
+            }
+        };
+        $scope.radioAryChg = function( val, unset, no ) {
+            if ( val ) { $scope.reqchk[unset][no] = false; }
+        };
+
+        // 監視設定
+        $scope.$watch('pgrg.pgKind', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKind = false; }
+        });
+        $scope.$watch('pgrg.pgPlace', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPlace = false; }
+        });
+        $scope.$watch('pgrg.pgLayout', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetLayout = false; }
+        });
+        $scope.$watch('pgrg.pgTime', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetTime = false; }
+        });
+        $scope.$watch('pgrg.pgKoma', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKoma = false; }
+        });
+        $scope.$watch('pgrg.pgNinzu', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetNinzu = false; }
+        });
+        $scope.$watch('pgrg.pgPgu18', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPgu18 = false; }
+        });
+        $scope.$watch('pgrg.pgPggen', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPggen = false; }
+        });
+        $scope.$watch('pgrg.pgNaiyouK', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetNaiyouK = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKb', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKirokuKb = false; }
+        });
+        $scope.$watch('pgrg.pgKirokuKa', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetKirokuKa = false; }
+        });
+        $scope.$watch('pgrg.fcVid', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetFcVid = false; }
+        });
+        $scope.$watch('pgrg.avV', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetAvV = false; }
+        });
+        $scope.$watch('pgrg.avA', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetAvA = false; }
+        });
+        $scope.$watch('pgrg.fcPc', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetFcPc = false; }
+        });
+        $scope.$watch('pgrg.pcV', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPcV = false; }
+        });
+        $scope.$watch('pgrg.pcA', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetPcA = false; }
+        });
+        $scope.$watch('pgrg.lan', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetLan = false; }
+        });
+        $scope.$watch('pgrg.pgEnquete', function( n, o, scope ) {
+            if ( n ) { scope.reqchk.unsetEnquete = false; }
+        });
+
+        $scope.$watch('pgrg.youdo', function( n, o, scope ) {
+          if ( n ) {
+            scope.reqchk.unsetYouDo = false;
+          }
+          if ( ( n == 'YD-0' ) && ( scope.pgrg.pyName == '' ) ){
+            scope.pgrg.pyName = scope.pgrg.p1Name;
+          }
+        });
+
+        // パラメータ定義
+        $scope.pgrg = {
+      //      phase1-tmpl.html
+          p1Name :          '<TMPL_VAR NAME=p1_name>',
+          email :           '<TMPL_VAR NAME=email>',
+          regNum :          '<TMPL_VAR NAME=reg_num>',
+          tel :             '<TMPL_VAR NAME=tel>',
+          fax :             '<TMPL_VAR NAME=fax>',
+          celphone :        '<TMPL_VAR NAME=cellphone>',
+          phonetime :       '<TMPL_VAR NAME=phonetime>',
+          pgName :          '<TMPL_VAR NAME=pg_name>',
+          pgNameF :         '<TMPL_VAR NAME=pg_name_f>',
+      //      prog_kind.tmpl
+          pgKind :          '<TMPL_VAR NAME=pg_kind>',
+          pgKind2 :         '<TMPL_VAR NAME=pg_kind2>',
+      //      prog_place.tmpl
+          pgPlace :         '<TMPL_VAR NAME=pg_place>',
+          pgPlace2 :        '<TMPL_VAR NAME=pg_place2>',
+          pgLayout :        '<TMPL_VAR NAME=pg_layout>',
+          pgLayout2 :       '<TMPL_VAR NAME=pg_layout2>',
+      //      prog_time.tmpl
+          pgTime :          '<TMPL_VAR NAME=pg_time>',
+          pgTime2 :         '<TMPL_VAR NAME=pg_time2>',
+      //      prog_koma.tmpl
+          pgKoma :          '<TMPL_VAR NAME=pg_koma>',
+          pgKoma2 :         '<TMPL_VAR NAME=pg_koma2>',
+      //      prog_ninzu.tmpl
+          pgNinzu :         '<TMPL_VAR NAME=pg_ninzu>',
+      //      phase1-tmpl.html
+          pgPgu18 :         '<TMPL_VAR NAME=pg_pgu18>',
+          pgPggen :         '<TMPL_VAR NAME=pg_pggen>',
+          pgNaiyouK :       '<TMPL_VAR NAME=pg_naiyou_k>',
+          pgNaiyou :        '<TMPL_VAR NAME=pg_naiyou>',
+      //      prog_kiroku_kb.tmpl
+          pgKirokuKb :      '<TMPL_VAR NAME=pg_kiroku_kb>',
+      //      prog_kiroku_ka.tmpl
+          pgKirokuKa :      '<TMPL_VAR NAME=pg_kiroku_ka>',
+      //      prog_kizai_teikyo.tmpl
+          wbd :             '<TMPL_VAR NAME=wbd>',
+          mic :             '<TMPL_VAR NAME=mic>',
+          miccnt :          '<TMPL_VAR NAME=miccnt>',
+          mic2 :            '<TMPL_VAR NAME=mic2>',
+          mic2cnt :         '<TMPL_VAR NAME=mic2cnt>',
+          mon :             '<TMPL_VAR NAME=mon>',
+          dvd :             '<TMPL_VAR NAME=dvd>',
+          syo :             '<TMPL_VAR NAME=syo>',
+      //      prog_kizai_youbou.tmpl
+          fcOther :         '<TMPL_VAR NAME=fc_other_naiyou>',
+      //      prog_kizai_motikomi.tmpl
+          fcVid :           '<TMPL_VAR NAME=fc_vid>',
+          avV :             '<TMPL_VAR NAME=av-v>',
+          avVelse :         '<TMPL_VAR NAME=av-v_velse>',
+          avA :             '<TMPL_VAR NAME=av-a>',
+          avAelse :         '<TMPL_VAR NAME=av-a_velse>',
+      //      prog_kizai_motipc.tmpl
+          fcPc :            '<TMPL_VAR NAME=fc_pc>',
+          pcV :             '<TMPL_VAR NAME=pc-v>',
+          pcVelse :         '<TMPL_VAR NAME=pc-v_velse>',
+          pcA :             '<TMPL_VAR NAME=pc-a>',
+          pcAelse :         '<TMPL_VAR NAME=pc-a_velse>',
+          lan :             '<TMPL_VAR NAME=lan>',
+          lanelse :         '<TMPL_VAR NAME=pc-l_velse>',
+          lanreason :       '<TMPL_VAR NAME=lanreason>',
+      //      phase1-tmpl.html
+          fcMochikomi :     '<TMPL_VAR NAME=fc_mochikomi>',
+          pgEnquete :       '<TMPL_VAR NAME=pg_enquete>',
+          pgBadprog :       '<TMPL_VAR NAME=pg_badprog>',
+          youdo :           '<TMPL_VAR NAME=youdo>',
+          pyName :          '<TMPL_VAR NAME=py_name>',
+          pyNameF :         '<TMPL_VAR NAME=py_name_f>',
+          pyTitle :         '<TMPL_VAR NAME=py_title>',
+          ppGuestNum :      '<TMPL_VAR NAME=pp_cnt>',
+          ppGuest :   [
+<TMPL_LOOP NAME=GUEST_LOOP>
+                          {
+                            name :  '<TMPL_VAR NAME=pp_name>',
+                            namef : '<TMPL_VAR NAME=pp_name_f>',
+                            title : '<TMPL_VAR NAME=pp_title>',
+                            con :   '<TMPL_VAR NAME=pp_con>',
+                            grq :   '<TMPL_VAR NAME=pp_grq>',
+                          },
+</TMPL_LOOP>
+                      ],
+          fcComment :     '<TMPL_VAR NAME=fc_comment>',
+        };
+        // 必須チェックフラグ(radio)定義
+        $scope.reqchk = {
+          chktelcel :       true,
+          unsetKind :       true,
+          unsetPlace :      true,
+          unsetLayout :     true,
+          unsetTime :       true,
+          unsetKoma :       true,
+          unsetNinzu :      true,
+          unsetPgu18 :      true,
+          unsetPggen :      true,
+          unsetNaiyouK :    true,
+          unsetKirokuKb :   true,
+          unsetKirokuKa :   true,
+          unsetFcVid :      true,
+          unsetAvV :        true,
+          unsetAvA :        true,
+          unsetFcPc :       true,
+          unsetPcV :        true,
+          unsetPcA :        true,
+          unsetLan :        true,
+          unsetEnquete :    true,
+          unsetYouDo :      true,
+          unsetppGcon :     [
+<TMPL_LOOP NAME=GUEST_LOOP>
+                              true,
+</TMPL_LOOP>
+                            ],
+          unsetppGgrq :     [
+<TMPL_LOOP NAME=GUEST_LOOP>
+                              true,
+</TMPL_LOOP>
+                            ],
+        };
+
+        // 出演者欄追加
+        $scope.AddppGuest = function() {
+          $scope.pgrg.ppGuestNum = parseInt($scope.pgrg.ppGuestNum) + 1;
+        };
+
+        // 初期値設定
+        (function() {
+          $scope.checktelcel();
+<TMPL_LOOP NAME=GUEST_LOOP>
+          $scope.radioAryChg( $scope.<TMPL_VAR NAME=mod_con>, 'unsetppGcon', <TMPL_VAR NAME=pp_no> );
+          $scope.radioAryChg( $scope.<TMPL_VAR NAME=mod_grq>, 'unsetppGgrq', <TMPL_VAR NAME=pp_no> );
+</TMPL_LOOP>
+          if ( $scope.pgrg.fcVid == '' ) { $scope.pgrg.fcVid = 'MT-1'; }
+          if ( $scope.pgrg.fcPc  == '' ) { $scope.pgrg.fcPc  = 'MT-1'; }
+          if ( $scope.pgrg.ppGuestNum == '' ) { $scope.pgrg.ppGuestNum = 0; };
+          // 再編集時、名前が設定されている出演者まで表示
+          for ( ; $scope.pgrg.ppGuestNum > 0; $scope.pgrg.ppGuestNum-- ) {
+            if ( $scope.pgrg.ppGuest[$scope.pgrg.ppGuestNum].name != '' ) {
+              break;
+            }
+          }
+        })();
+      }
+    ]
+  );
+</script>
+
