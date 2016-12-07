@@ -49,8 +49,10 @@ our %CONDEF_CONST = (
     'PGSTAFF'    => '',
     ## REGNUMTIT:   参加番号名称 (既定値 参加登録番号)
     ## DEFLAYOUT:   デフォルトの会議室レイアウト (既定値 スクール)
+    ## TELNUMPAT:   TELNUMチェックパターン (既定値 '/^[0+][1-9][0-9\-]*[0-9]$/')
     'REGNUMTIT'  => '参加登録番号',
     'DEFLAYOUT'  => 'スクール',
+    'TELNUMPAT'  => '/^[0+][1-9][0-9\- ]*[0-9]$/',
     ## CONKANURL:   conkan_programトップURL
     ## CONKANPASS:  conkan_program WebIF利用者(admin)パスワード
     'CONKANURL'  => '',
