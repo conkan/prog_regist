@@ -1,6 +1,6 @@
 #!/bin/bash
 NAME='apache4pgreg'
-PSET='-p 9001:80'
+PSET='-p 127.0.0.1:9001:80'
 RUNOPT='-d --restart=always'
 LOGMNT='-v /var/log/http4pgreg:/var/log/http'
 # 本番系は、run.sh product で起動
