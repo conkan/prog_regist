@@ -4,12 +4,12 @@ Dockerコンテナ/Pure CGI 両対応
 
 ## 概要
 
-大会ごとに必ず変更がある部分(大会名称とかメアドとか)は、すべて **pgregdef.pm** の中で定義し、吸収しています。 
+大会ごとに必ず変更がある部分(大会名称とかメアドとか)は、すべて **pgregdef.pm** の中で定義し、吸収しています。  
 (企画を登録するconkanのWebIF-URLやそのパラメータも)
 
 入力項目など変更がありそうな部分は、**XXXX.tmpl** に記述していますが、
 radioboxの選択肢などには **pgregdef.pm** で定義した値を使っていますので、
-ほぼ変更はいらないはずです。 
+ほぼ変更はいらないはずです。  
 ※入力項目を修正(増減)する場合は、conkanの設定変更と同期をとる必要があります
 
 画像ファイル
@@ -63,26 +63,28 @@ prompt> ./run.sh product
 引数を指定しない場合、prog_regist本体(CGI)としてgit cloneしたもの(<BASE>/prog_regist/pgreg/program_entry)を使用します。
 
 この方法で起動した場合、
+
 - prog_regist用httpdは、下記の状態になります
-  -- 待受プロトコル        ; http
-  -- 待受port              : 9001
-  -- prog_registトップパス : /program_entry
-  -- ログ出力ディレクトリ  : ホスト側の /var/log/http4pgreg
+
+|待受プロトコル        |http|
+|待受port              |9001|
+|prog_registトップパス |/program_entry|
+|ログ出力ディレクトリ  |ホスト側の /var/log/http4pgreg|
 
   ホスト側のリバースプロキシ(nginxなど)で、SSL解釈とプロキシパスを設定してください。
   [nginxの場合の設定例 nginx.conf]
 
 ~~~
-   server {
-       listen       443 ssl default_server;
-       ssl          on;
-        : (server_nameやsslの設定は省略)
-       # For program_regist
-       location /program_entry {
-               proxy_pass http://localhost:9001/program_entry;
-       }
-       : (他location やeror_pageの設定は省略)
-   }
+server {
+    listen       443 ssl default_server;
+    ssl          on;
+     : (server_nameやsslの設定は省略)
+    # For program_regist
+    location /program_entry {
+            proxy_pass http://localhost:9001/program_entry;
+    }
+    : (他location やeror_pageの設定は省略)
+}
 ~~~
 コンテナ起動後、後述の「大会独自ファイル設定」を実施してください。
 
@@ -102,20 +104,20 @@ prog_regist本体(<BASE>/prog_regist/pgreg/program_entry)を、
   prog_regist本体のパスを<PGREG>とする
 
 ~~~
-   <Directory "<PGREG>">
-       AllowOverride All
-       Options MultiViews SymLinksIfOwnerMatch ExecCGI
-       <Limit GET POST OPTIONS>
-           Order allow,deny
-           Allow from all
-       </Limit>
-       <LimitExcept GET POST OPTIONS>
-           Order deny,allow
-           Deny from all
-       </LimitExcept>
-       AddHandler cgi-script cgi pl
-       DirectoryIndex index.html index.cgi
-   </Directory>
+<Directory "<PGREG>">
+    AllowOverride All
+    Options MultiViews SymLinksIfOwnerMatch ExecCGI
+    <Limit GET POST OPTIONS>
+        Order allow,deny
+        Allow from all
+    </Limit>
+    <LimitExcept GET POST OPTIONS>
+        Order deny,allow
+        Deny from all
+    </LimitExcept>
+    AddHandler cgi-script cgi pl
+    DirectoryIndex index.html index.cgi
+</Directory>
 ~~~
 
 加えて、後述の「大会独自ファイル設定」を実施後、httpdを再起動してください。
