@@ -33,7 +33,7 @@ Perlのモジュールは、Dockerfile の Perlライブラリインストール
 
 企画申し込みページを起動する方法は2つあります。
 
-いずれの場合も、まずサーバ上の任意の場所(以下<BASE>)に
+いずれの場合も、まずサーバ上の任意の場所(以下`<BASE>`)に
 git リポジトリをcloneしてください。
 
 ~~~
@@ -43,8 +43,7 @@ prompt> git clone https://github.com/conkan/prog_regist.git
 
 ### Dockerコンテナとして起動
 
-Docker Hubに conkan/apache4pgreg コンテナが登録されるまでは、
-独自にコンテナイメージを作成する必要があります。
+Docker Hubに conkan/apache4pgreg コンテナが登録されるまでは、独自にコンテナイメージを作成する必要があります。  
 コンテナイメージの作成には、build.shを起動します。
 
 ~~~
@@ -59,20 +58,20 @@ prompt> cd <BASE>/prog_regist
 prompt> ./run.sh product
 ~~~
 
-引数にproductを指定すると、prog_regist本体(CGI)としてコンテナ内部のもの(build.sh時のもの)を使用します。
-引数を指定しない場合、prog_regist本体(CGI)としてgit cloneしたもの(<BASE>/prog_regist/pgreg/program_entry)を使用します。
+引数にproductを指定すると、prog_regist本体(CGI)としてコンテナ内部のもの(build.sh時のもの)を使用します。  
+引数を指定しない場合、prog_regist本体(CGI)としてgit cloneしたもの(`<BASE>`/prog_regist/pgreg/program_entry)を使用します。 
 
-この方法で起動した場合、
+この方法で起動した場合、 prog_regist用httpdは、下記の状態になります
 
-- prog_regist用httpdは、下記の状態になります
-
+|項目|値|
+|:--|:--|
 |待受プロトコル        |http|
 |待受port              |9001|
 |prog_registトップパス |/program_entry|
 |ログ出力ディレクトリ  |ホスト側の /var/log/http4pgreg|
 
-  ホスト側のリバースプロキシ(nginxなど)で、SSL解釈とプロキシパスを設定してください。
-  [nginxの場合の設定例 nginx.conf]
+  ホスト側のリバースプロキシ(nginxなど)で、SSL解釈とプロキシパスを設定してください。   
+  [nginxの場合の設定例 nginx.conf] 
 
 ~~~
 server {
@@ -91,17 +90,18 @@ server {
 ### 既存httpdに直接CGIを配置
 
 サーバで動作しているhttpd(apacheなど)のCGIとして動作させる場合には、
-prog_regist本体(<BASE>/prog_regist/pgreg/program_entry)を、
+prog_regist本体(`<BASE>`/prog_regist/pgreg/program_entry)を、
 ドキュメントルート下の適切な部分にcopy(あるいはシンボリックリンク)して、
 下記の設定をしてください。
+
 - CGI起動可能とする
 - cgi-scriptのHandlerとして cgi を設定する
 - DirectoryIndex として index.cgiを使用
 
 なお、当然ながらSSL解釈の設定なども必要です。
 
-  [apache2の場合の設定例 httpd.conf]
-  prog_regist本体のパスを<PGREG>とする
+  [apache2の場合の設定例 httpd.conf]  
+  prog_regist本体のパスを`<PGREG>`とする 
 
 ~~~
 <Directory "<PGREG>">
@@ -129,7 +129,7 @@ prog_regist本体(<BASE>/prog_regist/pgreg/program_entry)を、
 - **images/header_logo.png**
 を対応大会の物に上書きしてください。
 
-**pgregdef.pm** をcopyして生成して下さい
+**pgregdef.pm** をcopyして生成して下さい 
 
 ~~~
 prompt> cp pgregdef.pm_default pgregdef.pm
@@ -137,7 +137,7 @@ prompt> cp pgregdef.pm_default pgregdef.pm
 
  _これは、環境依存部分(セキュア情報を含む)を、GitHubに置かないための仕組みです。_
 
-**pgregdef.pm** の内容を環境に合わせて設定して下さい。
+**pgregdef.pm** の内容を環境に合わせて設定して下さい。  
 個々の項目に関しては、**pgregdef.pm** のコメントを参照してください。
 
 EOF
