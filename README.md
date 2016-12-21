@@ -63,12 +63,12 @@ prompt> ./run.sh product
 
 この方法で起動した場合、 prog_regist用httpdは、下記の状態になります
 
-|項目|値|
-|:--|:--|
-|待受プロトコル        |http|
-|待受port              |9001|
-|prog_registトップパス |/program_entry|
-|ログ出力ディレクトリ  |ホスト側の /var/log/http4pgreg|
+項目 | 値
+---- | ----
+待受プロトコル        | http
+待受port           | 9001
+prog_registトップパス | /program_entry
+ログ出力ディレクトリ  | ホスト側の /var/log/http4pgreg
 
   ホスト側のリバースプロキシ(nginxなど)で、SSL解釈とプロキシパスを設定してください。   
   [nginxの場合の設定例 nginx.conf] 
