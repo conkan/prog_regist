@@ -623,8 +623,8 @@ sub pg_CrtCastReg {
         $pHcast->{'pgname'}     = $sprm->param('py_name');
         $pHcast->{'pgnamef'}    = $sprm->param('py_name_f');
         $pHcast->{'pgtitle'}    = $sprm->param('py_title');
-        $pHcast->{'needreq'}    = $ppn_con_cnv{'PP-B1'};  # 固定値
-        $pHcast->{'needguest'}  = $ppn_grq_cnv{'PP-B'};   # 固定値
+        $pHcast->{'needreq'}    = '申込者';                 # 固定値
+        $pHcast->{'needguest'}  = $ppn_grq_cnv{'PP-B'};     # 固定値
         push ( @$pAcasts, $pHcast );
     }
     # 出演者情報:(Loop)
