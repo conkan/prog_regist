@@ -36,7 +36,10 @@ if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
         # 常にチェック成功 -> 入力値をセッションに保存し、phase2にredirect
         $cgi->param('dbgflgs', $session->param('dbgflgs'));
         $session->clear();
+        my $sv = $CGI::LIST_CONTEXT_WARN;   # CGI::Sessionのエラー対応
+        $CGI::LIST_CONTEXT_WARN = 0;        #   :
         $session->save_param($cgi);
+        $CGI::LIST_CONTEXT_WARN = $sv;      #   :
         my $wkid = defined($cgi->cookie('ID')) ? $cgi->cookie('ID') : '';
         my $urlparam = ( $wkid eq  $session->id ) ? '' : '?ID=' . $sid;
         $input_page = undef;

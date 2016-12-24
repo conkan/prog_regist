@@ -416,7 +416,7 @@ my %h_base_pname2json = (
     'pg_place'      => ['pg_place', \%pg_place_cnv, 'pg_place2'],
     'pg_layout'     => ['pg_layout', \%pg_layout_cnv, 'pg_layout2'],
     'pg_time'       => ['pg_time', \%pg_time_cnv, 'pg_time2'],
-    'pg_koma'       => ['pg_kome', \%pg_koma_cnv, 'pg_koma2'],
+    'pg_koma'       => ['pg_koma', \%pg_koma_cnv, 'pg_koma2'],
     'pg_ninzu'      => ['pg_ninzu', \%pg_ninzu_cnv, undef],
     'pg_pgu18'      => ['pg_pgu18', \%pg_kafuka_cnv, undef],
     'pg_pggen'      => ['pg_pggen',   \%pg_kafuka_cnv, undef],
@@ -489,8 +489,9 @@ sub pg_CnvPrgAPI {
     my $preg_prm = {};
     my $key = $pAval->[0];
     my $val = $sprm->param($pname);
-    # パラメータが設定されていなかったらundefを返す
+    # パラメータが設定されていない/空白 だったらundefを返す
     return(undef) unless ( defined( $val ) );
+    return(undef) if ( $val eq '' );
 
     if ( !defined($pAval->[1]) ) {
         # 値自体
@@ -563,8 +564,9 @@ sub pg_CrtEquipReg {
     my $pAequips = [];
     while ( my ($pname, $pAval) = each(%h_equip_pname2json)) {
         my $val = $sprm->param($pname);
-        # パラメータが設定されていなかったら、次
+        # パラメータが設定されていない/空白 だったら、次
         next unless ( defined( $val ) );
+        next if ( $val eq '' );
 
         my $one_equip = {};
         if ( !defined($pAval->[0]) ) {
@@ -581,6 +583,9 @@ sub pg_CrtEquipReg {
             # 機材名固定(持ち込み分)
             if ( $val eq 'MT-0' ) {
                 $one_equip->{'name'} = $pAval->[0];
+            }
+            else {
+                next;   # 持ち込まないなら、次
             }
         }
 
@@ -619,7 +624,7 @@ sub pg_CrtCastReg {
     if ( $sprm->param('youdo') eq 'YD-0' ) {
         my $pHcast = {};
         $pHcast->{'name'}       = $sprm->param('p1_name');
-        $pHcast->{'nentrantregno'} = $sprm->param('reg_num');
+        $pHcast->{'entrantregno'} = $sprm->param('reg_num');
         $pHcast->{'pgname'}     = $sprm->param('py_name');
         $pHcast->{'pgnamef'}    = $sprm->param('py_name_f');
         $pHcast->{'pgtitle'}    = $sprm->param('py_title');
