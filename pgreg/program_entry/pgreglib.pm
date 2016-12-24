@@ -121,79 +121,22 @@ my %lan_pname = (
     'lan'   => [ \%lan_cnv, 'pc-l_velse', ],
 );
 
-# 登録メール用変数名ハッシュ
-#   key: パラメータ名
-#   val: [0]:項目名
-#      : [1]:undef:値使用 0:使用する/しない HASHREF:変換テーブル   
-my %h_pname4mail = (
-    'prog_no'       => ['企画ID', undef],
-    'regdate'       => ['申し込み日付', undef],
-    # 申込者情報
-    'p1_name'       => ['申込者名', undef],
-    'email'         => ['メールアドレス', undef],
-    'reg_num'       => ['参加番号', undef],
-    'tel'           => ['電話番号', undef],
-    'fax'           => ['FAX番号', undef],
-    'cellphone'     => ['携帯番号', undef],
-    'phonetime'     => ['電話連絡可能な時間帯', undef],
-    # 企画情報
-    'pg_name'       => ['企画名', undef],
-    'pg_name_f'     => ['企画名フリガナ', undef],
-    'pg_kind'       => ['企画種別', \%pg_kind_cnv],
-    'pg_kind2'      => ['企画種別その他内容', undef],
-    'pg_place'      => ['希望場所', \%pg_place_cnv],
-    'pg_place2'     => ['希望場所その他内容', undef],
-    'pg_layout'     => ['希望レイアウト', \%pg_layout_cnv],
-    'pg_layout2'    => ['希望レイアウトその他内容', undef],
-    'pg_time'       => ['希望時刻', \%pg_time_cnv],
-    'pg_time2'      => ['希望時刻その他内容', undef],
-    'pg_koma'       => ['希望コマ数', \%pg_koma_cnv],
-    'pg_koma2'      => ['希望コマ数その他内容', undef],
-    'pg_ninzu'      => ['予想人数', \%pg_ninzu_cnv],
-    'pg_pgu18'      => ['未成年参加可否', \%pg_kafuka_cnv],
-    'pg_pggen'      => ['一般公開可否',   \%pg_kafuka_cnv],
-    'pg_naiyou_k'   => ['内容事前公開', \%pg_naiyou_k_cnv],
-    'pg_naiyou'     => ['企画内容', undef],
-    'pg_kiroku_kb'  => ['リアルタイム公開', \%pg_kiroku_cnv],
-    'pg_kiroku_ka'  => ['事後公開', \%pg_kiroku_cnv],
-    # 使用機材
-    'wbd'           => ['ホワイトボード', 0],
-    'mic'           => ['壇上マイク', 0],
-    'miccnt'        => ['壇上マイク本数', undef],
-    'mic2'          => ['客席マイク', 0],
-    'mic2cnt'       => ['客席マイク本数', undef],
-    'mon'           => ['モニタ/スクリーン', 0],
-    'dvd'           => ['BD/DVDプレイヤー', 0],
-    'syo'           => ['書画カメラ', 0],
-    'fc_other_naiyou'   => ['その他要望機材', undef],
-    'fc_vid'        => ['持ち込み映像機器', \%motikomi_cnv],
-    'av-v'          => ['映像機器映像接続', \%av_v_cnv],
-    'av-v_velse'    => ['映像機器映像接続その他内容', undef],
-    'av-a'          => ['映像機器音声接続', \%av_a_cnv],
-    'av-a_velse'    => ['映像機器音声接続その他内容', undef],
-    'fc_pc'         => ['持ち込みPC', \%motikomi_cnv],
-    'pc-v'          => ['PC映像接続', \%pc_v_cnv],
-    'pc-v_velse'    => ['PC映像接続その他内容', undef],
-    'pc-a'          => ['PC音声接続', \%pc_a_cnv],
-    'pc-a_velse'    => ['PC音声接続その他内容', undef],
-    'lan'           => ['PC-LAN接続', \%lan_cnv],
-    'pc-l_velse'    => ['PC-LAN接続その他内容', undef],
-    'lanreason'     => ['LAN利用目的', undef],
-    'fc_mochikomi'  => ['その他持ち込み機材', undef],
-    # 企画経験
-    'pg_enquete'    => ['企画経験', \%pg_enquete_cnv],
-    # 重なると困る企画
-    'pg_badprog'    => ['重なると困る企画', undef],
-    # 申込者出演情報
-    'youdo'         => ['申込者出演', \%ppn_youdo_cnv],
-    'py_name'       => ['申込者企画ネーム', undef],
-    'py_name_f'     => ['申込者企画ネームフリガナ', undef],
-    'py_title'      => ['申込者肩書', undef],
-    # 出演者情報
-    'pp_cnt'        => ['出演者数', undef],
-    # 備考
-    'fc_comment'    => ['備考', undef],
-);
+# 登録画面全パラメータ名
+#   一部はテーブルの値にも定義があるが、煩雑なので直接指定
+my @all_pname = (
+    @org_pname,
+    keys( %tbl_pname ),
+    keys( %useunuse_pname ),
+    keys( %motikomi_pname ),
+    keys( %lan_pname ),
+    'pg_kind2', 'pg_place2', 'pg_layout2', 'pg_time2', 'pg_koma2',
+    'miccnt', 'mic2cnt', 'av-v', 'av-v_velse', 'av-a', 'av-a_velse',
+    'pc-v', 'pc-v_velse', 'pc-a', 'pc-a_velse', 'pc-l_velse', 'lanreason',
+    'youdo', );
+
+##############################################################################
+# テンプレート処理共通関数
+##############################################################################
 
 # 共通関数 CONDEF_CONST テンプレート変数設定
 sub pg_stdConstTmpl_set {
@@ -358,9 +301,8 @@ sub pg_prmModelTmpl_set {
         $obj,   # CGIオブジェクト/CGI::Sessionオブジェクト
      ) = @_;
 
-    # %h_pname4mailの定義に従って値設定 
-    #   key: パラメータ名 のみ使用
-    foreach my $pname (keys(%h_pname4mail)) {
+    # @all_pname に定義されているパラメータの値設定
+    foreach my $pname ( @all_pname ) {
         if ( ( $page->query(name => $pname) ) &&
              ( defined($obj->param($pname)) )     ) {
             $page->param($pname   => $obj->param($pname));
@@ -448,67 +390,274 @@ sub pg_prmModelTmpl_set {
         if ( $page->query(name => 'GUEST_LOOP') );
 }
 
-# 共通関数 企画登録パラメータ生成(抽出)
-#   戻り値: 連想配列参照
+##############################################################################
+# 企画登録(WebAPIデータ作成)
+##############################################################################
+# 企画登録WebAPI連想配列生成用 ハッシュテーブル(基本)
+#   key: パラメータ名
+#   val: [0]:JSONキー名
+#      : [1]:undef:値使用
+#            Scalar:値追記対象 追記プレフィックス
+#            HASHREF:変換テーブル   
+#      : [2]:その他の場合の値パラメータ名
+my %h_base_pname2json = (
+    'prog_no'       => ['prog_no', undef, undef],
+    # 申込者情報
+    'p1_name'       => ['p1_name', undef, undef],
+    'email'         => ['email', undef, undef],
+    'reg_num'       => ['reg_num', undef, undef],
+    'tel'           => ['tel', undef, undef],
+    'fax'           => ['fax', undef, undef],
+    'cellphone'     => ['cellphone', undef, undef],
+    # 企画情報
+    'pg_name'       => ['pg_name', undef, undef],
+    'pg_name_f'     => ['pg_name_f', undef, undef],
+    'pg_kind'       => ['pg_kind', \%pg_kind_cnv, 'pg_kind2'],
+    'pg_place'      => ['pg_place', \%pg_place_cnv, 'pg_place2'],
+    'pg_layout'     => ['pg_layout', \%pg_layout_cnv, 'pg_layout2'],
+    'pg_time'       => ['pg_time', \%pg_time_cnv, 'pg_time2'],
+    'pg_koma'       => ['pg_koma', \%pg_koma_cnv, 'pg_koma2'],
+    'pg_ninzu'      => ['pg_ninzu', \%pg_ninzu_cnv, undef],
+    'pg_pgu18'      => ['pg_pgu18', \%pg_kafuka_cnv, undef],
+    'pg_pggen'      => ['pg_pggen',   \%pg_kafuka_cnv, undef],
+    'pg_naiyou_k'   => ['pg_naiyou_k', \%pg_naiyou_k_cnv, undef],
+    'pg_naiyou'     => ['pg_naiyou', undef, undef],
+    'pg_kiroku_kb'  => ['pg_kiroku_kb', \%pg_kiroku_cnv, undef],
+    'pg_kiroku_ka'  => ['pg_kiroku_ka', \%pg_kiroku_cnv, undef],
+    # 企画経験
+    'pg_enquete'    => ['pg_enquete', \%pg_enquete_cnv, undef],
+    # 重なると困る企画
+    'pg_badprog'    => ['pg_badprog', undef, undef],
+    # 備考
+    'fc_comment'    => ['fc_comment', undef, undef],
+    'phonetime'     => ['fc_comment', ' 電話連絡可能な時間帯:', undef],
+);
+
+
+# 企画登録WebAPIパラメータ生成
+#   戻り値: WebAPIデータオブジェクト参照
 sub pg_createRegParam {
     my (
         $sprm,      # セッションオブジェクト(含企画パラメータ)
         $pg_num,    # 企画番号(4文字数字)
      ) = @_;
-    my %reg_param = ();
 
+    my $preg_param;
+
+    # APIバージョン設定
+    $preg_param->{'WebAPI_VERSION'} = '2.0';
+    # 登録日設定
     my($c_d, $c_m, $c_y) = (localtime(time))[3,4,5];
     $c_y += 1900;
     $c_m += 1;
-    $sprm->param('prog_no', $pg_num) if defined( $pg_num );
-    $sprm->param('regdate', $c_y. '/' . $c_m . '/' . $c_d);
-    
-    # %h_pname4mailの定義に従って値設定 
-    #   key: パラメータ名
-    #   val: [0]:項目名
-    #      : [1]:undef:値使用 0:使用する/しない HASHREF:変換テーブル   
-    while ( my ($pname, $pAval) = each(%h_pname4mail)) {
-        my $val = $sprm->param($pname);
-        if ( !defined($pAval->[1]) ) {
-            $reg_param{$pAval->[0]} = $val;
-        } elsif ( $pAval->[1] eq 0 ) {
-            $reg_param{$pAval->[0]} = ($val) ? '使用する' : '使用しない';
-        } else {
-            $reg_param{$pAval->[0]} = defined($val) ? $pAval->[1]->{$val} : '';
-        }
-    }
-    # 特殊処理
-    if ( my $ptval = $sprm->param('phonetime') ) {
-        $reg_param{'備考'} .= ' ' . '電話連絡可能な時間帯:' . $ptval;
+    $preg_param->{'regdate'} = sprintf('%4d/%02d/%02d', $c_y, $c_m, $c_d);
+    # (念のため) 企画番号指定=上書き登録
+    $preg_param->{'prog_no'} = $pg_num if defined( $pg_num );
+
+    # 基本情報生成
+    # %h_base_pname2jsonの定義に従って値設定 
+    while ( my ($pname, $pAval) = each(%h_base_pname2json)) {
+        my $preg_item = pg_CnvPrgAPI( $sprm, $pname, $pAval );
+        $preg_param = { %$preg_param, %$preg_item } if defined($preg_item);
     }
 
-    # 申込者出演情報
-    if ( $reg_param{'申込者出演'} eq 'する' ) {
-        $reg_param{'申込者企画ネーム'}          = $sprm->param('py_name');
-        $reg_param{'申込者企画ネームフリガナ'}  = $sprm->param('py_name_f');
-        $reg_param{'申込者肩書'}                = $sprm->param('py_title');
-    }
-    # 出演者情報:(Loop)
-    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
-    for (my $ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
-        my $prefix = 'pp' . $ppcnt;
-        if (    defined($sprm->param($prefix . '_name') )
-             && ( $sprm->param($prefix . '_name') ne '' ) ) {
-            $reg_param{'出演者氏名' . $ppcnt}
-                = $sprm->param($prefix . '_name');
-            $reg_param{'出演者氏名フリガナ' . $ppcnt}
-                = $sprm->param($prefix . '_name_f');
-            $reg_param{'出演者肩書' . $ppcnt}
-                = $sprm->param($prefix . '_title');
-            $reg_param{'出演交渉' . $ppcnt}
-                = $ppn_con_cnv{$sprm->param($prefix . '_con')};
-            $reg_param{'ゲスト申請' . $ppcnt}
-                = $ppn_grq_cnv{$sprm->param($prefix . '_grq')};
-        }
-    }
-    return(\%reg_param);
+    # 機材情報生成
+    my $pAequips = pg_CrtEquipReg( $sprm );
+    $preg_param->{'equips'} = $pAequips if defined( $pAequips );
+
+    # 出演者情報生成
+    my $pAcasts = pg_CrtCastReg( $sprm );
+    $preg_param->{'casts'} = $pAcasts if defined( $pAcasts );
+
+    return($preg_param);
 }
 
+# 変換定義に従って指定HTMLパラメータに対応したWebAPIデータを返す
+#   戻り値: WebAPIデータオブジェクト参照
+sub pg_CnvPrgAPI {
+    my (
+        $sprm,      # セッションオブジェクト(含企画パラメータ)
+        $pname,     # HTMLパラメータ名
+        $pAval,     # 変換定義
+                    #   : [0]:JSONキー名
+                    #   : [1]:undef:値使用
+                    #         Scalar:値追記対象 追記プレフィックス
+                    #         HASHREF:変換テーブル   
+                    #   : [2]:その他の場合の値パラメータ名
+     ) = @_;
+
+    my $preg_prm = {};
+    my $key = $pAval->[0];
+    my $val = $sprm->param($pname);
+    # パラメータが設定されていない/空白 だったらundefを返す
+    return(undef) unless ( defined( $val ) );
+    return(undef) if ( $val eq '' );
+
+    if ( !defined($pAval->[1]) ) {
+        # 値自体
+        $preg_prm->{$key} = $val;
+    } elsif ( ref($pAval->[1]) eq 'HASH' ) {
+        # 変換
+        $preg_prm->{$key} = $pAval->[1]->{$val};
+        if ( defined($pAval->[2]) ) {
+            # その他の値設定
+            if ( $val eq 'other' ) {
+                $preg_prm->{$key} .= ' ' . $sprm->param($pAval->[2]);
+            }
+        }
+    } else {
+        # 追記
+        $preg_prm->{$key} .= ' ' . $pAval->[1] . ' ' . $val;
+    }
+    return($preg_prm);
+}
+
+# 企画登録WebAPI連想配列生成用 ハッシュテーブル(機材)
+#   key: パラメータ名
+#   val: [0]:機材名 undef: 機材名として値を使う
+#      : [1]:undef:  提供機材(on/offで判断)
+#            scalar: 機材名につける注釈([0]がundefの時)
+#            HASHREF:変換テーブル(持ち込みかどうかの判断のみに使用)
+#      : [2]:undef: 追加情報なし
+#            HASHREF:追加情報登録ハッシュテーブル
+#               key: 追加情報パラメータ名
+#               val: [0]:子階層JSONキー名
+#                  : [1]:undef:値使用 HASHREF:変換テーブル   
+#                  : [2]:その他の場合の値パラメータ名
+my %h_equip_pname2json = (
+    'wbd'    => ['ホワイトボード', undef, undef],
+    'mic'    => ['壇上マイク', undef,
+                 {
+                     miccnt => ['count', undef, undef]
+                 } ],
+    'mic2'   => ['客席マイク', undef,
+                 {
+                     mic2cnt => ['count', undef, undef]
+                 } ],
+    'mon'    => ['モニタ/スクリーン', undef, undef],
+    'dvd'    => ['BD/DVDプレイヤー', undef, undef],
+    'syo'    => ['書画カメラ', undef, undef],
+    'fc_vid' => ['持ち込み映像機器', \%motikomi_cnv,
+                 {
+                     'av-v'  => ['vif', \%av_v_cnv, 'av-v_velse' ],
+                     'av-a'  => ['aif', \%av_a_cnv, 'av-a_velse' ],
+                 } ],
+    'fc_pc'  => ['持ち込みPC', \%motikomi_cnv,
+                 {
+                     'pc-v'  => ['vif', \%pc_v_cnv, 'pc-v_velse'],
+                     'pc-a'  => ['aif', \%pc_a_cnv, 'pc-a_velse'],
+                     'lan'   => ['eif', \%lan_cnv,  'pc-l_velse'],
+                     'lanreason' => ['intende', undef, undef ],
+                 } ],
+    'fc_other_naiyou'   => [undef, '(要望)', undef],
+    'fc_mochikomi'      => [undef, '(持ち込み)', undef],
+);
+
+# 機材情報生成
+# %h_equip_pname2json の定義に従って配列作成
+# 戻り値: 機材情報配列参照
+sub pg_CrtEquipReg {
+    my (
+        $sprm,      # セッションオブジェクト(含企画パラメータ)
+     ) = @_;
+
+    my $pAequips = [];
+    while ( my ($pname, $pAval) = each(%h_equip_pname2json)) {
+        my $val = $sprm->param($pname);
+        # パラメータが設定されていない/空白 だったら、次
+        next unless ( defined( $val ) );
+        next if ( $val eq '' );
+
+        my $one_equip = {};
+        if ( !defined($pAval->[0]) ) {
+            # 機材名として値を使う
+            $one_equip->{'name'} = $val . $pAval->[1];
+        }
+        elsif ( !defined($pAval->[1]) ) {
+            # 機材名固定(提供分)
+            if ( $val eq 'on' ) {
+                $one_equip->{'name'} = $pAval->[0];
+            }
+        }
+        elsif ( ref($pAval->[1]) eq 'HASH' ) {
+            # 機材名固定(持ち込み分)
+            if ( $val eq 'MT-0' ) {
+                $one_equip->{'name'} = $pAval->[0];
+            }
+            else {
+                next;   # 持ち込まないなら、次
+            }
+        }
+
+        if ( defined($pAval->[2]) ) {
+            # pAval->[2]は必ず変換定義HASH
+            while ( my ($addpname, $pAaddval) = each( %{$pAval->[2]} )) {
+                my $padd = pg_CnvPrgAPI( $sprm, $addpname, $pAaddval );
+                $one_equip = { %$one_equip, %$padd } if defined( $padd );
+            }
+        }
+        push ( @$pAequips, $one_equip );
+    }
+    return($pAequips);
+}
+
+my %h_cast_pname2json = (
+    # 申込者出演情報
+    'youdo'         => ['申込者出演', \%ppn_youdo_cnv],
+    'py_name'       => ['申込者企画ネーム', undef],
+    'py_name_f'     => ['申込者企画ネームフリガナ', undef],
+    'py_title'      => ['申込者肩書', undef],
+    # 出演者情報
+    'pp_cnt'        => ['出演者数', undef],
+);
+# 出演者情報生成
+#   定義(ロジック埋め込み)にしたがって、出演者情報配列を生成する
+#   HTMLパラメータ名を操作するので、埋め込み定義とする
+# 戻り値: 出演者情報配列参照
+sub pg_CrtCastReg {
+    my (
+        $sprm,      # セッションオブジェクト(含企画パラメータ)
+     ) = @_;
+    my $pAcasts = [];
+
+    # 申込者出演情報
+    if ( $sprm->param('youdo') eq 'YD-0' ) {
+        my $pHcast = {};
+        $pHcast->{'name'}       = $sprm->param('p1_name');
+        $pHcast->{'entrantregno'} = $sprm->param('reg_num');
+        $pHcast->{'pgname'}     = $sprm->param('py_name');
+        $pHcast->{'pgnamef'}    = $sprm->param('py_name_f');
+        $pHcast->{'pgtitle'}    = $sprm->param('py_title');
+        $pHcast->{'needreq'}    = '申込者';                 # 固定値
+        $pHcast->{'needguest'}  = $ppn_grq_cnv{'PP-B'};     # 固定値
+        push ( @$pAcasts, $pHcast );
+    }
+    # 出演者情報:(Loop)
+    my $ppmax = $sprm->param('pp_cnt') + 1;
+    for (my $ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
+        my $prefix = 'pp' . $ppcnt;
+        my $pgnamepn = $prefix . '_name';
+        if (    defined($sprm->param($pgnamepn) )
+             && ( $sprm->param($pgnamepn) ne '' ) ) {
+            my $pHcast = {};
+            my $pgnamefpn = $prefix . '_name_f';
+            my $pgtitlepn = $prefix . '_title';
+            my $needconpn = $prefix . '_con';
+            my $needgrqpn = $prefix . '_grq';
+            $pHcast->{'pgname'}   = $sprm->param($pgnamepn);
+            $pHcast->{'pgnamef'}  = $sprm->param($pgnamefpn);
+            $pHcast->{'pgtitle'}  = $sprm->param($pgtitlepn);
+            $pHcast->{'needreq'}  = $ppn_con_cnv{$sprm->param($needconpn)};
+            $pHcast->{'needguest'}= $ppn_grq_cnv{$sprm->param($needgrqpn)};
+            push ( @$pAcasts, $pHcast );
+        }
+    }
+    return($pAcasts);
+}
+
+##############################################################################
+# デバッグテスト用共通関数
+##############################################################################
 # 共通関数 テスト用 HTMLにメール内容を埋め込む
 sub pg_HtmlMailChk_set {
     my (
