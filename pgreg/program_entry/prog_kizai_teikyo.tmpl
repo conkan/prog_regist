@@ -1,9 +1,10 @@
 <b>提供予定機材</b><br/>
-今大会では以下の設備が使用可能です。<br/>
-企画に使用したい機材をチェックして下さい。(マイクに関してはだいたいの本数も記入願います<BR/>
+今大会では以下の設備を大会の負担で提供いたします。<br/>
+企画に使用したい機材をチェックして下さい。<BR/>
 <div class="commtext">
-  ただし、数や予算に限りがありますので、無料提供出来ない場合があることをご了承下さい。<br/>
+  ただし、数に限りがありますので、提供出来ない場合があることをご了承下さい。<br/>
 </div>
+<br/>
 <div>
   <input type="checkbox" ng-model="pgrg.wbd" name="wbd" ng-true-value="'on'" ng-false-value="false"/>
   <span>ホワイトボード</span>
@@ -12,7 +13,7 @@
   <input type="checkbox" ng-model="pgrg.mic" name="mic" ng-true-value="'on'"/>
   <span>壇上用マイク(固定)</span>
   <span ng-if="pgrg.mic">
-    本数
+    希望本数
     <input type="number" string-to-number ng-model="pgrg.miccnt" name="miccnt" min="1"
       size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
   </span>
@@ -21,7 +22,7 @@
   <input type="checkbox" ng-model="pgrg.mic2" name="mic2" ng-true-value="'on'"/>
   <span>客席用マイク(可動)</span>
   <span ng-if="pgrg.mic2">
-    本数
+    希望本数
     <input type="number" string-to-number ng-model="pgrg.mic2cnt" name="mic2cnt" min="1"
       size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
   </span>
@@ -30,11 +31,13 @@
   <input type="checkbox" ng-model="pgrg.mon" name="mon" ng-true-value="'on'"/>
     <span>プロジェクタまたは大型モニタ</span>
 </div>
+<br/>
+以下の機材の貸出をご希望の場合は、実費をご負担ください。レンタル手配は大会側で手続きいたします。
 <div>
   <input type="checkbox" ng-model="pgrg.dvd" name="dvd" ng-true-value="'on'"/>
-    <span>BD/DVDプレイヤー</span>
+    <span>BD/DVDプレイヤー(3000円)</span>
 </div>
 <div>
   <input type="checkbox" ng-model="pgrg.syo" name="syo" ng-true-value="'on'"/>
-  <span>書画カメラ</span>
+  <span>書画カメラ(3000円)</span>
 </div>
