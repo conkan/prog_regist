@@ -38,7 +38,7 @@ sub doMailSend {
             SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
         );
     } else {
-        $smtp = Net::SMTP->new(
+        $smtp = Net::SMTPS->new(
             $CONDEF_CONST{'SMTP'}->{'SERVER'},
             Port        => $CONDEF_CONST{'SMTP'}->{'PORT'}
         );
