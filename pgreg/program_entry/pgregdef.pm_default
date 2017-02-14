@@ -134,7 +134,7 @@ our @pg_place_ary = (           # 希望場所選択肢定義
     { VAL => 'P-C1',  DISP => '会議室(一般非公開エリアのみ)', },
     { VAL => 'P-H1',  DISP => 'ホール', },
     { VAL => 'P-H2',  DISP => '映像ホール', },
-    { VAL => 'other', DISP => 'その他', },     # その他のVALはother固定
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 
 );
 our @pg_layout_ary = (          # レイアウト選択肢定義
@@ -142,7 +142,7 @@ our @pg_layout_ary = (          # レイアウト選択肢定義
     { VAL => 'L-1',   DISP => 'シアター', },
     { VAL => 'L-2',   DISP => '□の字', },
     { VAL => 'L-3',   DISP => '島組', },
-    { VAL => 'other', DISP => 'その他', },     # その他のVALはother固定
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
 our @pg_time_ary = (            # 希望日時選択肢定義
     { VAL => 'T-N',    DISP => '特になし', },
@@ -159,7 +159,7 @@ our @pg_koma_ary = (            # 希望コマ数選択肢定義
     { VAL => 'TK-1',  DISP => '１コマ(90分+準備30分)', },
     { VAL => 'TK-2',  DISP => '２コマ(210分+準備30分)', },
     { VAL => 'TK-A',  DISP => '終日', },
-    { VAL => 'other', DISP => 'その他', },     # その他のVALはother固定
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
 our @pg_ninzu_ary = (           # 予想参加者選択肢定義
     { VAL => 'TN-0', DISP => '不明', },
@@ -198,13 +198,13 @@ our @av_a_ary = (            # 持ち込み映像機器音声接続形式選択�
     { VAL => 'none',  DISP => '不要', },
     { VAL => 'tsr',   DISP => 'ステレオミニ(3.5mmTSR)', },
     { VAL => 'rca',   DISP => 'RCAコンポジット(赤白)', },
-    { VAL => 'other', DISP => 'その他', },     # その他のVALはother固定
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
 our @pc_v_ary = (            # 持ち込みPC映像接続形式選択肢定義
     { VAL => 'none',  DISP => '接続しない', },
     { VAL => 'hdmi',  DISP => 'HDMI', },
     { VAL => 'vga',   DISP => 'D-Sub15(VGA)', },
-    { VAL => 'other', DISP => 'その他', },     # その他のVALはother固定
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
 our @pc_a_ary = (            # 持ち込みPC音声接続形式選択肢定義
     { VAL => 'none',   DISP => '不要', },
@@ -216,7 +216,7 @@ our @lan_ary = (             # ネット接続形式選択肢定義
     { VAL => 'none',  DISP => '接続しない', },  # 接続しないのVALはnone固定
     { VAL => 'lan',   DISP => '有線(RJ-45)', },
     { VAL => 'wifi',  DISP => '無線', },
-    { VAL => 'other', DISP => 'その他', },     # その他のVALはother固定
+    { VAL => 'other', DISP => 'その他', },      # その他のVALはother固定
 );
 our @pg_enquete_ary = (      # 企画経験選択肢定義
     { VAL => 'PE-0', DISP => '初めて', },
