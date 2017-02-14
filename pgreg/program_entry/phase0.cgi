@@ -14,7 +14,7 @@ use pgreglib;
 my $cgi = CGI->new;
 my $name     = $cgi->param("name"); 
 my $mailaddr = $cgi->param("mail");
-my $reg_num  = $cgi->param("reg_num"); 
+my $reg_num  = $cgi->param("reg_num") || ''; 
 my $referer  = $cgi->referer();
 
 # 登録番号からデバッグフラグを設定
@@ -91,6 +91,7 @@ $session->param('dbgflgs',  \%debflg);  # デバッグフラグ
 
 # 申し込みURL生成
 # referer()を元に生成するので、プロトコルの変更は不要
+_DEBUG_("referer[%s]\n", $referer);
 my ($filename, $pathname) = fileparse($referer);
 my $next_uri = $pathname . 'phase1.cgi?ID=' . $session->id;
 

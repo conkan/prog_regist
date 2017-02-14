@@ -12,6 +12,7 @@ use base qw/Exporter/;
 our @EXPORT = qw(
     %CONDEF_CONST
     doMailSend
+    _DEBUG_
 );
 
 our %EXPORT_TAGS = (
@@ -352,6 +353,8 @@ sub pg_prmModelTmpl_set {
         my %row_data;
         my $ppno = $ppcnt - 1;
         my $prefix = 'pp' . $ppcnt;
+        # 名前が未定義なら次
+        next unless $obj->param($prefix . '_name');
         $row_data{'pp_no'}      = $ppno;
         $row_data{'pp_number'}  = $ppcnt;
         $row_data{'mod_pre'}    = 'pgrg.ppGuest[' . $ppno . ']';
@@ -693,6 +696,13 @@ sub pg_HtmlJson_set {
         if ( $page->query(name => 'JSONHR') );
     $page->param(JSONBODY => $jsonbody)
         if ( $page->query(name => 'JSONBODY') );
+}
+
+# デバッグ出力
+sub _DEBUG_ {
+    return unless $CONDEF_CONST{'DEBUGLOG'};
+    printf STDERR "[%s]", scalar(localtime);
+    printf STDERR @_;
 }
 
 1;
