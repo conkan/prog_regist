@@ -353,8 +353,6 @@ sub pg_prmModelTmpl_set {
         my %row_data;
         my $ppno = $ppcnt - 1;
         my $prefix = 'pp' . $ppcnt;
-        # 名前が未定義なら次
-        next unless $obj->param($prefix . '_name');
         $row_data{'pp_no'}      = $ppno;
         $row_data{'pp_number'}  = $ppcnt;
         $row_data{'mod_pre'}    = 'pgrg.ppGuest[' . $ppno . ']';
