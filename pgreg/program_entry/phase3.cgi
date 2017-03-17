@@ -146,7 +146,6 @@ sub _progRegViaConkanWebIF {
 
     # adminでlogin -> RESPONCEは捨てる
     #   $CONDEF_CONST{'CONKANURL'} ,
-_DEBUG_("conkan login start\n");
     $req = POST( $CONDEF_CONST{'CONKANURL'} . 'login',
                  [  'realm'     => 'passwd',
                     'account'   => 'admin',
@@ -156,7 +155,6 @@ _DEBUG_("conkan login start\n");
     die 'login error: ' . $res->message if $res->is_error();
     
     # 企画登録
-_DEBUG_("conkan program/add start\n");
     $req = POST( $CONDEF_CONST{'CONKANURL'} . 'program/add',
                  Content_Type => 'form-data',
                  Content      =>
@@ -184,9 +182,10 @@ _DEBUG_("conkan program/add start\n");
     }
 
     # logout
-_DEBUG_("conkan logout\n");
-    $agent->get( $CONDEF_CONST{'CONKANURL'} . 'logout');
-    # logoutはエラーになっても無視
+    $res = $agent->get( $CONDEF_CONST{'CONKANURL'} . 'logout');
+    # logoutはエラーになっても無視(エラーログのみ出力)
+     _DEBUG_('conkan logout error [' . $res->message . "]\n")
+        if $res->is_error();
 
     $agent = undef;
     return ( $pgid, $prog_no );

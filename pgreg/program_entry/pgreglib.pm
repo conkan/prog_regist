@@ -136,6 +136,115 @@ my @all_pname = (
     'youdo', );
 
 ##############################################################################
+# パラメータチェック
+#   クライアントでのチェックを回避されたときのため、サーバ側でもチェック
+##############################################################################
+# 前後空白トリム正規表現 $1となる
+my $QRLRSPACE => qr/^\s*(.*?)\s*$/;
+# 正の整数正規表現
+my $QRPDIGIT => qr/^[1-9]+\d*$/;
+
+sub pg_input_check {
+    my (
+        $cgi,       # CGIオブジェクト
+    ) = @_;
+
+    my %AfailVnames = ();   # エラーTMPL変数名ハッシュ(値はダミー)
+
+    # 必須項目チェック
+    foreach my $pname ( @needs_prm ) {
+        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+        $AfailVnames{$pname} = 1 if ( $cgi->param($pname) eq '' );
+    }
+    # いずれか必須チェック
+    foreach my $pPnames ( @oneneed_prm ) {
+        my $setcnt = 0;
+        foreach my $pname ( @$pPnames ) {
+            $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+            if ( $cgi->param($pname) ne '' ) {
+                $setcnt++;
+            }
+        }
+        if ( $setcnt == 0 ) {
+            foreach my $pname ( @$pPnames ) {
+                $AfailVnames{$pname} = 1;
+            }
+        }
+    }
+    # 条件付き必須チェック
+    while ( my ( $pname, $pAcnd ) = each( %cond_tbl ) ) {
+        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+        if ( $cgi->param($pname) eq $pAcnd->[0] ) {
+            $cgi->param($pAcnd->[1]) =~ s/$QRLRSPACE/$1/;
+            if ( $pAcnd->[2] eq 'count' ) { # 数量項目
+                $AfailVnames{$pAcnd->[1]} = 1
+                    unless ( $cgi->param($pAcnd->[1]) =~ $QRPDIGIT );
+            }
+            else { # 必須項目
+                $AfailVnames{$pAcnd->[1]} = 1
+                    if ( $cgi->param($pAcnd->[1]) eq '' );
+            }
+        }
+    }
+    # 持ち込み機材チェック
+    while ( my ( $pname, $pAinfo ) = each( %chkmotikomi_tbl ) ) {
+        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+        if ( $cgi->param($pname) eq $pAinfo->[0] ) {
+            while ( my ( $pname2, $pAcnd ) = each ( %{$pAinfo->[1]} ) ) {
+                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
+                if ( $cgi->param($pname2) eq $pAcnd->[0] ) {
+                    $cgi->param($pAcnd->[1]) =~ s/$QRLRSPACE/$1/;
+                    $AfailVnames{$pAcnd->[1]} = 1
+                        if ( $cgi->param($pAcnd->[1]) eq '' );
+                }
+            }
+        }
+    }
+    # ネット接続理由チェック
+    #   持ち込み機材チェックテーブルに組み込みたいが、特殊なので断念
+    while ( my ( $pname, $pAinfo ) = each( %chklan_tbl ) ) {
+        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+        if ( $cgi->param($pname) eq $pAinfo->[0] ) {
+            while ( my ( $pname2, $pAcnd ) = each ( %{$pAinfo->[1]} ) ) {
+                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
+                unless ( $cgi->param($pname2) eq $pAcnd->[0] ) { # ここが特殊
+                    $cgi->param($pAcnd->[1]) =~ s/$QRLRSPACE/$1/;
+                    $AfailVnames{$pAcnd->[1]} = 1
+                        if ( $cgi->param($pAcnd->[1]) eq '' );
+                }
+            }
+        }
+    }
+    # 申込者出演チェック
+    while ( my ( $pname, $pAinfo ) = each( %chkyoudo_tbl ) ) {
+        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+        if ( $cgi->param($pname) eq $pAinfo->[0] ) {
+            foreach my $pname2 ( @{$pAinfo->[1]} ) {
+                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
+                $AfailVnames{$pname2} = 1 if ( $cgi->param($pname2) eq '' );
+            }
+        }
+    }
+    # 出演者情報
+    my $ppcnt;
+    my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
+    for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
+        my $prefix = 'pp' . $ppcnt;
+        my $pname = $prefix . '_name';
+        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
+        if ( $cgi->param($pname) ne '') {
+            foreach my $postfix ( '_name_f', '_title', '_con', '_grq' ) {
+                my $pname2 = $prefix . $postfix;
+                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
+                $AfailVnames{$pname2} = 1 if ( $cgi->param($pname2) eq '' );
+            }
+        }
+    }
+
+    return( scalar(%AfailVnames) ? 1 : 0 );
+} # End of pg_input_check
+
+##############################################################################
 # テンプレート処理共通関数
 ##############################################################################
 

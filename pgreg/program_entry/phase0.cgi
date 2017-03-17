@@ -91,7 +91,6 @@ $session->param('dbgflgs',  \%debflg);  # デバッグフラグ
 
 # 申し込みURL生成
 # referer()を元に生成するので、プロトコルの変更は不要
-_DEBUG_("referer[%s]\n", $referer);
 my ($filename, $pathname) = fileparse($referer);
 my $next_uri = $pathname . 'phase1.cgi?ID=' . $session->id;
 
