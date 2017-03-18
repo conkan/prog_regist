@@ -1,4 +1,5 @@
-<div ng-class="{invalid: reqchk.unsetTime}">
+<div ng-class="{invalid: reqchk.unsetTime}"
+  class="<TMPL_VAR NAME=pg_time_fail> <TMPL_VAR NAME=pg_time2_fail>">
   <TMPL_LOOP NAME=TIME_LOOP>
     <input type="radio" ng-model="pgrg.pgTime" name="pg_time"
       ng-required="true"

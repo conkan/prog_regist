@@ -1,4 +1,5 @@
-<div ng-class="{invalid: reqchk.unsetNinzu}">
+<div ng-class="{invalid: reqchk.unsetNinzu}"
+  class="<TMPL_VAR NAME=pg_ninzu_fail>">
   <TMPL_LOOP NAME=NINZU_LOOP>
     <input type="radio" ng-model="pgrg.pgNinzu" name="pg_ninzu"
       ng-required="true"

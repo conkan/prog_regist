@@ -11,6 +11,7 @@ our @EXPORT = qw(
     @pg_ninzu_ary @pg_kafuka_ary @pg_naiyou_k_ary @pg_kiroku_ary
     @motikomi_ary @av_v_ary @av_a_ary @pc_v_ary @pc_a_ary @lan_ary 
     @pg_enquete_ary @ppn_youdo_ary @ppn_con_ary @ppn_grq_ary
+    @needs_prm @oneneed_prm %cond_tbl %chkmotikomi_tbl %chklan_tbl %chkyoudo_tbl
     %CONDEF_CONST
 );
 
@@ -238,6 +239,98 @@ our @ppn_con_ary = (     # 出演交渉選択肢定義
 our @ppn_grq_ary = (     # ゲスト申請選択肢定義
     { VAL => 'PP-A',  DISP => 'する', },
     { VAL => 'PP-B',  DISP => 'しない', },
+);
+### パラメータチェック情報定義
+#       phase1-tmpl.html でのng-requiredチェック相当
+# 必須項目 項目名の配列
+our @needs_prm = (
+    'p1_name', 'email', 'reg_num', 
+    'pg_name', 'pg_name_f', 'pg_kind', 'pg_place', 'pg_layout',
+    'pg_time', 'pg_koma', 'pg_ninzu', 'pg_pgu18', 'pg_pggen',
+    'pg_naiyou', 'pg_naiyou_k', 'pg_kiroku_kb', 'pg_kiroku_ka',
+    'pg_enquete', 'youdo',
+);
+# いずれか必須項目
+#   配列参照の配列
+#       配列は、いずれかが必須である項目名の配列
+our @oneneed_prm = (
+    [ 'tel', 'cellphone', ],
+);
+# 条件付き必須項目
+#   key: 項目名
+#   val: 配列参照
+#       [0]:key項目のチェック条件値
+#       [1]:チェック項目名
+#       [2]:チェック内容 'count':数量 'need':必須
+our %cond_tbl = (
+    'mic'       => [ 'on',    'miccnt',     'count' ],
+    'mic2'      => [ 'on',    'mic2cnt',    'count' ],
+    'pg_kind'   => [ 'other', 'pg_kind2',   'need'  ],
+    'pg_place'  => [ 'other', 'pg_place2',  'need'  ],
+    'pg_layout' => [ 'other', 'pg_layout2', 'need'  ],
+    'pg_time'   => [ 'other', 'pg_time2',   'need'  ],
+    'pg_koma'   => [ 'other', 'pg_koma2',   'need'  ],
+);
+# 持ち込み機材チェックテーブル
+#   key: 項目名
+#   val: 配列参照
+#       [0]:key項目のチェック条件値
+#       [1]:サブチェックテーブルハッシュ
+#           key: チェック項目名
+#           val: 配列参照
+#               [0]:key項目のチェック条件値
+#               [1]:チェック項目名
+our %chkmotikomi_tbl = (
+    'fc_vid'    =>
+        [
+            'MT-0',
+            {
+                'av-v' => [ 'other', 'av-v_velse' ],
+                'av-a' => [ 'other', 'av-a_velse' ],
+            }
+        ],
+    'fc_pc'     =>
+        [
+            'MT-0',
+            {
+              'pc-v' => [ 'other', 'pc-v_velse' ],
+              'pc-a' => [ 'other', 'pc-a_velse' ],
+              'lan'  => [ 'other', 'pc-l_velse' ],
+            }
+        ],
+);
+# ネット接続理由チェックテーブル
+#   持ち込み機材チェックテーブルに組み込みたいが、特殊なので断念
+#   key: 項目名
+#   val: 配列参照
+#       [0]:key項目のチェック条件値
+#       [1]:サブチェックテーブルハッシュ
+#           key: チェック項目名
+#           val: 配列参照
+#               [0]:key項目のチェック条件値 ※この値でない時チェック
+#               [1]:チェック項目名
+our %chklan_tbl = (
+    'fc_pc'     =>
+        [
+            'MT-0',
+            {
+                'lan'  => [ 'none', 'lanreason' ],
+            }
+        ],
+);
+# 申込者出演チェックテーブル
+#   key: 項目名
+#   val: 配列参照
+#       [0]:key項目のチェック条件値
+#       [1]:チェック項目名配列 参照
+our %chkyoudo_tbl = (
+    'youdo'     =>
+        [
+            'YD-0',
+            [
+                'py_name', 'py_name_f', 'py_title',
+            ]
+        ],
 );
 #### <--- pgreglib 内部項目
 

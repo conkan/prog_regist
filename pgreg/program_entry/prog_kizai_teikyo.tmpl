@@ -12,7 +12,8 @@
 <div>
   <input type="checkbox" ng-model="pgrg.mic" name="mic" ng-true-value="'on'"/>
   <span>壇上用マイク(固定)</span>
-  <span ng-if="pgrg.mic">
+  <span ng-if="pgrg.mic"
+    class="<TMPL_VAR NAME=miccnt_fail>">
     希望本数
     <input type="number" string-to-number ng-model="pgrg.miccnt" name="miccnt" min="1"
       size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
@@ -21,7 +22,8 @@
 <div>
   <input type="checkbox" ng-model="pgrg.mic2" name="mic2" ng-true-value="'on'"/>
   <span>客席用マイク(可動)</span>
-  <span ng-if="pgrg.mic2">
+  <span ng-if="pgrg.mic2"
+    class="<TMPL_VAR NAME=mic2cnt_fail>">
     希望本数
     <input type="number" string-to-number ng-model="pgrg.mic2cnt" name="mic2cnt" min="1"
       size="10" style="ime-mode: inactive;" ng-required="true"/>本(半角で記入)
