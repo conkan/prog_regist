@@ -240,7 +240,13 @@ sub pg_input_check {
             }
         }
     }
-
+    if ( scalar(%AfailVnames) ) {
+        printf STDERR '[%s]', scalar(localtime);
+        foreach my $pname ( keys(%AfailVnames) ) {
+            printf STDERR ' %s fail', $pname;
+        }
+        printf STDERR "\n";
+    }
     return( scalar(%AfailVnames) ? 1 : 0 );
 } # End of pg_input_check
 
