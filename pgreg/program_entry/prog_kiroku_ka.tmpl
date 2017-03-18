@@ -1,4 +1,5 @@
-<div ng-class="{invalid: reqchk.unsetKirokuKa}">
+<div ng-class="{invalid: reqchk.unsetKirokuKa}"
+  class="<TMPL_VAR NAME=pg_kiroku_ka_fail>">
   <TMPL_LOOP NAME=KIROKU_LOOP>
     <input type="radio" ng-model="pgrg.pgKirokuKa" name="pg_kiroku_ka"
       ng-required="true"

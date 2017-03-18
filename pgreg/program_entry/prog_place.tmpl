@@ -1,4 +1,5 @@
-<div ng-class="{invalid: reqchk.unsetPlace}">
+<div ng-class="{invalid: reqchk.unsetPlace}"
+  class="<TMPL_VAR NAME=pg_place_fail> <TMPL_VAR NAME=pg_place2_fail>">
   <TMPL_LOOP NAME=PLACE_LOOP>
     <input type="radio" ng-model="pgrg.pgPlace" name="pg_place"
       ng-required="true"
@@ -11,7 +12,8 @@
 </div>
 <br/>
 希望レイアウト
-<div ng-class="{invalid: reqchk.unsetLayout}">
+<div ng-class="{invalid: reqchk.unsetLayout}"
+  class="<TMPL_VAR NAME=pg_layout_fail> <TMPL_VAR NAME=pg_layout2_fail>">
   <TMPL_LOOP NAME=LAYOUT_LOOP>
     <input type="radio" ng-model="pgrg.pgLayout" name="pg_layout"
       ng-required="true"

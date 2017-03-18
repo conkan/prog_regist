@@ -5,7 +5,8 @@
     接続方式によっては、大会が用意する方式への変換ケーブルやコンバータも持ち込んで頂く場合があります。
 </div>
 <div>
-  <div ng-class="{invalid: reqchk.unsetFcVid}">
+  <div ng-class="{invalid: reqchk.unsetFcVid}"
+    class="<TMPL_VAR NAME=fc_vid_fail>">
     <TMPL_LOOP NAME=MOTIKOMI_LOOP>
       <input type="radio" ng-model="pgrg.fcVid" name="fc_vid"
         ng-required="true"
@@ -19,7 +20,8 @@
   <div class="indent">
     <div id="av-v" class="spacing">
       <b>映像接続形式</b><br/>
-      <div ng-class="{invalid: reqchk.unsetAvV}">
+      <div ng-class="{invalid: reqchk.unsetAvV}"
+        class="<TMPL_VAR NAME=av-v_fail> <TMPL_VAR NAME=av-v_velse_fail>">
         <TMPL_LOOP NAME=AV_V_LOOP>
           <input type="radio" ng-model="pgrg.avV" name="av-v"
             ng-required="true"
@@ -32,7 +34,8 @@
     </div>
     <div id="av-a" class="spacing">
       <b>音声接続形式</b>
-      <div ng-class="{invalid: reqchk.unsetAvA}">
+      <div ng-class="{invalid: reqchk.unsetAvA}"
+        class="<TMPL_VAR NAME=av-a_fail> <TMPL_VAR NAME=av-a_velse_fail>">
         <span class="commtext">HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
         <TMPL_LOOP NAME=AV_A_LOOP>
           <input type="radio" ng-model="pgrg.avA" name="av-a"

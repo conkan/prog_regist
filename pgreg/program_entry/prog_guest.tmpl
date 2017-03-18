@@ -5,20 +5,20 @@
     <td valign="middle">
       <input type="text" ng-model="<TMPL_VAR NAME=mod_name>"
         name="<TMPL_VAR NAME=id_pre>_name" id="<TMPL_VAR NAME=id_pre>_name"
-        placeholder="例:カーティス・ニュートン"
+        placeholder="例:桜木日出雄"
         size="30" style="ime-mode: active;"/><br/>
       <input type="text" ng-model="<TMPL_VAR NAME=mod_pre>.namef"
         name="<TMPL_VAR NAME=id_pre>_name_f" id="<TMPL_VAR NAME=id_pre>_name_f"
-        placeholder="例:カーティス・ニュートン"
+        placeholder="例:サクラギヒデオ"
         ng-required="<TMPL_VAR NAME=mod_name>"
         size="30" style="ime-mode: active;"/>
     </td>
     <td valign="middle">
       <textarea ng-model="<TMPL_VAR NAME=mod_pre>.title"
         name="<TMPL_VAR NAME=id_pre>_title" id="<TMPL_VAR NAME=id_pre>_title"
-        placeholder="例:キャプテン・フューチャー"
+        placeholder="例:神風隊長ことキャプテン・フューチャー"
         ng-required="<TMPL_VAR NAME=mod_name>"
-        cols="20" rows="2" style="ime-mode: active;"></textarea>
+        cols="25" rows="3" style="ime-mode: active;"></textarea>
     </td>
     <td id="<TMPL_VAR NAME=id_con>">
       <div ng-class="{invalid: <TMPL_VAR NAME=mod_name> && reqchk.unsetppGcon[<TMPL_VAR NAME=pp_no>]}">

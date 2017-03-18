@@ -167,3 +167,6 @@ th.sanka-bikou{
     color: red;
     font-weight: bold;
 }
+.failvalue {
+	background-color: red;
+}

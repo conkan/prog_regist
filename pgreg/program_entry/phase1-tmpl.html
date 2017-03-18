@@ -17,13 +17,14 @@
     <input type="hidden" name="_code"   value="application">
     <input type="hidden" name="orders"  value="<TMPL_VAR NAME=CONNAME>企画申し込み">
     <input type="hidden" name="self"    value="true">
+    <div style="COLOR:Red;"><TMPL_VAR NAME=param_fail></div>
     <h3>主催者情報</h3>
     <dl class="register"><table border="0" align="center" cellpadding="5">
         <tr >
             <th align="right">
                 <font color="blue">※</font>お名前：
             </th>
-            <td >
+            <td class="<TMPL_VAR NAME=p1_name_fail>">
                 <input type="text" name="p1_name" ng-model="pgrg.p1Name"
                   placeholder="例:S田F子"
                   size="30" style="ime-mode: active;" ng-required="true"/>
@@ -33,7 +34,8 @@
             <th align="right">
                 <font color="blue">※</font>メールアドレス：
             </th>
-            <td><input type="email" name="email" ng-model="pgrg.email"
+            <td class="<TMPL_VAR NAME=email_fail>">
+                <input type="email" name="email" ng-model="pgrg.email"
                   placeholder="例:foo@hoo.hee"
                   size="40" style="ime-mode: inactive;" ng-required="true"/>
             </td>
@@ -42,7 +44,7 @@
             <th align="right">
                 <font color="blue">※</font><TMPL_VAR NAME=CONNAME><TMPL_VAR NAME=REGNUMTIT>：
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=reg_num_fail>">
                 <input type="text" name="reg_num" ng-model="pgrg.regNum"
                   placeholder="例:9999"
                   size="40" style="ime-mode: inactive;" ng-required="true">
@@ -54,7 +56,7 @@
                 <div class="rubytext">電話・携帯/PHS等について<br/>
                 どちらか一方は入力してください</div>
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=tel_fail>">
                 <input type="text" name="tel" ng-model="pgrg.tel"
                  size="30" ng-pattern="<TMPL_VAR NAME=TELNUMPAT>"
                  placeholder="例:01-2345-6789, +81 1-2345-6789"
@@ -67,7 +69,7 @@
             <th align="right">
                 携帯/PHS等：
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=cellphone_fail>">
                 <input type="text" name="cellphone" ng-model="pgrg.celphone"
                  size="30" ng-pattern="<TMPL_VAR NAME=TELNUMPAT>"
                  placeholder="例:090-2345-6789 +81 90-2345-6789"
@@ -105,7 +107,7 @@
                 <font color="blue">※</font>
                 企画名称：
             </th>
-            <td width = "450" >
+            <td width = "450" class="<TMPL_VAR NAME=pg_name_fail>">
                 <input type="text" name="pg_name" ng-model="pgrg.pgName"
                  placeholder="例:日本SFの歴史"
                  size="60" style="ime-mode: active;" ng-required="true">
@@ -116,7 +118,7 @@
                 <font color="blue">※</font>
                 フリガナ：
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=pg_name_f_fail>">
                 <input type="text" name="pg_name_f" ng-model="pgrg.pgNameF"
                  placeholder="例:ニホンエスエフノレキシ"
                  size="60" style="ime-mode: active;" ng-required="true"/>
@@ -172,7 +174,7 @@
                 <font color="blue">※</font>
                 未成年参加可否：
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=pg_pgu18_fail>">
               <div ng-class="{invalid: reqchk.unsetPgu18}">
                 <TMPL_LOOP NAME=KAFUKA_LOOP>
                   <input type="radio" name="pg_pgu18" ng-model="pgrg.pgPgu18"
@@ -187,7 +189,7 @@
                 <font color="blue">※</font>
                 一般公開可否：
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=pg_pggen_fail>">
               <div ng-class="{invalid: reqchk.unsetPggen}">
                 <TMPL_LOOP NAME=KAFUKA_LOOP>
                   <input type="radio" name="pg_pggen" ng-model="pgrg.pgPggen"
@@ -205,7 +207,7 @@
                 <font color="blue">※</font>
                 内容説明：
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=pg_naiyou_k_fail> <TMPL_VAR NAME=pg_naiyou_fail>">
               <div ng-class="{invalid: reqchk.unsetNaiyouK}">
                 <TMPL_LOOP NAME=NAIYOUK_LOOP>
                   <input type="radio" name="pg_naiyou_k"
@@ -275,7 +277,7 @@
                 <font color="blue">※</font>
                 企画を立てるのは:
             </th>
-            <td>
+            <td class="<TMPL_VAR NAME=pg_enquete_fail>">
               <div ng-class="{invalid: reqchk.unsetEnquete}">
                 <TMPL_LOOP NAME=ENQUETE_LOOP>
                   <input type="radio" name="pg_enquete"
@@ -310,7 +312,7 @@
                 <font color="blue">※</font>
                 企画申込者自身は出演
             </th>
-            <td colspan="2">
+            <td colspan="2" class="<TMPL_VAR NAME=youdo_fail>">
               <div ng-class="{invalid: reqchk.unsetYouDo}">
                 <TMPL_LOOP NAME=YOUDO_LOOP>
                   <input type="radio" name="youdo" ng-model="pgrg.youdo"
@@ -327,14 +329,15 @@
         </tr>
         <tr ng-if="pgrg.youdo=='YD-0'">
             <td align="right"></td>
-            <td valign="middle">
+            <td valign="middle"
+              class="<TMPL_VAR NAME=py_name_fail> <TMPL_VAR NAME=py_name_f_fail>">
                 <input type="text" name="py_name" ng-model="pgrg.pyName"
                  size="30" style="ime-mode: active;" ng-required="true"/>
                 <br/><br/>
                 <input type="text" name="py_name_f" ng-model="pgrg.pyNameF"
                  size="30" style="ime-mode: active;" ng-required="true"/>
             </td>
-            <td valign="middle">
+            <td valign="middle" class="<TMPL_VAR NAME=py_title_fail>">
                 <textarea name="py_title" ng-model="pgrg.pyTitle"
                  cols="20" rows="2" style="ime-mode: active;"
                  ng-required="true"></textarea>
@@ -345,7 +348,8 @@
       <input type="text" ng-model="pgrg.ppGuestNum" ng-hide="true"
         name="pp_cnt" id="pp_cnt"/>
       <table border="0" align="center" cellpadding="5">
-        <tbody id="addGuest">
+        <tbody id="addGuest"
+          class="<TMPL_VAR NAME=guest_fail>">
           <tr>
             <th align="right" >No.</th>
             <th align="left" >出演者氏名/フリガナ</th>
@@ -356,7 +360,7 @@
           <TMPL_INCLUDE NAME=prog_guest.tmpl>
         </tbody>
       </table>
-      <div ng-if="pgrg.ppGuestNum+1<<TMPL_VAR NAME=MAXGCNT>"
+      <div ng-if="pgrg.ppGuestNum+1<<TMPL_VAR NAME=MAXGCNT>">
         <span><button type="button" class="btn" ng-click="AddppGuest()">
           出演者追加
         </button></span>

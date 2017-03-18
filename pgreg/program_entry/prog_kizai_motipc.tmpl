@@ -4,7 +4,8 @@
   接続方式によっては、大会が用意する方式への変換ケーブルやコンバータも持ち込んで頂く場合があります。<br/>
   特にMacの場合、HDMIあるいはD-Sub15への変換ケーブルは各自用意し、どちらへの変換であるかを記載して下さい。
 </div>
-<div ng-class="{invalid: reqchk.unsetFcPc}">
+<div ng-class="{invalid: reqchk.unsetFcPc}"
+  class="<TMPL_VAR NAME=fc_pc_fail>">
   <TMPL_LOOP NAME=MOTIKOMI_LOOP>
     <input type="radio" ng-model="pgrg.fcPc" name="fc_pc"
       ng-required="true"
@@ -17,7 +18,8 @@
     <div class="indent">
       <div id="pc-v" class="spacing">
         <b>映像接続形式</b><br/>
-        <div ng-class="{invalid: reqchk.unsetPcV}">
+        <div ng-class="{invalid: reqchk.unsetPcV}"
+          class="<TMPL_VAR NAME=pc-v_fail> <TMPL_VAR NAME=pc-v_velse_fail>">
           <TMPL_LOOP NAME=PC_V_LOOP>
             <input type="radio" ng-model="pgrg.pcV" name="pc-v"
               ng-required="true"
@@ -31,7 +33,8 @@
       </div>
       <div id="pc-a" class="spacing">
         <b>音声接続形式</b>
-        <div ng-class="{invalid: reqchk.unsetPcA}">
+        <div ng-class="{invalid: reqchk.unsetPcA}"
+          class="<TMPL_VAR NAME=pc-a_fail> <TMPL_VAR NAME=pc-a_velse_fail>">
           <span class="commtext">
             HDMIで映像と音声を伝送する場合は、不要を選んで下さい</span><br/>
           <TMPL_LOOP NAME=PC_A_LOOP>
@@ -47,7 +50,8 @@
       </div>
       <div id="lan" class="spacing">
         <b>インタネット接続形式</b><br/>
-        <div ng-class="{invalid: reqchk.unsetLan}">
+        <div ng-class="{invalid: reqchk.unsetLan}"
+          class="<TMPL_VAR NAME=lan_fail> <TMPL_VAR NAME=pc-l_velse_fail>">
           <TMPL_LOOP NAME=LAN_LOOP>
             <input type="radio" ng-model="pgrg.lan" name="lan"
               ng-required="true"
@@ -57,7 +61,8 @@
             <input type="text" ng-model="pgrg.lanelse" name="pc-l_velse"
               size="30" style="ime-mode: active;" ng-required="true"/>
           </span><br/>
-          <div ng-if="pgrg.lan && pgrg.lan!='none'">
+          <div ng-if="pgrg.lan && pgrg.lan!='none'"
+            class="<TMPL_VAR NAME=lanreason_fail>">
             <div class="indent spacing">
               <b>インタネット利用方法</b>(接続する場合)
               <div class="commtext">

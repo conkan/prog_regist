@@ -261,15 +261,15 @@ our @oneneed_prm = (
 #   val: 配列参照
 #       [0]:key項目のチェック条件値
 #       [1]:チェック項目名
-#       [2]:チェック内容 'count':数量 undef:必須
+#       [2]:チェック内容 'count':数量 'need':必須
 our %cond_tbl = (
-    'mic'       => [ 'on',    'miccnt',    'count' ],
-    'mic2'      => [ 'on',    'mic2cnt',   'count' ],
-    'pg_kind'   => [ 'other', 'pg_kind2',   undef  ],
-    'pg_place'  => [ 'other', 'pg_place2',  undef  ],
-    'pg_layout' => [ 'other', 'pg_layout2', undef  ],
-    'pg_time'   => [ 'other', 'pg_time2',   undef  ],
-    'pg_koma'   => [ 'other', 'pg_koma2',   undef  ],
+    'mic'       => [ 'on',    'miccnt',     'count' ],
+    'mic2'      => [ 'on',    'mic2cnt',    'count' ],
+    'pg_kind'   => [ 'other', 'pg_kind2',   'need'  ],
+    'pg_place'  => [ 'other', 'pg_place2',  'need'  ],
+    'pg_layout' => [ 'other', 'pg_layout2', 'need'  ],
+    'pg_time'   => [ 'other', 'pg_time2',   'need'  ],
+    'pg_koma'   => [ 'other', 'pg_koma2',   'need'  ],
 );
 # 持ち込み機材チェックテーブル
 #   key: 項目名

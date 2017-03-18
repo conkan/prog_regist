@@ -140,10 +140,12 @@ my @all_pname = (
 #   クライアントでのチェックを回避されたときのため、サーバ側でもチェック
 ##############################################################################
 # 前後空白トリム正規表現 $1となる
-my $QRLRSPACE => qr/^\s*(.*?)\s*$/;
-# 正の整数正規表現
-my $QRPDIGIT => qr/^[1-9]+\d*$/;
+my $QRLRSPACE = qr/^\s*(.*?)\s*$/;
+# 正の整数正規表現(前後空白含む)
+my $QRPDIGIT = qr/^\s*[1-9]+\d*\s*$/;
 
+# パラメータチェック実施
+# 戻り値 不正項目名(文字列)
 sub pg_input_check {
     my (
         $cgi,       # CGIオブジェクト
@@ -153,17 +155,13 @@ sub pg_input_check {
 
     # 必須項目チェック
     foreach my $pname ( @needs_prm ) {
-        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
-        $AfailVnames{$pname} = 1 if ( $cgi->param($pname) eq '' );
+        $AfailVnames{$pname} = 1 unless ( isValid($cgi->multi_param($pname)) );
     }
     # いずれか必須チェック
     foreach my $pPnames ( @oneneed_prm ) {
         my $setcnt = 0;
         foreach my $pname ( @$pPnames ) {
-            $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
-            if ( $cgi->param($pname) ne '' ) {
-                $setcnt++;
-            }
+            $setcnt++ if ( isValid($cgi->multi_param($pname)) );
         }
         if ( $setcnt == 0 ) {
             foreach my $pname ( @$pPnames ) {
@@ -173,29 +171,24 @@ sub pg_input_check {
     }
     # 条件付き必須チェック
     while ( my ( $pname, $pAcnd ) = each( %cond_tbl ) ) {
-        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
         if ( $cgi->param($pname) eq $pAcnd->[0] ) {
-            $cgi->param($pAcnd->[1]) =~ s/$QRLRSPACE/$1/;
             if ( $pAcnd->[2] eq 'count' ) { # 数量項目
                 $AfailVnames{$pAcnd->[1]} = 1
                     unless ( $cgi->param($pAcnd->[1]) =~ $QRPDIGIT );
             }
             else { # 必須項目
                 $AfailVnames{$pAcnd->[1]} = 1
-                    if ( $cgi->param($pAcnd->[1]) eq '' );
+                    unless ( isValid($cgi->multi_param($pAcnd->[1])) );
             }
         }
     }
     # 持ち込み機材チェック
     while ( my ( $pname, $pAinfo ) = each( %chkmotikomi_tbl ) ) {
-        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
         if ( $cgi->param($pname) eq $pAinfo->[0] ) {
             while ( my ( $pname2, $pAcnd ) = each ( %{$pAinfo->[1]} ) ) {
-                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
                 if ( $cgi->param($pname2) eq $pAcnd->[0] ) {
-                    $cgi->param($pAcnd->[1]) =~ s/$QRLRSPACE/$1/;
                     $AfailVnames{$pAcnd->[1]} = 1
-                        if ( $cgi->param($pAcnd->[1]) eq '' );
+                        unless ( isValid($cgi->multi_param($pAcnd->[1])) );
                 }
             }
         }
@@ -203,25 +196,21 @@ sub pg_input_check {
     # ネット接続理由チェック
     #   持ち込み機材チェックテーブルに組み込みたいが、特殊なので断念
     while ( my ( $pname, $pAinfo ) = each( %chklan_tbl ) ) {
-        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
         if ( $cgi->param($pname) eq $pAinfo->[0] ) {
             while ( my ( $pname2, $pAcnd ) = each ( %{$pAinfo->[1]} ) ) {
-                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
                 unless ( $cgi->param($pname2) eq $pAcnd->[0] ) { # ここが特殊
-                    $cgi->param($pAcnd->[1]) =~ s/$QRLRSPACE/$1/;
                     $AfailVnames{$pAcnd->[1]} = 1
-                        if ( $cgi->param($pAcnd->[1]) eq '' );
+                        unless ( isValid($cgi->multi_param($pAcnd->[1])) );
                 }
             }
         }
     }
     # 申込者出演チェック
     while ( my ( $pname, $pAinfo ) = each( %chkyoudo_tbl ) ) {
-        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
         if ( $cgi->param($pname) eq $pAinfo->[0] ) {
             foreach my $pname2 ( @{$pAinfo->[1]} ) {
-                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
-                $AfailVnames{$pname2} = 1 if ( $cgi->param($pname2) eq '' );
+                $AfailVnames{$pname2} = 1
+                    unless ( isValid($cgi->multi_param($pname2)) );
             }
         }
     }
@@ -230,25 +219,32 @@ sub pg_input_check {
     my $ppmax = $CONDEF_CONST{'MAXGCNT'};   # CONST: 出演者の最大値
     for ($ppcnt = 1; $ppcnt <= $ppmax; $ppcnt++) {
         my $prefix = 'pp' . $ppcnt;
-        my $pname = $prefix . '_name';
-        $cgi->param($pname) =~ s/$QRLRSPACE/$1/;
-        if ( $cgi->param($pname) ne '') {
+        if ( isValid($cgi->multi_param($prefix . '_name')) ) {
             foreach my $postfix ( '_name_f', '_title', '_con', '_grq' ) {
-                my $pname2 = $prefix . $postfix;
-                $cgi->param($pname2) =~ s/$QRLRSPACE/$1/;
-                $AfailVnames{$pname2} = 1 if ( $cgi->param($pname2) eq '' );
+                my $pname = $prefix . $postfix;
+                unless (isValid($cgi->multi_param($pname))) {
+                    $AfailVnames{$pname} = 1;
+                    $AfailVnames{'guest'} = 1; # 個別は困難なのでまとめて
+                }
             }
         }
     }
-    if ( scalar(%AfailVnames) ) {
-        printf STDERR '[%s]', scalar(localtime);
-        foreach my $pname ( keys(%AfailVnames) ) {
-            printf STDERR ' %s fail', $pname;
-        }
-        printf STDERR "\n";
-    }
-    return( scalar(%AfailVnames) ? 1 : 0 );
+    my @retval = keys(%AfailVnames);
+    printf STDERR "[%s] invalid value on %s\n",
+        scalar(localtime), join(' ', @retval) if ( scalar(@retval) );
+    return @retval;
 } # End of pg_input_check
+
+# 値が存在するか
+sub isValid {
+    my (
+        $val,   # 項目値
+    ) = @_;
+    
+    $val =~ s/$QRLRSPACE/$1/ if ($val);
+    
+    return $val ? 1 : 0;
+}
 
 ##############################################################################
 # テンプレート処理共通関数

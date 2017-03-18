@@ -33,10 +33,17 @@ if ( $CONDEF_CONST{'ONLYUICHK'} || # UIチェック環境か
         $fobject    = $session;
     } else {
         # 申し込み受付時チェック
+        my @failParms;
         if ( !( $session->param('dbgflgs')->{'SKIPVALID'} )
-          && ( pgreglib::pg_input_check( $cgi ) ) ) {
+          && ( @failParms = pgreglib::pg_input_check( $cgi ) ) ) {
             # 入力内容不備時 申込画面再表示準備
             $fobject    = $cgi;
+            foreach my $pname ( @failParms ) {
+                my $ftag = $pname . '_fail';
+                $input_page->param( $ftag => 'failvalue')
+                    if ( $input_page->query( name => $ftag ) );
+            }
+            $input_page->param( 'param_fail' => 'パラメータ不正です');
         } else {
             # チェック成功 -> 入力値をセッションに保存し、phase2にredirect
             $cgi->param('dbgflgs', $session->param('dbgflgs'));

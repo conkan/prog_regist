@@ -1,4 +1,5 @@
-<div ng-class="{invalid: reqchk.unsetKoma}">
+<div ng-class="{invalid: reqchk.unsetKoma}"
+  class="<TMPL_VAR NAME=pg_koma_fail> <TMPL_VAR NAME=pg_koma2_fail>">
   <TMPL_LOOP NAME=KOMA_LOOP>
     <input type="radio" ng-model="pgrg.pgKoma" name="pg_koma"
       ng-required="true"

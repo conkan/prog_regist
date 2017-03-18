@@ -1,4 +1,5 @@
-<div ng-class="{invalid: reqchk.unsetKind}">
+<div ng-class="{invalid: reqchk.unsetKind}"
+  class="<TMPL_VAR NAME=pg_kind_fail> <TMPL_VAR NAME=pg_kind2_fail>">
   <TMPL_LOOP NAME=KIND_LOOP>
     <input type="radio" ng-model="pgrg.pgKind" name="pg_kind"
       ng-required="true"
